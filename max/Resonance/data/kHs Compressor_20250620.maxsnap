@@ -1,0 +1,23 @@
+{
+	"filetype" : "C74Snapshot",
+	"version" : 2,
+	"minorversion" : 0,
+	"name" : "kHs Compressor",
+	"origin" : "kHs Compressor.auinfo",
+	"type" : "AudioUnit",
+	"subtype" : "AudioEffect",
+	"embed" : 0,
+	"snapshot" : 	{
+		"pluginname" : "kHs Compressor.auinfo",
+		"plugindisplayname" : "kHs Compressor",
+		"pluginsavedname" : "C74_AU:/kHs Compressor",
+		"pluginsaveduniqueid" : 711806331,
+		"version" : 1,
+		"isbank" : 0,
+		"isbase64" : 1,
+		"sliderorder" : [  ],
+		"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
+		"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..ugF0ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..ugF0Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
+	}
+
+}
