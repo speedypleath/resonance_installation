@@ -1,0 +1,9 @@
+{
+  "Ionian":    ["I", "ii", "iii", "IV", "V", "vi", "vii°"],
+  "Dorian":    ["i", "ii", "♭III", "IV", "v", "vi", "♭VII"],
+  "Phrygian":  ["i", "♭II", "♭III", "iv", "v", "♭VI", "♭VII"],
+  "Lydian":    ["I", "II", "iii", "IV", "V", "vi", "vii"],
+  "Mixolydian":["I", "ii", "iii", "IV", "v", "vi", "♭VII"],
+  "Aeolian":   ["i", "ii°", "♭III", "iv", "v", "♭VI", "♭VII"],
+  "Locrian":   ["i°", "♭II", "♭iii", "iv", "♭V", "♭VI", "♭VII"]
+}

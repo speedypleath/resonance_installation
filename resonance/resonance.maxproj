@@ -2,7 +2,7 @@
 	"name" : "resonance",
 	"version" : 1,
 	"creationdate" : 3833633244,
-	"modificationdate" : 3834129717,
+	"modificationdate" : 3834137478,
 	"viewrect" : [ 25.0, 106.0, 300.0, 500.0 ],
 	"autoorganize" : 1,
 	"hideprojectwindow" : 0,
@@ -34,6 +34,11 @@
 				"kind" : "patcher",
 				"local" : 1
 			}
+,
+			"server.maxpat" : 			{
+				"kind" : "patcher",
+				"local" : 1
+			}
 
 		}
 ,
@@ -43,6 +48,16 @@
 ,
 		"code" : 		{
 			"vad_to_key.js" : 			{
+				"kind" : "javascript",
+				"local" : 1
+			}
+,
+			"chord_engine.js" : 			{
+				"kind" : "javascript",
+				"local" : 1
+			}
+,
+			"main.js" : 			{
 				"kind" : "javascript",
 				"local" : 1
 			}
