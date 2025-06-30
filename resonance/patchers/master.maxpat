@@ -47,7 +47,7 @@
 					"numoutlets" : 5,
 					"outlettype" : [ "signal", "signal", "", "float", "list" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 82.0, 222.0, 84.0, 136.0 ],
+					"patching_rect" : [ 82.0, 271.0, 120.0, 136.0 ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
 							"parameter_longname" : "drums",
@@ -72,7 +72,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "signal" ],
-					"patching_rect" : [ 82.0, 182.0, 84.0, 22.0 ],
+					"patching_rect" : [ 82.0, 231.0, 120.0, 22.0 ],
 					"text" : "mc.unpack~ 2"
 				}
 
@@ -86,14 +86,14 @@
 					"numoutlets" : 5,
 					"outlettype" : [ "signal", "signal", "", "float", "list" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 343.0, 222.0, 84.0, 136.0 ],
+					"patching_rect" : [ 361.0, 271.0, 126.0, 136.0 ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
 							"parameter_longname" : "live.gain~[1]",
 							"parameter_mmax" : 6.0,
 							"parameter_mmin" : -70.0,
 							"parameter_modmode" : 3,
-							"parameter_shortname" : "Bass",
+							"parameter_shortname" : "Melody",
 							"parameter_type" : 0,
 							"parameter_unitstyle" : 4
 						}
@@ -113,14 +113,14 @@
 					"numoutlets" : 5,
 					"outlettype" : [ "signal", "signal", "", "float", "list" ],
 					"parameter_enable" : 1,
-					"patching_rect" : [ 215.0, 222.0, 84.0, 136.0 ],
+					"patching_rect" : [ 215.0, 271.0, 134.0, 136.0 ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
 							"parameter_longname" : "live.gain~",
 							"parameter_mmax" : 6.0,
 							"parameter_mmin" : -70.0,
 							"parameter_modmode" : 3,
-							"parameter_shortname" : "Pads",
+							"parameter_shortname" : "Harmony",
 							"parameter_type" : 0,
 							"parameter_unitstyle" : 4
 						}
@@ -138,7 +138,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "signal" ],
-					"patching_rect" : [ 343.0, 182.0, 84.0, 22.0 ],
+					"patching_rect" : [ 361.0, 231.0, 126.0, 22.0 ],
 					"text" : "mc.unpack~ 2"
 				}
 
@@ -150,7 +150,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "signal", "signal" ],
-					"patching_rect" : [ 215.0, 182.0, 84.0, 22.0 ],
+					"patching_rect" : [ 215.0, 231.0, 134.0, 22.0 ],
 					"text" : "mc.unpack~ 2"
 				}
 
@@ -161,7 +161,7 @@
 					"maxclass" : "ezdac~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 209.0, 481.0, 52.0, 52.0 ]
+					"patching_rect" : [ 215.0, 530.0, 48.0, 48.0 ]
 				}
 
 			}
@@ -172,7 +172,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 9,
 					"outlettype" : [ "int", "int", "float", "float", "float", "", "int", "float", "" ],
-					"patching_rect" : [ 233.0, 63.0, 103.0, 22.0 ],
+					"patching_rect" : [ 82.0, 30.0, 103.0, 22.0 ],
 					"text" : "transport"
 				}
 
@@ -222,7 +222,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "multichannelsignal" ],
-					"patching_rect" : [ 82.0, 132.0, 120.0, 22.0 ],
+					"patching_rect" : [ 82.0, 181.0, 120.0, 22.0 ],
 					"text" : "mc.receive~ drums 2"
 				}
 
@@ -234,8 +234,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "multichannelsignal" ],
-					"patching_rect" : [ 343.0, 132.0, 112.0, 22.0 ],
-					"text" : "mc.receive~ bass 2"
+					"patching_rect" : [ 361.0, 181.0, 126.0, 22.0 ],
+					"text" : "mc.receive~ melody 2"
 				}
 
 			}
@@ -246,8 +246,8 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "multichannelsignal" ],
-					"patching_rect" : [ 215.0, 132.0, 113.0, 22.0 ],
-					"text" : "mc.receive~ pads 2"
+					"patching_rect" : [ 215.0, 181.0, 134.0, 22.0 ],
+					"text" : "mc.receive~ harmony 2"
 				}
 
 			}
@@ -297,7 +297,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-4", 1 ],
-					"midpoints" : [ 240.75, 468.0, 251.5, 468.0 ],
+					"midpoints" : [ 253.25, 517.0, 253.5, 517.0 ],
 					"source" : [ "obj-20", 1 ]
 				}
 
@@ -305,7 +305,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-4", 0 ],
-					"midpoints" : [ 224.5, 468.0, 218.5, 468.0 ],
+					"midpoints" : [ 224.5, 517.0, 224.5, 517.0 ],
 					"source" : [ "obj-20", 0 ]
 				}
 
@@ -313,7 +313,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-4", 1 ],
-					"midpoints" : [ 368.75, 468.0, 251.5, 468.0 ],
+					"midpoints" : [ 397.25, 517.0, 253.5, 517.0 ],
 					"source" : [ "obj-21", 1 ]
 				}
 
@@ -321,7 +321,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-4", 0 ],
-					"midpoints" : [ 352.5, 468.0, 218.5, 468.0 ],
+					"midpoints" : [ 370.5, 517.0, 224.5, 517.0 ],
 					"source" : [ "obj-21", 0 ]
 				}
 
@@ -343,7 +343,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-4", 1 ],
-					"midpoints" : [ 107.75, 468.0, 251.5, 468.0 ],
+					"midpoints" : [ 116.75, 517.0, 253.5, 517.0 ],
 					"source" : [ "obj-23", 1 ]
 				}
 
@@ -351,7 +351,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-4", 0 ],
-					"midpoints" : [ 91.5, 468.0, 218.5, 468.0 ],
+					"midpoints" : [ 91.5, 517.0, 224.5, 517.0 ],
 					"source" : [ "obj-23", 0 ]
 				}
 
@@ -380,8 +380,8 @@
 			}
  ],
 		"parameters" : 		{
-			"obj-20" : [ "live.gain~", "Pads", 0 ],
-			"obj-21" : [ "live.gain~[1]", "Bass", 0 ],
+			"obj-20" : [ "live.gain~", "Harmony", 0 ],
+			"obj-21" : [ "live.gain~[1]", "Melody", 0 ],
 			"obj-23" : [ "drums", "Drums", 0 ],
 			"parameterbanks" : 			{
 				"0" : 				{

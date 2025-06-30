@@ -2,7 +2,7 @@
 	"name" : "resonance",
 	"version" : 1,
 	"creationdate" : 3833633244,
-	"modificationdate" : 3833676737,
+	"modificationdate" : 3834124574,
 	"viewrect" : [ 25.0, 106.0, 300.0, 500.0 ],
 	"autoorganize" : 1,
 	"hideprojectwindow" : 0,
@@ -10,13 +10,12 @@
 	"autolocalize" : 0,
 	"contents" : 	{
 		"patchers" : 		{
-			"bass.maxpat" : 			{
+			"melody.maxpat" : 			{
 				"kind" : "patcher",
-				"local" : 1,
-				"toplevel" : 1
+				"local" : 1
 			}
 ,
-			"pads.maxpat" : 			{
+			"harmony.maxpat" : 			{
 				"kind" : "patcher",
 				"local" : 1
 			}
@@ -63,7 +62,7 @@
 
 		}
 ,
-		"externals" : 		{
+		"other" : 		{
 
 		}
 
