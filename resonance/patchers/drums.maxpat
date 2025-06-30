@@ -46,7 +46,7 @@
 					"numinlets" : 2,
 					"numoutlets" : 1,
 					"outlettype" : [ "multichannelsignal" ],
-					"patching_rect" : [ 573.0, 572.0, 70.0, 22.0 ],
+					"patching_rect" : [ 546.0, 580.0, 70.0, 22.0 ],
 					"text" : "mc.pack~ 2"
 				}
 
@@ -57,7 +57,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 573.0, 623.0, 108.0, 22.0 ],
+					"patching_rect" : [ 546.0, 631.0, 108.0, 22.0 ],
 					"text" : "mc.send~ drums 2"
 				}
 
@@ -74,7 +74,7 @@
 					"numoutlets" : 8,
 					"offset" : [ 0.0, 0.0 ],
 					"outlettype" : [ "signal", "signal", "", "list", "int", "", "", "" ],
-					"patching_rect" : [ 573.0, 454.0, 300.0, 100.0 ],
+					"patching_rect" : [ 546.0, 462.0, 300.0, 100.0 ],
 					"save" : [ "#N", "vst~", "loaduniqueid", 0, "C74_AU:/kHs Compressor", ";" ],
 					"saved_attribute_attributes" : 					{
 						"valueof" : 						{
@@ -111,7 +111,7 @@
 							"isbase64" : 1,
 							"sliderorder" : [  ],
 							"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-							"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..Ltl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..Ltl2Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
+							"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..6Bm2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..6Bm2Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
 						}
 ,
 						"snapshotlist" : 						{
@@ -135,7 +135,7 @@
 										"isbase64" : 1,
 										"sliderorder" : [  ],
 										"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-										"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..Ltl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..Ltl2Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
+										"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..6Bm2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..6Bm2Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
 									}
 ,
 									"fileref" : 									{
@@ -374,10 +374,10 @@
 					"outlettype" : [ "" ],
 					"patching_rect" : [ 22.5, 466.0, 198.0, 22.0 ],
 					"saved_object_attributes" : 					{
-						"client_rect" : [ 809, 112, 1355, 911 ],
+						"client_rect" : [ 580, 87, 949, 304 ],
 						"parameter_enable" : 0,
 						"parameter_mappable" : 0,
-						"storage_rect" : [ 583, 87, 1081, 651 ]
+						"storage_rect" : [ 583, 69, 1034, 197 ]
 					}
 ,
 					"text" : "pattrstorage randomiser @greedy 1",
@@ -604,10 +604,10 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 742.0, 168.0, 135.0, 22.0 ],
 									"saved_object_attributes" : 									{
-										"client_rect" : [ 809, 112, 1355, 911 ],
+										"client_rect" : [ 580, 87, 949, 304 ],
 										"parameter_enable" : 0,
 										"parameter_mappable" : 0,
-										"storage_rect" : [ 583, 87, 1081, 651 ]
+										"storage_rect" : [ 583, 69, 1034, 197 ]
 									}
 ,
 									"text" : "pattrstorage @greedy 1",
@@ -1006,10 +1006,10 @@
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 390.0, 161.0, 103.0, 22.0 ],
 													"saved_object_attributes" : 													{
-														"client_rect" : [ 809, 112, 1355, 911 ],
+														"client_rect" : [ 580, 87, 949, 304 ],
 														"parameter_enable" : 0,
 														"parameter_mappable" : 0,
-														"storage_rect" : [ 583, 87, 1081, 651 ]
+														"storage_rect" : [ 583, 69, 1034, 197 ]
 													}
 ,
 													"text" : "pattrstorage drum",
@@ -2262,6 +2262,18 @@
 						"assistshowspatchername" : 0,
 						"boxes" : [ 							{
 								"box" : 								{
+									"id" : "obj-10",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "signal" ],
+									"patching_rect" : [ 44.0, 473.0, 34.0, 22.0 ],
+									"text" : "limi~"
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"autosave" : 1,
 									"bgmode" : 0,
 									"border" : 0,
@@ -2272,7 +2284,7 @@
 									"numoutlets" : 8,
 									"offset" : [ 0.0, 0.0 ],
 									"outlettype" : [ "signal", "signal", "", "list", "int", "", "", "" ],
-									"patching_rect" : [ 216.0, 590.0, 300.0, 100.0 ],
+									"patching_rect" : [ 44.0, 528.0, 300.0, 100.0 ],
 									"save" : [ "#N", "vst~", "loaduniqueid", 0, "C74_AU:/kHs Compressor", ";" ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
@@ -2309,7 +2321,7 @@
 											"isbase64" : 1,
 											"sliderorder" : [  ],
 											"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-											"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..Ltl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.v3ZdqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
+											"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..6Bm2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.rKbdqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
 										}
 ,
 										"snapshotlist" : 										{
@@ -2333,7 +2345,7 @@
 														"isbase64" : 1,
 														"sliderorder" : [  ],
 														"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-														"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..Ltl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.v3ZdqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
+														"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..6Bm2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.rKbdqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
 													}
 ,
 													"fileref" : 													{
@@ -2358,36 +2370,13 @@
 							}
 , 							{
 								"box" : 								{
-									"id" : "obj-25",
-									"maxclass" : "newobj",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 361.0, 496.0, 29.5, 22.0 ],
-									"text" : "+~"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-7",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 618.0, 533.0, 102.0, 22.0 ]
-								}
-
-							}
-, 							{
-								"box" : 								{
 									"id" : "obj-8",
 									"maxclass" : "button",
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 418.0, 69.0, 24.0, 24.0 ]
+									"patching_rect" : [ 214.0, 9.0, 24.0, 24.0 ]
 								}
 
 							}
@@ -2398,7 +2387,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 5,
 									"outlettype" : [ "preset", "int", "preset", "int", "" ],
-									"patching_rect" : [ 793.0, 353.0, 100.0, 40.0 ],
+									"patching_rect" : [ 550.0, 134.0, 100.0, 40.0 ],
 									"preset_data" : [ 										{
 											"number" : 1,
 											"data" : [ 5, "obj-6", "flonum", "float", 40.0, 5, "<invalid>", "flonum", "float", 881.0, 6, "obj-23", "gain~", "list", 96, 10.0 ]
@@ -2424,7 +2413,7 @@
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "" ],
 									"parameter_enable" : 0,
-									"patching_rect" : [ 518.0, 448.0, 22.0, 140.0 ]
+									"patching_rect" : [ 242.0, 299.0, 22.0, 140.0 ]
 								}
 
 							}
@@ -2436,8 +2425,20 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
-									"parameter_enable" : 0,
-									"patching_rect" : [ 567.0, 362.0, 50.0, 22.0 ]
+									"parameter_enable" : 1,
+									"patching_rect" : [ 298.0, 213.0, 50.0, 22.0 ],
+									"saved_attribute_attributes" : 									{
+										"valueof" : 										{
+											"parameter_invisible" : 1,
+											"parameter_longname" : "number[10]",
+											"parameter_modmode" : 0,
+											"parameter_shortname" : "number[10]",
+											"parameter_type" : 3
+										}
+
+									}
+,
+									"varname" : "reverb"
 								}
 
 							}
@@ -2448,8 +2449,8 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 518.0, 404.0, 68.0, 22.0 ],
-									"text" : "cverb~ 100"
+									"patching_rect" : [ 242.0, 254.0, 75.0, 22.0 ],
+									"text" : "cverb~ 1000"
 								}
 
 							}
@@ -2460,12 +2461,12 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 834.0, 169.0, 135.0, 22.0 ],
+									"patching_rect" : [ 550.0, 65.0, 135.0, 22.0 ],
 									"saved_object_attributes" : 									{
-										"client_rect" : [ 809, 112, 1355, 911 ],
+										"client_rect" : [ 580, 87, 949, 304 ],
 										"parameter_enable" : 0,
 										"parameter_mappable" : 0,
-										"storage_rect" : [ 583, 87, 1081, 651 ]
+										"storage_rect" : [ 583, 69, 1034, 197 ]
 									}
 ,
 									"text" : "pattrstorage @greedy 1",
@@ -2480,8 +2481,10 @@
 									"numinlets" : 1,
 									"numoutlets" : 4,
 									"outlettype" : [ "", "", "", "" ],
-									"patching_rect" : [ 871.0, 242.0, 56.0, 22.0 ],
+									"patching_rect" : [ 550.0, 100.0, 56.0, 22.0 ],
 									"restore" : 									{
+										"overdrive" : [ 2.3 ],
+										"reverb" : [ 2327.0 ],
 										"vst~" : [ 											{
 												"filetype" : "C74Snapshot",
 												"version" : 2,
@@ -2501,7 +2504,7 @@
 													"isbase64" : 1,
 													"sliderorder" : [  ],
 													"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-													"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..Ltl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.v3ZdqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
+													"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..6Bm2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.rKbdqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
 												}
 
 											}
@@ -2518,11 +2521,25 @@
 									"format" : 6,
 									"id" : "obj-6",
 									"maxclass" : "flonum",
+									"minimum" : 0.01,
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "bang" ],
-									"parameter_enable" : 0,
-									"patching_rect" : [ 383.0, 332.0, 50.0, 22.0 ]
+									"parameter_enable" : 1,
+									"patching_rect" : [ 175.0, 254.0, 50.0, 22.0 ],
+									"saved_attribute_attributes" : 									{
+										"valueof" : 										{
+											"parameter_invisible" : 1,
+											"parameter_longname" : "number",
+											"parameter_mmin" : 0.01,
+											"parameter_modmode" : 0,
+											"parameter_shortname" : "number",
+											"parameter_type" : 3
+										}
+
+									}
+,
+									"varname" : "overdrive"
 								}
 
 							}
@@ -2533,7 +2550,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "signal" ],
-									"patching_rect" : [ 248.0, 396.0, 65.0, 22.0 ],
+									"patching_rect" : [ 129.0, 307.0, 65.0, 22.0 ],
 									"text" : "overdrive~"
 								}
 
@@ -2546,7 +2563,7 @@
 									"maxclass" : "outlet",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 223.0, 759.0, 30.0, 30.0 ]
+									"patching_rect" : [ 44.0, 654.0, 30.0, 30.0 ]
 								}
 
 							}
@@ -2557,7 +2574,7 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 246.0, 70.0, 36.0, 22.0 ],
+									"patching_rect" : [ 42.0, 10.0, 36.0, 22.0 ],
 									"text" : "r kick"
 								}
 
@@ -2894,12 +2911,12 @@
 													"restore" : 													{
 														"button" : [ 1.0 ],
 														"gain" : [ 1.0 ],
-														"number" : [ 48 ],
+														"number" : [ 77 ],
 														"peakdown[2]" : [ 20.0 ],
-														"peakright[2]" : [ 200.0 ],
-														"pitch[2]" : [ 31.0 ],
+														"peakright[2]" : [ 275.0 ],
+														"pitch[2]" : [ 39.0 ],
 														"randomize" : [ 0.0 ],
-														"snap[1]" : [ 6.0 ]
+														"snap[1]" : [ 7.0 ]
 													}
 ,
 													"text" : "autopattr",
@@ -2916,10 +2933,10 @@
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 390.0, 161.0, 103.0, 22.0 ],
 													"saved_object_attributes" : 													{
-														"client_rect" : [ 809, 112, 1355, 911 ],
+														"client_rect" : [ 580, 87, 949, 304 ],
 														"parameter_enable" : 0,
 														"parameter_mappable" : 0,
-														"storage_rect" : [ 583, 87, 1081, 651 ]
+														"storage_rect" : [ 583, 69, 1034, 197 ]
 													}
 ,
 													"text" : "pattrstorage drum",
@@ -3142,7 +3159,7 @@
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 472.0, 386.0, 141.0, 22.0 ],
-													"text" : "288., 48. 20 12. 200"
+													"text" : "539., 77. 20 19. 275"
 												}
 
 											}
@@ -4042,7 +4059,7 @@
  ]
 									}
 ,
-									"patching_rect" : [ 246.0, 165.0, 420.0, 150.0 ],
+									"patching_rect" : [ 42.0, 54.0, 420.0, 150.0 ],
 									"varname" : "custom.drum",
 									"viewvisibility" : 1
 								}
@@ -4058,8 +4075,23 @@
 							}
 , 							{
 								"patchline" : 								{
+									"destination" : [ "obj-28", 0 ],
+									"source" : [ "obj-10", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
 									"destination" : [ "obj-23", 0 ],
 									"source" : [ "obj-14", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-10", 0 ],
+									"order" : 2,
+									"source" : [ "obj-2", 0 ]
 								}
 
 							}
@@ -4088,24 +4120,8 @@
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-25", 1 ],
+									"destination" : [ "obj-10", 0 ],
 									"source" : [ "obj-23", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-28", 1 ],
-									"order" : 0,
-									"source" : [ "obj-25", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-28", 0 ],
-									"order" : 1,
-									"source" : [ "obj-25", 0 ]
 								}
 
 							}
@@ -4125,7 +4141,7 @@
 							}
 , 							{
 								"patchline" : 								{
-									"destination" : [ "obj-25", 0 ],
+									"destination" : [ "obj-10", 0 ],
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -4819,8 +4835,8 @@
 					"patching_rect" : [ 123.5, 438.0, 56.0, 22.0 ],
 					"restore" : 					{
 						"live.gain~" : [ -0.00000000000001 ],
-						"live.gain~[1]" : [ -9.88095238095238 ],
-						"live.gain~[2]" : [ -8.659793814432991 ],
+						"live.gain~[1]" : [ -0.27777777777778 ],
+						"live.gain~[2]" : [ -5.315691208701995 ],
 						"live.gain~[3]" : [ -6.037340693238097 ],
 						"vst~" : [ 							{
 								"filetype" : "C74Snapshot",
@@ -4841,7 +4857,7 @@
 									"isbase64" : 1,
 									"sliderorder" : [  ],
 									"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-									"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..Ltl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..Ltl2Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
+									"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..6Bm2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..6Bm2Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
 								}
 
 							}
@@ -4885,7 +4901,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-53", 1 ],
-					"midpoints" : [ 562.75, 453.0, 863.5, 453.0 ],
+					"midpoints" : [ 562.75, 453.0, 836.5, 453.0 ],
 					"source" : [ "obj-10", 1 ]
 				}
 
@@ -4893,7 +4909,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-53", 0 ],
-					"midpoints" : [ 555.5, 453.0, 582.5, 453.0 ],
+					"midpoints" : [ 555.5, 453.0, 555.5, 453.0 ],
 					"source" : [ "obj-10", 0 ]
 				}
 
@@ -4917,7 +4933,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-53", 1 ],
-					"midpoints" : [ 685.75, 453.0, 863.5, 453.0 ],
+					"midpoints" : [ 685.75, 453.0, 836.5, 453.0 ],
 					"source" : [ "obj-13", 1 ]
 				}
 
@@ -4925,7 +4941,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-53", 0 ],
-					"midpoints" : [ 678.5, 453.0, 582.5, 453.0 ],
+					"midpoints" : [ 678.5, 453.0, 555.5, 453.0 ],
 					"source" : [ "obj-13", 0 ]
 				}
 
@@ -4933,7 +4949,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-53", 1 ],
-					"midpoints" : [ 747.75, 453.0, 863.5, 453.0 ],
+					"midpoints" : [ 747.75, 453.0, 836.5, 453.0 ],
 					"source" : [ "obj-14", 1 ]
 				}
 
@@ -4941,7 +4957,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-53", 0 ],
-					"midpoints" : [ 740.5, 453.0, 582.5, 453.0 ],
+					"midpoints" : [ 740.5, 453.0, 555.5, 453.0 ],
 					"source" : [ "obj-14", 0 ]
 				}
 
@@ -5142,6 +5158,7 @@
 			"obj-12" : [ "live.gain~[2]", "live.gain~[1]", 0 ],
 			"obj-13" : [ "live.gain~[3]", "live.gain~[1]", 0 ],
 			"obj-14" : [ "live.gain~[4]", "live.gain~[1]", 0 ],
+			"obj-18::obj-22" : [ "number[10]", "number[10]", 0 ],
 			"obj-18::obj-28" : [ "vst~", "vst~", 0 ],
 			"obj-18::obj-2::obj-12" : [ "button[3]", "button", 0 ],
 			"obj-18::obj-2::obj-29" : [ "number[7]", "number", 0 ],
@@ -5151,6 +5168,7 @@
 			"obj-18::obj-2::obj-74" : [ "peakright[2]", "Peak Right", 0 ],
 			"obj-18::obj-2::obj-77" : [ "peakdown[2]", "Peak Down", 0 ],
 			"obj-18::obj-2::obj-79" : [ "snap[1]", "Snap", 0 ],
+			"obj-18::obj-6" : [ "number", "number", 0 ],
 			"obj-19::obj-2::obj-12" : [ "button[4]", "button", 0 ],
 			"obj-19::obj-2::obj-29" : [ "number[9]", "number", 0 ],
 			"obj-19::obj-2::obj-39" : [ "live.toggle[5]", "live.toggle", 0 ],
