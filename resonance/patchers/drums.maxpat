@@ -41,40 +41,24 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
-					"id" : "obj-2",
+					"id" : "obj-3",
 					"maxclass" : "newobj",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 1013.0, 529.0, 78.0, 22.0 ],
-					"text" : "send~ drums"
+					"numinlets" : 2,
+					"numoutlets" : 1,
+					"outlettype" : [ "multichannelsignal" ],
+					"patching_rect" : [ 573.0, 572.0, 70.0, 22.0 ],
+					"text" : "mc.pack~ 2"
 				}
 
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-54",
-					"lastchannelcount" : 0,
-					"maxclass" : "live.gain~",
-					"numinlets" : 2,
-					"numoutlets" : 5,
-					"orientation" : 1,
-					"outlettype" : [ "signal", "signal", "", "float", "list" ],
-					"parameter_enable" : 1,
-					"patching_rect" : [ 581.0, 576.0, 159.0, 47.0 ],
-					"saved_attribute_attributes" : 					{
-						"valueof" : 						{
-							"parameter_longname" : "live.gain~[5]",
-							"parameter_mmax" : 6.0,
-							"parameter_mmin" : -70.0,
-							"parameter_modmode" : 3,
-							"parameter_shortname" : "live.gain~[5]",
-							"parameter_type" : 0,
-							"parameter_unitstyle" : 4
-						}
-
-					}
-,
-					"varname" : "live.gain~[4]"
+					"id" : "obj-2",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 573.0, 623.0, 108.0, 22.0 ],
+					"text" : "mc.send~ drums 2"
 				}
 
 			}
@@ -127,7 +111,7 @@
 							"isbase64" : 1,
 							"sliderorder" : [  ],
 							"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-							"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..gkT1ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..gkT1Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
+							"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..4kl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..4kl2Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
 						}
 ,
 						"snapshotlist" : 						{
@@ -151,7 +135,7 @@
 										"isbase64" : 1,
 										"sliderorder" : [  ],
 										"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-										"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..gkT1ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..gkT1Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
+										"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..4kl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..4kl2Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
 									}
 ,
 									"fileref" : 									{
@@ -237,7 +221,7 @@
 					"numinlets" : 4,
 					"numoutlets" : 2,
 					"offset" : [ 0.0, 0.0 ],
-					"outlettype" : [ "signal", "signal" ],
+					"outlettype" : [ "", "" ],
 					"patching_rect" : [ 53.0, 29.0, 145.0, 45.0 ],
 					"varname" : "global",
 					"viewvisibility" : 1
@@ -248,15 +232,10 @@
 				"box" : 				{
 					"id" : "obj-27",
 					"maxclass" : "newobj",
-					"numinlets" : 3,
-					"numoutlets" : 4,
-					"outlettype" : [ "signal", "signal", "signal", "" ],
+					"numinlets" : 0,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
 					"patching_rect" : [ 143.0, 111.0, 203.0, 22.0 ],
-					"saved_object_attributes" : 					{
-						"parameter_enable" : 0,
-						"parameter_mappable" : 0
-					}
-,
 					"text" : "rtt.euclidean~ @steps 12 @events 7"
 				}
 
@@ -411,14 +390,9 @@
 					"id" : "obj-6",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
-					"numoutlets" : 6,
-					"outlettype" : [ "signal", "signal", "signal", "signal", "signal", "" ],
+					"numoutlets" : 3,
+					"outlettype" : [ "", "", "" ],
 					"patching_rect" : [ 53.0, 111.0, 71.5, 22.0 ],
-					"saved_object_attributes" : 					{
-						"parameter_enable" : 0,
-						"parameter_mappable" : 0
-					}
-,
 					"text" : "rtt.loop~",
 					"varname" : "loop_37921"
 				}
@@ -440,7 +414,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"offset" : [ 0.0, 0.0 ],
-					"outlettype" : [ "signal" ],
+					"outlettype" : [ "" ],
 					"patching_rect" : [ 74.0, 190.0, 292.0, 105.0 ],
 					"varname" : "randomiser",
 					"viewvisibility" : 1
@@ -2335,7 +2309,7 @@
 											"isbase64" : 1,
 											"sliderorder" : [  ],
 											"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-											"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..gkT1ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.DVRYqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
+											"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..4kl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.jWZdqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
 										}
 ,
 										"snapshotlist" : 										{
@@ -2359,7 +2333,7 @@
 														"isbase64" : 1,
 														"sliderorder" : [  ],
 														"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-														"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..gkT1ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.DVRYqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
+														"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..4kl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.jWZdqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
 													}
 ,
 													"fileref" : 													{
@@ -2527,7 +2501,7 @@
 													"isbase64" : 1,
 													"sliderorder" : [  ],
 													"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-													"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..gkT1ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.DVRYqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
+													"blob" : "803.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBbHTKM.AT..BHf..4kl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HaByEAtjfz.+tGtHY6r7H7ew.Z9IG9Q5yyKymwz1NRw9wcuLe1LVG0yipfe76YruDddfRecM4qk5CbGYB6O3rwgb7xw5jg+fh5xkBtHMVUKMRs7+058bkeJH5o8J6S6GbjP5kVS5qCRw9mrtS7TuMeXGJofLkcINcMKEcNmy7xNRbjKMWtAxRKLVyTGLbc4F8699wJWtjRyPLr2qrgqc7RnvpSL8dqqrM1Ak8gzg+wmpofw6tsKp3gzcKuz+lqMqrga2x0EU2UJKvcGnPt6mmJ8oOto5hn6Q5l+ERk35ziW3s071nSPkNVpL1WfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.lOES92+URYln9WuYd4R6a9zj3o4mnwoMbQy5cqZ2sszTV3ni7GsptwrkqZW1zrqF5x8JGztXYy5Ms22Vqmm6wb4AheZbkjh395MHs1llu2ztYUMiGB75.Glitey5Maa2lnkkwxiEX8MJuTpSFd2qCafGNlqzyEAq64u8SWT6u6OQi33hSdwPcUSSl3MoSGwijKOdjSmguqXoccci8VmlWdlaFOOU7PYFHYMK2zN0DME3028yyeEPszAHDjs6bY.B...6mC...0RAH...PA.Hf.B.jWZdqUP1tykAH...reN..fB......................vbzEFck4hZy8laPsTAF.....P..D..3....ji......HQX0YFdRr1biAGDA..B.TA.Z.vI.vB.w.PN.DD.MAfTBzs.hKv4........BD..........M...................BjN"
 												}
 
 											}
@@ -4845,54 +4819,9 @@
 					"patching_rect" : [ 123.5, 438.0, 56.0, 22.0 ],
 					"restore" : 					{
 						"live.gain~" : [ -0.00000000000001 ],
-						"live.gain~[1]" : [ -0.27777777777778 ],
+						"live.gain~[1]" : [ -9.88095238095238 ],
 						"live.gain~[2]" : [ -8.659793814432991 ],
 						"live.gain~[3]" : [ -6.037340693238097 ],
-						"live.gain~[4]" : [ -4.487314085739276 ],
-						"loop_37921" : [ 							{
-								"subdiv" : 								{
-									"value" : 16.0
-								}
-,
-								"direction" : 								{
-									"value" : 0.0
-								}
-,
-								"regionstart" : 								{
-									"value" : 0.0
-								}
-,
-								"drunk2minus" : 								{
-									"value" : 0.0
-								}
-,
-								"drunk2equals" : 								{
-									"value" : 0.0
-								}
-,
-								"syncupdate" : 								{
-									"value" : 1.0
-								}
-,
-								"drunk2plus" : 								{
-									"value" : 0.0
-								}
-,
-								"steps" : 								{
-									"value" : 16.0
-								}
-,
-								"subdivmode" : 								{
-									"value" : 0.0
-								}
-,
-								"regionlength" : 								{
-									"value" : 1.0
-								}
-,
-								"__presetid" : "rnbo"
-							}
- ],
 						"vst~" : [ 							{
 								"filetype" : "C74Snapshot",
 								"version" : 2,
@@ -4912,7 +4841,7 @@
 									"isbase64" : 1,
 									"sliderorder" : [  ],
 									"slidervisibility" : [ 1, 1, 1, 1, 1, 1, 1 ],
-									"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..gkT1ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..gkT1Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
+									"blob" : "802.hAGaoMGcv.i0AHv.DTfAGfPBJr.CT4VXsUFWsEla0YVXiQWcxUlbTQVXzEFUzkGbkc0b0IFc4AWYWYWYxMWZu41VDIWcsMGHPUmaiglDfrFRy8TDBXHTKM.AT..BHf..4kl2ZA...............n....vbzEFck4hZy8lasucxtsMLPX.3y1OEAD8Xgqk7Rc54dsn8dQgAC0HKBwEAtjfz.+tGRJIamkGg+KFPyO4vOReddY4Bl11PJ1Ot6kkKVvZnVdTE7Seuf8kvyCT5qqIesTef6HS33ImMNjiWOUmL7GTTStTvEoopZoQpk+erdKW4mChd5nx9zwAGIjdo0j95jTb7Iqqmm5s4C6PIEjorKQ+0rTz4bNyKaHQGWZtbCjkVXrl4NX35xM52ssSUtbIklgX3nWYCW63kPgUmX58VWYarSJ6CoC+iOUyAS2caSTwCo6Vdo+MWaQYC2tkqKZbWor.2chB4tedtzm93lpKhtGoa9WHUhqSOdg2VyaiNAU5XoxTeAFfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX.FfAX9TL4e+WIkYh5e8l4kKsukyShml2SSSa3ppsG1TeXeoorPmi7cVUyT15M0qqpNLF5x8JGTupptdy80aGqmm6wb4Ah2OsRRQb+3MXUpAUeupd2lwLdHvGG3vbz861tae89DsrLVdr.GeixKkZjg285vF3gtbkVtHXcO+se5hZ+c+IZDcq58hgwUMOYh2jNeDORt73QNeF9lhk46Rq0o4km4poySEOUlARV05c0yMQSA93694kuBTKc.BtXpww.f...v94...PsT.B...T..BHf..4kl2Z4hoFGC.B...6mC..n.......................LGcgQWYtn1bu4FTKUfA.....D..A..N....3H......RDVclgmDqM2XvAQ..f..U.fF.bB.r.PL.jC.AAPS.Hk.bKP3BXN.......f.A.........PC..................f.nC"
 								}
 
 							}
@@ -5109,6 +5038,13 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-2", 0 ],
+					"source" : [ "obj-3", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-12", 0 ],
 					"source" : [ "obj-30", 0 ]
 				}
@@ -5172,30 +5108,15 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-54", 1 ],
-					"midpoints" : [ 622.64285714285711, 567.0, 730.5, 567.0 ],
+					"destination" : [ "obj-3", 1 ],
 					"source" : [ "obj-53", 1 ]
 				}
 
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-54", 0 ],
+					"destination" : [ "obj-3", 0 ],
 					"source" : [ "obj-53", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-2", 0 ],
-					"source" : [ "obj-54", 1 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-2", 0 ],
-					"source" : [ "obj-54", 0 ]
 				}
 
 			}
@@ -5254,7 +5175,6 @@
 			"obj-43::obj-6::obj-9" : [ "live.text[5]", "live.text[2]", 0 ],
 			"obj-43::obj-93::obj-25" : [ "live.button[4]", "live.button", 0 ],
 			"obj-53" : [ "vst~[1]", "vst~[1]", 0 ],
-			"obj-54" : [ "live.gain~[5]", "live.gain~[5]", 0 ],
 			"parameterbanks" : 			{
 				"0" : 				{
 					"index" : 0,
@@ -5356,10 +5276,6 @@
 				"implicit" : 1
 			}
 , 			{
-				"name" : "rtt.clock~.mxo",
-				"type" : "iLaX"
-			}
-, 			{
 				"name" : "rtt.dist.maxpat",
 				"bootpath" : "~/Documents/Max 8/Packages/rhythm-and-time-toolkit/patchers/modules/dist",
 				"patcherrelativepath" : "../../../../Documents/Max 8/Packages/rhythm-and-time-toolkit/patchers/modules/dist",
@@ -5386,18 +5302,6 @@
 				"patcherrelativepath" : "../../../../Documents/Max 8/Packages/rhythm-and-time-toolkit/patchers/modules/dist",
 				"type" : "JSON",
 				"implicit" : 1
-			}
-, 			{
-				"name" : "rtt.dist~.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "rtt.euclidean~.mxo",
-				"type" : "iLaX"
-			}
-, 			{
-				"name" : "rtt.loop~.mxo",
-				"type" : "iLaX"
 			}
 , 			{
 				"name" : "rtt.module.attrchecker.maxpat",
@@ -5436,15 +5340,13 @@
 			}
 , 			{
 				"name" : "sine.svg",
-				"bootpath" : "~/Documents/Max 8/Packages/rhythm-and-time-toolkit/media/icons",
-				"patcherrelativepath" : "../../../../Documents/Max 8/Packages/rhythm-and-time-toolkit/media/icons",
+				"bootpath" : "C74:/media/max/picts/m4l-picts",
 				"type" : "svg",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "square.svg",
-				"bootpath" : "~/Documents/Max 8/Packages/rhythm-and-time-toolkit/media/icons",
-				"patcherrelativepath" : "../../../../Documents/Max 8/Packages/rhythm-and-time-toolkit/media/icons",
+				"bootpath" : "C74:/media/max/picts/m4l-picts",
 				"type" : "svg",
 				"implicit" : 1
 			}
