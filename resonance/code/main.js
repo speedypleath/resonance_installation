@@ -3487,7 +3487,7 @@ var require_dist29 = __commonJS({
       Pcset: () => Pcset,
       Progression: () => Progression,
       Range: () => Range,
-      RhythmPattern: () => RhythmPattern,
+      RhythmPattern: () => RhythmPattern2,
       RomanNumeral: () => RomanNumeral,
       Scale: () => Scale2,
       ScaleDictionary: () => ScaleDictionary,
@@ -3513,7 +3513,7 @@ var require_dist29 = __commonJS({
     var Pcset = __toESM2(require_dist8());
     var Progression = __toESM2(require_dist20());
     var Range = __toESM2(require_dist21());
-    var RhythmPattern = __toESM2(require_dist22());
+    var RhythmPattern2 = __toESM2(require_dist22());
     var RomanNumeral = __toESM2(require_dist17());
     var Scale2 = __toESM2(require_dist23());
     var ScaleType = __toESM2(require_dist12());
@@ -3682,7 +3682,7 @@ var makeNextChord = () => {
 var nextChord = makeNextChord();
 import_max_api.default.addHandler("nextChord", () => {
   const { chord, midi } = nextChord();
-  import_max_api.default.outlet([chord, ...midi]);
+  import_max_api.default.outlet(["chord", chord, ...midi]);
 });
 import_max_api.default.addHandler("getMode", () => {
   return state.mode;
@@ -3693,4 +3693,10 @@ import_max_api.default.addHandler("setMode", (mode) => {
 });
 import_max_api.default.addHandler("setRoot", (root) => {
   state.set("root", root);
+});
+import_max_api.default.addHandler("generateEuclidean", (beats, steps) => {
+  return import_tonal.RhythmPattern.euclid(steps, beats);
+});
+import_max_api.default.addHandler("computeProbability", (...args) => {
+  import_max_api.default.outlet(["probs", ...import_tonal.RhythmPattern.probability(args)]);
 });

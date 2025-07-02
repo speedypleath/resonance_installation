@@ -1,5 +1,5 @@
 import MaxAPI from "max-api";
-import { Note, Midi, Scale, Chord } from "tonal";
+import { Note, Midi, Scale, Chord, RhythmPattern } from "tonal";
 
 interface State {
   mode: string;
@@ -9,11 +9,6 @@ interface State {
   dominance: number;
   set: (key: keyof Omit<State, "set">, value: any) => void;
 }
-
-type ModeConfig = {
-  tonic: string;
-  mode: string;
-};
 
 const state: State = {
   mode: "ionian",
@@ -194,7 +189,7 @@ const nextChord = makeNextChord();
 // Max message handler
 MaxAPI.addHandler("nextChord", () => {
   const { chord, midi } = nextChord();
-  MaxAPI.outlet([chord, ...midi]);
+  MaxAPI.outlet(["chord", chord, ...midi]);
 });
 
 MaxAPI.addHandler("getMode", () => {
@@ -209,3 +204,11 @@ MaxAPI.addHandler("setMode", (mode: string) => {
 MaxAPI.addHandler("setRoot", (root: number) => {
   state.set("root", root);
 });
+
+MaxAPI.addHandler("generateEuclidean", (beats: number, steps: number) => {
+  return RhythmPattern.euclid(steps, beats);
+});
+
+MaxAPI.addHandler("computeProbability", (...args) => {
+  MaxAPI.outlet(["probs", ...RhythmPattern.probability(args)])
+})
