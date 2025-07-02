@@ -26,18 +26,33 @@ const state: State = {
   },
 };
 
+const durationOptions = ["16n", "8n", "4n", "2n", "1n"];
+const durationToTicks: Record<string, number> = {
+  "16n": 120,
+  "8n": 240,
+  "4n": 480,
+  "2n": 960,
+  "1n": 1920,
+};
+const durationWeights = [0.03, 0.1, 0.4, 0.2, 0.07];
+
 // Characteristic note by relative index in scale
 const CHARACTERISTIC_NOTE_INDEX: Record<string, number> = {
-  ionian: 6,       // 7th degree
-  dorian: 5,       // ♮6
-  phrygian: 1,     // ♭2
-  lydian: 3,       // ♯4
-  mixolydian: 6,   // ♭7
-  aeolian: 5,      // ♭6
-  locrian: 1       // ♭2
+  ionian: 6, // 7th degree
+  dorian: 5, // ♮6
+  phrygian: 1, // ♭2
+  lydian: 3, // ♯4
+  mixolydian: 6, // ♭7
+  aeolian: 5, // ♭6
+  locrian: 1, // ♭2
 };
 
 const romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII"];
+
+let modes: { [key: string]: any } = {};
+
+const main = async () => { modes = await MaxAPI.getDict("modes"); console.log(modes) };
+main();
 
 const rotate = (arr: any[], n: number) => arr.slice(n).concat(arr.slice(0, n));
 
@@ -97,20 +112,19 @@ const generateChord = (
     `${Midi.midiToNoteName(rootMidi)} ${mode.toLowerCase()}`
   ).notes.map((note) => Midi.toMidi(note)!);
 
-  console.log(`Notes: ${scale}`)
-  
+  console.log(`Notes: ${scale}`);
+
   if (!scale) return [];
   const deg = (degree - 1) % 7;
-  return [
-    scale[deg],
-    scale[(deg + 2) % 7],
-    scale[(deg + 4) % 7],
-  ].sort((a, b) => a - b);
+  return [scale[deg], scale[(deg + 2) % 7], scale[(deg + 4) % 7]].sort(
+    (a, b) => a - b
+  );
 };
 
 const getRoman = (i: number, chord: string[]): string => {
   const detected = Chord.detect(chord)[0] || "";
-  const isMinor = detected.toLowerCase().includes("m") && !detected.includes("maj");
+  const isMinor =
+    detected.toLowerCase().includes("m") && !detected.includes("maj");
   const isDim = detected.includes("dim") || detected.includes("°");
   const numeral = romanNumerals[i % 7];
 
@@ -120,12 +134,17 @@ const getRoman = (i: number, chord: string[]): string => {
 
 const makeNextChord = () => {
   let currentChord: string = romanNumerals[0];
-  
+
   return (): { chord: string; midi: number[] } => {
-    const scale = Scale.get(`${Midi.midiToNoteName(state.root)} ${state.mode}`).notes;
-    console.log(`Scale: ${Midi.midiToNoteName(state.root)} ${state.mode},  ${scale}`)
+    const scale = Scale.get(
+      `${Midi.midiToNoteName(state.root)} ${state.mode}`
+    ).notes;
+    console.log(
+      `Scale: ${Midi.midiToNoteName(state.root)} ${state.mode},  ${scale}`
+    );
     const triads = buildTriads(scale);
-    const characteristicNote = scale[CHARACTERISTIC_NOTE_INDEX[state.mode] ?? 0];
+    const characteristicNote =
+      scale[CHARACTERISTIC_NOTE_INDEX[state.mode] ?? 0];
 
     const pool: { name: string; notes: string[] }[] = triads
       .map((chord, i) => {
@@ -186,6 +205,117 @@ const makeNextChord = () => {
 
 const nextChord = makeNextChord();
 
+// Melody generation
+const getTraits = ([val, ar, dom]: [number, number, number]) => ({
+  maxStepJump: 2 + Math.floor(ar * 4),
+  stepBias: 0.6 + dom * 0.4,
+  restChance: 0.1 + (1 - ar) * 0.3,
+  ornamentChance: 0.15 + (1 - val) * 0.3,
+  velocityBase: 50 + val * 40 + ar * 20,
+});
+
+const chooseWeighted = <T>(items: T[], weights: number[]): T => {
+  const sum = weights.reduce((a, b) => a + b, 0);
+  let r = Math.random() * sum;
+  for (let i = 0; i < items.length; i++) {
+    if (r < weights[i]) return items[i];
+    r -= weights[i];
+  }
+  return items[items.length - 1];
+};
+
+const parseTimeString = (time: string): number => {
+  const [bars = 0, beats = 0, sixteenths = 0] = time.split(".").map(Number);
+  return (bars * 4 + beats + sixteenths / 4) * 480;
+};
+
+export const generateMelody = (
+  length: string
+): Array<[number | "rest", number, string]> => {
+  const { maxStepJump, stepBias, restChance, ornamentChance, velocityBase } =
+    getTraits([state.valence, state.arousal, state.dominance]);
+
+  const result: Array<[number | "rest", number, string]> = [];
+
+  let currentDegree = 1;
+  let totalTicks = 0;
+  const maxTicks = parseTimeString(length);
+  const modeValues = modes[`${state.mode[0].toUpperCase()}${state.mode.slice(1).toLowerCase()}`]
+
+  while (totalTicks < maxTicks) {
+    const insertRest = result.length > 0 && Math.random() < restChance;
+    if (insertRest) {
+      const duration = chooseWeighted(durationOptions, [0.35, 0.5, 0.05, 0.0, 0.0]);
+      const ticks = durationToTicks[duration];
+      result.push(["rest", 0, duration]);
+      totalTicks += ticks;
+      continue;
+    }
+
+    let duration = chooseWeighted(durationOptions, durationWeights);
+    let ticks = durationToTicks[duration];
+    if (totalTicks + ticks > maxTicks) {
+      const remainingTicks = maxTicks - totalTicks;
+      const remainingDuration = durationOptions.find(
+        (d) => durationToTicks[d] <= remainingTicks
+      );
+      if (remainingDuration) {
+        duration = remainingDuration;
+        ticks = durationToTicks[remainingDuration];
+      }
+    }
+
+    const velocity = Math.max(
+      20,
+      Math.min(127, Math.round(velocityBase + (Math.random() - 0.5) * 20))
+    );
+
+    const insertOrnament =
+      result.length > 0 && Math.random() < ornamentChance && ticks >= 240;
+
+    if (insertOrnament) {
+      const shortDur = "16n";
+      const shortTicks = durationToTicks[shortDur];
+
+      const auxOffset = Math.random() < 0.5 ? -1 : 1;
+      const auxDegree = Math.max(1, Math.min(currentDegree + auxOffset, 7));
+
+      result.push([modeValues[auxDegree - 1], velocity - 10, shortDur]);
+      result.push([modeValues[currentDegree - 1], velocity, shortDur]);
+
+      totalTicks += shortTicks * 2;
+    } else {
+      result.push([modeValues[currentDegree - 1], velocity, duration]);
+      totalTicks += ticks;
+    }
+
+    // Step movement
+    const intervalOptions = [];
+    for (let offset = -maxStepJump; offset <= maxStepJump; offset++) {
+      if (offset === 0) continue;
+      const nextDeg = currentDegree + offset;
+      if (nextDeg < 1 || nextDeg > 7) continue;
+      const weight =
+        Math.exp(-Math.abs(offset)) *
+        (Math.abs(offset) === 1 ? stepBias : 1 - stepBias);
+      intervalOptions.push({ offset, weight });
+    }
+
+    const totalWeight = intervalOptions.reduce((s, o) => s + o.weight, 0);
+    let acc = 0;
+    const r = Math.random() * totalWeight;
+    for (const opt of intervalOptions) {
+      acc += opt.weight;
+      if (r <= acc) {
+        currentDegree = currentDegree + opt.offset;
+        break;
+      }
+    }
+  }
+
+  return result;
+};
+
 // Max message handler
 MaxAPI.addHandler("nextChord", () => {
   const { chord, midi } = nextChord();
@@ -210,5 +340,13 @@ MaxAPI.addHandler("generateEuclidean", (beats: number, steps: number) => {
 });
 
 MaxAPI.addHandler("computeProbability", (...args) => {
-  MaxAPI.outlet(["probs", ...RhythmPattern.probability(args)])
-})
+  MaxAPI.outlet(["probs", ...RhythmPattern.probability(args)]);
+});
+
+MaxAPI.addHandler("generateMelody", (length: string) => {
+  const sequence = generateMelody(length)
+  MaxAPI.outlet(["melody", {
+    array: sequence,
+    length: sequence.length
+  }]);
+});

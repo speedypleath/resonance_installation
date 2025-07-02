@@ -2,7 +2,7 @@
 	"name" : "resonance",
 	"version" : 1,
 	"creationdate" : 3833633244,
-	"modificationdate" : 3834137478,
+	"modificationdate" : 3834314967,
 	"viewrect" : [ 25.0, 106.0, 300.0, 500.0 ],
 	"autoorganize" : 1,
 	"hideprojectwindow" : 0,
@@ -52,12 +52,12 @@
 				"local" : 1
 			}
 ,
-			"chord_engine.js" : 			{
+			"main.js" : 			{
 				"kind" : "javascript",
 				"local" : 1
 			}
 ,
-			"main.js" : 			{
+			"chord_engine.js" : 			{
 				"kind" : "javascript",
 				"local" : 1
 			}
@@ -67,22 +67,12 @@
 		"data" : 		{
 			"modes.json" : 			{
 				"kind" : "json",
-				"local" : 1,
-				"singleton" : 				{
-					"bootpath" : "~/Projects/resonance_installation/max/Resonance/data",
-					"projectrelativepath" : "../max/Resonance/data"
-				}
-
+				"local" : 1
 			}
 ,
 			"chord_prog.json" : 			{
 				"kind" : "json",
-				"local" : 1,
-				"singleton" : 				{
-					"bootpath" : "~/Projects/resonance_installation/max/Resonance/data",
-					"projectrelativepath" : "../max/Resonance/data"
-				}
-
+				"local" : 1
 			}
 
 		}

@@ -8,6 +8,10 @@ var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
@@ -24,6 +28,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // node_modules/@tonaljs/pitch/dist/index.js
 var require_dist = __commonJS({
@@ -33,7 +38,7 @@ var require_dist = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -45,9 +50,9 @@ var require_dist = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var pitch_exports = {};
-    __export(pitch_exports, {
+    __export2(pitch_exports, {
       chroma: () => chroma,
       coordinates: () => coordinates,
       height: () => height,
@@ -56,7 +61,7 @@ var require_dist = __commonJS({
       midi: () => midi,
       pitch: () => pitch
     });
-    module2.exports = __toCommonJS(pitch_exports);
+    module2.exports = __toCommonJS2(pitch_exports);
     function isNamedPitch(src) {
       return src !== null && typeof src === "object" && "name" in src && typeof src.name === "string" ? true : false;
     }
@@ -109,7 +114,7 @@ var require_dist2 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -121,14 +126,14 @@ var require_dist2 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var pitch_interval_exports = {};
-    __export(pitch_interval_exports, {
+    __export2(pitch_interval_exports, {
       coordToInterval: () => coordToInterval,
       interval: () => interval,
       tokenizeInterval: () => tokenizeInterval
     });
-    module2.exports = __toCommonJS(pitch_interval_exports);
+    module2.exports = __toCommonJS2(pitch_interval_exports);
     var import_pitch = require_dist();
     var fillStr = (s, n) => Array(Math.abs(n) + 1).join(s);
     var NoInterval = Object.freeze({
@@ -244,7 +249,7 @@ var require_dist3 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -256,9 +261,9 @@ var require_dist3 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod2) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod2);
+    var __toCommonJS2 = (mod2) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod2);
     var pitch_note_exports = {};
-    __export(pitch_note_exports, {
+    __export2(pitch_note_exports, {
       accToAlt: () => accToAlt,
       altToAcc: () => altToAcc,
       coordToNote: () => coordToNote,
@@ -266,7 +271,7 @@ var require_dist3 = __commonJS({
       stepToLetter: () => stepToLetter,
       tokenizeNote: () => tokenizeNote
     });
-    module2.exports = __toCommonJS(pitch_note_exports);
+    module2.exports = __toCommonJS2(pitch_note_exports);
     var import_pitch = require_dist();
     var fillStr = (s, n) => Array(Math.abs(n) + 1).join(s);
     var NoNote = Object.freeze({
@@ -361,7 +366,7 @@ var require_dist4 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -373,14 +378,14 @@ var require_dist4 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var pitch_distance_exports = {};
-    __export(pitch_distance_exports, {
+    __export2(pitch_distance_exports, {
       distance: () => distance,
       tonicIntervalsTransposer: () => tonicIntervalsTransposer,
       transpose: () => transpose
     });
-    module2.exports = __toCommonJS(pitch_distance_exports);
+    module2.exports = __toCommonJS2(pitch_distance_exports);
     var import_pitch_interval = require_dist2();
     var import_pitch_note = require_dist3();
     function transpose(noteName, intervalName) {
@@ -427,7 +432,7 @@ var require_dist5 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -439,9 +444,9 @@ var require_dist5 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var abc_notation_exports = {};
-    __export(abc_notation_exports, {
+    __export2(abc_notation_exports, {
       abcToScientificNotation: () => abcToScientificNotation,
       default: () => abc_notation_default,
       distance: () => distance,
@@ -449,7 +454,7 @@ var require_dist5 = __commonJS({
       tokenize: () => tokenize,
       transpose: () => transpose
     });
-    module2.exports = __toCommonJS(abc_notation_exports);
+    module2.exports = __toCommonJS2(abc_notation_exports);
     var import_pitch_distance = require_dist4();
     var import_pitch_note = require_dist3();
     var fillStr = (character, times) => Array(times + 1).join(character);
@@ -508,7 +513,7 @@ var require_dist6 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -520,9 +525,9 @@ var require_dist6 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var array_exports = {};
-    __export(array_exports, {
+    __export2(array_exports, {
       compact: () => compact,
       permutations: () => permutations,
       range: () => range,
@@ -531,7 +536,7 @@ var require_dist6 = __commonJS({
       sortedNoteNames: () => sortedNoteNames,
       sortedUniqNoteNames: () => sortedUniqNoteNames
     });
-    module2.exports = __toCommonJS(array_exports);
+    module2.exports = __toCommonJS2(array_exports);
     var import_pitch_note = require_dist3();
     function ascR(b, n) {
       const a = [];
@@ -598,7 +603,7 @@ var require_dist7 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -610,9 +615,9 @@ var require_dist7 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var collection_exports = {};
-    __export(collection_exports, {
+    __export2(collection_exports, {
       compact: () => compact,
       default: () => collection_default,
       permutations: () => permutations,
@@ -620,7 +625,7 @@ var require_dist7 = __commonJS({
       rotate: () => rotate2,
       shuffle: () => shuffle
     });
-    module2.exports = __toCommonJS(collection_exports);
+    module2.exports = __toCommonJS2(collection_exports);
     function ascR(b, n) {
       const a = [];
       for (; n--; a[n] = n + b) ;
@@ -686,7 +691,7 @@ var require_dist8 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -698,9 +703,9 @@ var require_dist8 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var pcset_exports = {};
-    __export(pcset_exports, {
+    __export2(pcset_exports, {
       EmptyPcset: () => EmptyPcset,
       chroma: () => chroma,
       chromas: () => chromas,
@@ -714,12 +719,12 @@ var require_dist8 = __commonJS({
       isNoteIncludedIn: () => isNoteIncludedIn,
       isSubsetOf: () => isSubsetOf,
       isSupersetOf: () => isSupersetOf,
-      modes: () => modes,
+      modes: () => modes2,
       notes: () => notes,
       num: () => num,
       pcset: () => pcset
     });
-    module2.exports = __toCommonJS(pcset_exports);
+    module2.exports = __toCommonJS2(pcset_exports);
     var import_collection = require_dist7();
     var import_pitch_distance = require_dist4();
     var import_pitch_interval = require_dist2();
@@ -776,7 +781,7 @@ var require_dist8 = __commonJS({
     function chromas() {
       return (0, import_collection.range)(2048, 4095).map(setNumToChroma);
     }
-    function modes(set, normalize = true) {
+    function modes2(set, normalize = true) {
       const pcs = get(set);
       const binary = pcs.chroma.split("");
       return (0, import_collection.compact)(
@@ -828,7 +833,7 @@ var require_dist8 = __commonJS({
       isNoteIncludedIn,
       isEqual,
       filter,
-      modes,
+      modes: modes2,
       notes,
       // deprecated
       pcset
@@ -875,7 +880,7 @@ var require_dist9 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all2) => {
+    var __export2 = (target, all2) => {
       for (var name in all2)
         __defProp2(target, name, { get: all2[name], enumerable: true });
     };
@@ -887,9 +892,9 @@ var require_dist9 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var chord_type_exports = {};
-    __export(chord_type_exports, {
+    __export2(chord_type_exports, {
       add: () => add,
       addAlias: () => addAlias,
       all: () => all,
@@ -902,7 +907,7 @@ var require_dist9 = __commonJS({
       removeAll: () => removeAll,
       symbols: () => symbols
     });
-    module2.exports = __toCommonJS(chord_type_exports);
+    module2.exports = __toCommonJS2(chord_type_exports);
     var import_pcset = require_dist8();
     var CHORDS = [
       // ==Major==
@@ -1120,7 +1125,7 @@ var require_dist10 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all2) => {
+    var __export2 = (target, all2) => {
       for (var name in all2)
         __defProp2(target, name, { get: all2[name], enumerable: true });
     };
@@ -1132,13 +1137,13 @@ var require_dist10 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var chord_detect_exports = {};
-    __export(chord_detect_exports, {
+    __export2(chord_detect_exports, {
       default: () => chord_detect_default,
       detect: () => detect2
     });
-    module2.exports = __toCommonJS(chord_detect_exports);
+    module2.exports = __toCommonJS2(chord_detect_exports);
     var import_chord_type = require_dist9();
     var import_pcset = require_dist8();
     var import_pitch_note = require_dist3();
@@ -1226,7 +1231,7 @@ var require_dist11 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name2 in all)
         __defProp2(target, name2, { get: all[name2], enumerable: true });
     };
@@ -1238,9 +1243,9 @@ var require_dist11 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var interval_exports = {};
-    __export(interval_exports, {
+    __export2(interval_exports, {
       add: () => add,
       addTo: () => addTo,
       default: () => interval_default,
@@ -1257,7 +1262,7 @@ var require_dist11 = __commonJS({
       subtract: () => subtract,
       transposeFifths: () => transposeFifths
     });
-    module2.exports = __toCommonJS(interval_exports);
+    module2.exports = __toCommonJS2(interval_exports);
     var import_pitch_distance = require_dist4();
     var import_pitch_interval = require_dist2();
     function names() {
@@ -1337,7 +1342,7 @@ var require_dist12 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all2) => {
+    var __export2 = (target, all2) => {
       for (var name in all2)
         __defProp2(target, name, { get: all2[name], enumerable: true });
     };
@@ -1349,9 +1354,9 @@ var require_dist12 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var scale_type_exports = {};
-    __export(scale_type_exports, {
+    __export2(scale_type_exports, {
       NoScaleType: () => NoScaleType,
       add: () => add,
       addAlias: () => addAlias,
@@ -1364,7 +1369,7 @@ var require_dist12 = __commonJS({
       removeAll: () => removeAll,
       scaleType: () => scaleType
     });
-    module2.exports = __toCommonJS(scale_type_exports);
+    module2.exports = __toCommonJS2(scale_type_exports);
     var import_pcset = require_dist8();
     var SCALES = [
       // Basic scales
@@ -1572,7 +1577,7 @@ var require_dist13 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -1584,9 +1589,9 @@ var require_dist13 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var chord_exports = {};
-    __export(chord_exports, {
+    __export2(chord_exports, {
       chord: () => chord,
       chordScales: () => chordScales,
       default: () => chord_default,
@@ -1601,7 +1606,7 @@ var require_dist13 = __commonJS({
       tokenize: () => tokenize,
       transpose: () => transpose
     });
-    module2.exports = __toCommonJS(chord_exports);
+    module2.exports = __toCommonJS2(chord_exports);
     var import_chord_detect = require_dist10();
     var import_chord_type = require_dist9();
     var import_interval = require_dist11();
@@ -1770,7 +1775,7 @@ var require_dist14 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -1782,9 +1787,9 @@ var require_dist14 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var duration_value_exports = {};
-    __export(duration_value_exports, {
+    __export2(duration_value_exports, {
       default: () => duration_value_default,
       fraction: () => fraction,
       get: () => get,
@@ -1792,7 +1797,7 @@ var require_dist14 = __commonJS({
       shorthands: () => shorthands,
       value: () => value
     });
-    module2.exports = __toCommonJS(duration_value_exports);
+    module2.exports = __toCommonJS2(duration_value_exports);
     var DATA = [
       [
         0.125,
@@ -1886,7 +1891,7 @@ var require_dist15 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -1898,9 +1903,9 @@ var require_dist15 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var index_exports = {};
-    __export(index_exports, {
+    __export2(index_exports, {
       chroma: () => chroma,
       default: () => index_default,
       freqToMidi: () => freqToMidi,
@@ -1913,7 +1918,7 @@ var require_dist15 = __commonJS({
       pcsetSteps: () => pcsetSteps,
       toMidi: () => toMidi
     });
-    module2.exports = __toCommonJS(index_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var import_pitch_note = require_dist3();
     function isMidi(arg) {
       return +arg >= 0 && +arg <= 127;
@@ -2012,7 +2017,7 @@ var require_dist16 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name2 in all)
         __defProp2(target, name2, { get: all[name2], enumerable: true });
     };
@@ -2024,9 +2029,9 @@ var require_dist16 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var index_exports = {};
-    __export(index_exports, {
+    __export2(index_exports, {
       accidentals: () => accidentals,
       ascending: () => ascending,
       chroma: () => chroma,
@@ -2058,7 +2063,7 @@ var require_dist16 = __commonJS({
       transposeFrom: () => transposeFrom,
       transposeOctaves: () => transposeOctaves
     });
-    module2.exports = __toCommonJS(index_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var import_midi = require_dist15();
     var import_pitch_distance = require_dist4();
     var import_pitch_note = require_dist3();
@@ -2194,7 +2199,7 @@ var require_dist17 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -2206,16 +2211,16 @@ var require_dist17 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var roman_numeral_exports = {};
-    __export(roman_numeral_exports, {
+    __export2(roman_numeral_exports, {
       default: () => roman_numeral_default,
       get: () => get,
       names: () => names,
       romanNumeral: () => romanNumeral,
       tokenize: () => tokenize
     });
-    module2.exports = __toCommonJS(roman_numeral_exports);
+    module2.exports = __toCommonJS2(roman_numeral_exports);
     var import_pitch = require_dist();
     var import_pitch_interval = require_dist2();
     var import_pitch_note = require_dist3();
@@ -2278,7 +2283,7 @@ var require_dist18 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -2290,9 +2295,9 @@ var require_dist18 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var index_exports = {};
-    __export(index_exports, {
+    __export2(index_exports, {
       default: () => index_default,
       majorKey: () => majorKey,
       majorKeyChords: () => majorKeyChords,
@@ -2300,7 +2305,7 @@ var require_dist18 = __commonJS({
       minorKey: () => minorKey,
       minorKeyChords: () => minorKeyChords
     });
-    module2.exports = __toCommonJS(index_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var import_note = require_dist16();
     var import_pitch_note = require_dist3();
     var import_roman_numeral = require_dist17();
@@ -2530,7 +2535,7 @@ var require_dist19 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all2) => {
+    var __export2 = (target, all2) => {
       for (var name in all2)
         __defProp2(target, name, { get: all2[name], enumerable: true });
     };
@@ -2542,9 +2547,9 @@ var require_dist19 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var mode_exports = {};
-    __export(mode_exports, {
+    __export2(mode_exports, {
       all: () => all,
       default: () => mode_default,
       distance: () => distance,
@@ -2557,7 +2562,7 @@ var require_dist19 = __commonJS({
       seventhChords: () => seventhChords,
       triads: () => triads
     });
-    module2.exports = __toCommonJS(mode_exports);
+    module2.exports = __toCommonJS2(mode_exports);
     var import_collection = require_dist7();
     var import_interval = require_dist11();
     var import_pcset = require_dist8();
@@ -2581,9 +2586,9 @@ var require_dist19 = __commonJS({
       seventh: "",
       aliases: []
     };
-    var modes = MODES.map(toMode);
+    var modes2 = MODES.map(toMode);
     var index = {};
-    modes.forEach((mode2) => {
+    modes2.forEach((mode2) => {
       index[mode2.name] = mode2;
       mode2.aliases.forEach((alias) => {
         index[alias] = mode2;
@@ -2594,11 +2599,11 @@ var require_dist19 = __commonJS({
     }
     var mode = get;
     function all() {
-      return modes.slice();
+      return modes2.slice();
     }
     var entries = all;
     function names() {
-      return modes.map((mode2) => mode2.name);
+      return modes2.map((mode2) => mode2.name);
     }
     function toMode(mode2) {
       const [modeNum, setNum, alt, name, triad, seventh, alias] = mode2;
@@ -2666,7 +2671,7 @@ var require_dist20 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -2678,14 +2683,14 @@ var require_dist20 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var progression_exports = {};
-    __export(progression_exports, {
+    __export2(progression_exports, {
       default: () => progression_default,
       fromRomanNumerals: () => fromRomanNumerals,
       toRomanNumerals: () => toRomanNumerals
     });
-    module2.exports = __toCommonJS(progression_exports);
+    module2.exports = __toCommonJS2(progression_exports);
     var import_chord = require_dist13();
     var import_pitch_distance = require_dist4();
     var import_pitch_interval = require_dist2();
@@ -2716,7 +2721,7 @@ var require_dist21 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -2728,14 +2733,14 @@ var require_dist21 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var index_exports = {};
-    __export(index_exports, {
+    __export2(index_exports, {
       chromatic: () => chromatic,
       default: () => index_default,
       numeric: () => numeric
     });
-    module2.exports = __toCommonJS(index_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var import_collection = require_dist7();
     var import_midi = require_dist15();
     function numeric(notes) {
@@ -2768,7 +2773,7 @@ var require_dist22 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -2780,9 +2785,9 @@ var require_dist22 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var rhythm_patterm_exports = {};
-    __export(rhythm_patterm_exports, {
+    __export2(rhythm_patterm_exports, {
       binary: () => binary,
       euclid: () => euclid,
       hex: () => hex,
@@ -2791,7 +2796,7 @@ var require_dist22 = __commonJS({
       random: () => random,
       rotate: () => rotate2
     });
-    module2.exports = __toCommonJS(rhythm_patterm_exports);
+    module2.exports = __toCommonJS2(rhythm_patterm_exports);
     function binary(...numbers) {
       return numbers.reduce((pattern, number) => {
         number.toString(2).split("").forEach((digit) => {
@@ -2860,7 +2865,7 @@ var require_dist23 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all2) => {
+    var __export2 = (target, all2) => {
       for (var name in all2)
         __defProp2(target, name, { get: all2[name], enumerable: true });
     };
@@ -2872,9 +2877,9 @@ var require_dist23 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var index_exports = {};
-    __export(index_exports, {
+    __export2(index_exports, {
       default: () => index_default,
       degrees: () => degrees,
       detect: () => detect2,
@@ -2890,7 +2895,7 @@ var require_dist23 = __commonJS({
       steps: () => steps,
       tokenize: () => tokenize
     });
-    module2.exports = __toCommonJS(index_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var import_chord_type = require_dist9();
     var import_collection = require_dist7();
     var import_note = require_dist16();
@@ -3049,7 +3054,7 @@ var require_dist24 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -3061,15 +3066,15 @@ var require_dist24 = __commonJS({
       }
       return to;
     };
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var time_signature_exports = {};
-    __export(time_signature_exports, {
+    __export2(time_signature_exports, {
       default: () => time_signature_default,
       get: () => get,
       names: () => names,
       parse: () => parse
     });
-    module2.exports = __toCommonJS(time_signature_exports);
+    module2.exports = __toCommonJS2(time_signature_exports);
     var NONE = {
       empty: true,
       name: "",
@@ -3140,7 +3145,7 @@ var require_dist25 = __commonJS({
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __getProtoOf2 = Object.getPrototypeOf;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -3160,13 +3165,13 @@ var require_dist25 = __commonJS({
       isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
       mod
     ));
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var index_exports = {};
-    __export(index_exports, {
+    __export2(index_exports, {
       default: () => index_default,
       topNoteDiff: () => topNoteDiff
     });
-    module2.exports = __toCommonJS(index_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var import_note = __toESM2(require_dist16());
     var topNoteDiff = (voicings, lastVoicing) => {
       if (!lastVoicing || !lastVoicing.length) {
@@ -3192,7 +3197,7 @@ var require_dist26 = __commonJS({
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __getProtoOf2 = Object.getPrototypeOf;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all2) => {
+    var __export2 = (target, all2) => {
       for (var name in all2)
         __defProp2(target, name, { get: all2[name], enumerable: true });
     };
@@ -3212,9 +3217,9 @@ var require_dist26 = __commonJS({
       isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
       mod
     ));
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var index_exports = {};
-    __export(index_exports, {
+    __export2(index_exports, {
       all: () => all,
       default: () => index_default,
       defaultDictionary: () => defaultDictionary,
@@ -3222,7 +3227,7 @@ var require_dist26 = __commonJS({
       lookup: () => lookup,
       triads: () => triads
     });
-    module2.exports = __toCommonJS(index_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var import_chord = __toESM2(require_dist13());
     var triads = {
       M: ["1P 3M 5P", "3M 5P 8P", "5P 8P 10M"],
@@ -3298,7 +3303,7 @@ var require_dist27 = __commonJS({
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __getProtoOf2 = Object.getPrototypeOf;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -3318,15 +3323,15 @@ var require_dist27 = __commonJS({
       isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
       mod
     ));
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var index_exports = {};
-    __export(index_exports, {
+    __export2(index_exports, {
       default: () => index_default,
       get: () => get,
       search: () => search,
       sequence: () => sequence
     });
-    module2.exports = __toCommonJS(index_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var import_chord = __toESM2(require_dist13());
     var import_interval = __toESM2(require_dist11());
     var import_note = __toESM2(require_dist16());
@@ -3399,7 +3404,7 @@ var require_dist28 = __commonJS({
     var __getOwnPropDesc2 = Object.getOwnPropertyDescriptor;
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -3412,14 +3417,14 @@ var require_dist28 = __commonJS({
       return to;
     };
     var __reExport = (target, mod, secondTarget) => (__copyProps2(target, mod, "default"), secondTarget && __copyProps2(secondTarget, mod, "default"));
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var core_exports = {};
-    __export(core_exports, {
+    __export2(core_exports, {
       deprecate: () => deprecate,
       fillStr: () => fillStr,
       isNamed: () => isNamed
     });
-    module2.exports = __toCommonJS(core_exports);
+    module2.exports = __toCommonJS2(core_exports);
     var import_pitch = require_dist();
     __reExport(core_exports, require_dist(), module2.exports);
     __reExport(core_exports, require_dist4(), module2.exports);
@@ -3446,7 +3451,7 @@ var require_dist29 = __commonJS({
     var __getOwnPropNames2 = Object.getOwnPropertyNames;
     var __getProtoOf2 = Object.getPrototypeOf;
     var __hasOwnProp2 = Object.prototype.hasOwnProperty;
-    var __export = (target, all) => {
+    var __export2 = (target, all) => {
       for (var name in all)
         __defProp2(target, name, { get: all[name], enumerable: true });
     };
@@ -3467,9 +3472,9 @@ var require_dist29 = __commonJS({
       isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", { value: mod, enumerable: true }) : target,
       mod
     ));
-    var __toCommonJS = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
+    var __toCommonJS2 = (mod) => __copyProps2(__defProp2({}, "__esModule", { value: true }), mod);
     var index_exports = {};
-    __export(index_exports, {
+    __export2(index_exports, {
       AbcNotation: () => AbcNotation,
       Array: () => Array2,
       Chord: () => Chord2,
@@ -3498,7 +3503,7 @@ var require_dist29 = __commonJS({
       Voicing: () => Voicing,
       VoicingDictionary: () => VoicingDictionary
     });
-    module2.exports = __toCommonJS(index_exports);
+    module2.exports = __toCommonJS2(index_exports);
     var AbcNotation = __toESM2(require_dist5());
     var Array2 = __toESM2(require_dist6());
     var Chord2 = __toESM2(require_dist13());
@@ -3531,6 +3536,11 @@ var require_dist29 = __commonJS({
 });
 
 // src/main.ts
+var main_exports = {};
+__export(main_exports, {
+  generateMelody: () => generateMelody
+});
+module.exports = __toCommonJS(main_exports);
 var import_max_api = __toESM(require("max-api"));
 var import_tonal = __toESM(require_dist29());
 var state = {
@@ -3548,6 +3558,15 @@ var state = {
     }
   }
 };
+var durationOptions = ["16n", "8n", "4n", "2n", "1n"];
+var durationToTicks = {
+  "16n": 120,
+  "8n": 240,
+  "4n": 480,
+  "2n": 960,
+  "1n": 1920
+};
+var durationWeights = [0.03, 0.1, 0.4, 0.2, 0.07];
 var CHARACTERISTIC_NOTE_INDEX = {
   ionian: 6,
   // 7th degree
@@ -3565,6 +3584,12 @@ var CHARACTERISTIC_NOTE_INDEX = {
   // ♭2
 };
 var romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII"];
+var modes = {};
+var main = async () => {
+  modes = await import_max_api.default.getDict("modes");
+  console.log(modes);
+};
+main();
 var rotate = (arr, n) => arr.slice(n).concat(arr.slice(0, n));
 var semitoneDistance = (a, b) => Math.abs(import_tonal.Note.midi(a) - import_tonal.Note.midi(b));
 var hasDiatonicTritone = (chord) => {
@@ -3614,11 +3639,9 @@ var generateChord = (rootMidi, degree, mode) => {
   console.log(`Notes: ${scale}`);
   if (!scale) return [];
   const deg = (degree - 1) % 7;
-  return [
-    scale[deg],
-    scale[(deg + 2) % 7],
-    scale[(deg + 4) % 7]
-  ].sort((a, b) => a - b);
+  return [scale[deg], scale[(deg + 2) % 7], scale[(deg + 4) % 7]].sort(
+    (a, b) => a - b
+  );
 };
 var getRoman = (i, chord) => {
   const detected = import_tonal.Chord.detect(chord)[0] || "";
@@ -3631,8 +3654,12 @@ var getRoman = (i, chord) => {
 var makeNextChord = () => {
   let currentChord = romanNumerals[0];
   return () => {
-    const scale = import_tonal.Scale.get(`${import_tonal.Midi.midiToNoteName(state.root)} ${state.mode}`).notes;
-    console.log(`Scale: ${import_tonal.Midi.midiToNoteName(state.root)} ${state.mode},  ${scale}`);
+    const scale = import_tonal.Scale.get(
+      `${import_tonal.Midi.midiToNoteName(state.root)} ${state.mode}`
+    ).notes;
+    console.log(
+      `Scale: ${import_tonal.Midi.midiToNoteName(state.root)} ${state.mode},  ${scale}`
+    );
     const triads = buildTriads(scale);
     const characteristicNote = scale[CHARACTERISTIC_NOTE_INDEX[state.mode] ?? 0];
     const pool = triads.map((chord, i) => {
@@ -3680,6 +3707,92 @@ var makeNextChord = () => {
   };
 };
 var nextChord = makeNextChord();
+var getTraits = ([val, ar, dom]) => ({
+  maxStepJump: 2 + Math.floor(ar * 4),
+  stepBias: 0.6 + dom * 0.4,
+  restChance: 0.1 + (1 - ar) * 0.3,
+  ornamentChance: 0.15 + (1 - val) * 0.3,
+  velocityBase: 50 + val * 40 + ar * 20
+});
+var chooseWeighted = (items, weights) => {
+  const sum = weights.reduce((a, b) => a + b, 0);
+  let r = Math.random() * sum;
+  for (let i = 0; i < items.length; i++) {
+    if (r < weights[i]) return items[i];
+    r -= weights[i];
+  }
+  return items[items.length - 1];
+};
+var parseTimeString = (time) => {
+  const [bars = 0, beats = 0, sixteenths = 0] = time.split(".").map(Number);
+  return (bars * 4 + beats + sixteenths / 4) * 480;
+};
+var generateMelody = (length) => {
+  const { maxStepJump, stepBias, restChance, ornamentChance, velocityBase } = getTraits([state.valence, state.arousal, state.dominance]);
+  const result = [];
+  let currentDegree = 1;
+  let totalTicks = 0;
+  const maxTicks = parseTimeString(length);
+  const modeValues = modes[`${state.mode[0].toUpperCase()}${state.mode.slice(1).toLowerCase()}`];
+  while (totalTicks < maxTicks) {
+    const insertRest = result.length > 0 && Math.random() < restChance;
+    if (insertRest) {
+      const duration2 = chooseWeighted(durationOptions, [0.35, 0.5, 0.05, 0, 0]);
+      const ticks2 = durationToTicks[duration2];
+      result.push(["rest", 0, duration2]);
+      totalTicks += ticks2;
+      continue;
+    }
+    let duration = chooseWeighted(durationOptions, durationWeights);
+    let ticks = durationToTicks[duration];
+    if (totalTicks + ticks > maxTicks) {
+      const remainingTicks = maxTicks - totalTicks;
+      const remainingDuration = durationOptions.find(
+        (d) => durationToTicks[d] <= remainingTicks
+      );
+      if (remainingDuration) {
+        duration = remainingDuration;
+        ticks = durationToTicks[remainingDuration];
+      }
+    }
+    const velocity = Math.max(
+      20,
+      Math.min(127, Math.round(velocityBase + (Math.random() - 0.5) * 20))
+    );
+    const insertOrnament = result.length > 0 && Math.random() < ornamentChance && ticks >= 240;
+    if (insertOrnament) {
+      const shortDur = "16n";
+      const shortTicks = durationToTicks[shortDur];
+      const auxOffset = Math.random() < 0.5 ? -1 : 1;
+      const auxDegree = Math.max(1, Math.min(currentDegree + auxOffset, 7));
+      result.push([modeValues[auxDegree - 1], velocity - 10, shortDur]);
+      result.push([modeValues[currentDegree - 1], velocity, shortDur]);
+      totalTicks += shortTicks * 2;
+    } else {
+      result.push([modeValues[currentDegree - 1], velocity, duration]);
+      totalTicks += ticks;
+    }
+    const intervalOptions = [];
+    for (let offset = -maxStepJump; offset <= maxStepJump; offset++) {
+      if (offset === 0) continue;
+      const nextDeg = currentDegree + offset;
+      if (nextDeg < 1 || nextDeg > 7) continue;
+      const weight = Math.exp(-Math.abs(offset)) * (Math.abs(offset) === 1 ? stepBias : 1 - stepBias);
+      intervalOptions.push({ offset, weight });
+    }
+    const totalWeight = intervalOptions.reduce((s, o) => s + o.weight, 0);
+    let acc = 0;
+    const r = Math.random() * totalWeight;
+    for (const opt of intervalOptions) {
+      acc += opt.weight;
+      if (r <= acc) {
+        currentDegree = currentDegree + opt.offset;
+        break;
+      }
+    }
+  }
+  return result;
+};
 import_max_api.default.addHandler("nextChord", () => {
   const { chord, midi } = nextChord();
   import_max_api.default.outlet(["chord", chord, ...midi]);
@@ -3699,4 +3812,15 @@ import_max_api.default.addHandler("generateEuclidean", (beats, steps) => {
 });
 import_max_api.default.addHandler("computeProbability", (...args) => {
   import_max_api.default.outlet(["probs", ...import_tonal.RhythmPattern.probability(args)]);
+});
+import_max_api.default.addHandler("generateMelody", (length) => {
+  const sequence = generateMelody(length);
+  import_max_api.default.outlet(["melody", {
+    array: sequence,
+    length: sequence.length
+  }]);
+});
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  generateMelody
 });
