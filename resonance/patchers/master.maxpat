@@ -40,6 +40,117 @@
 		"assistshowspatchername" : 0,
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-11",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 779.0, 181.0, 77.0, 22.0 ],
+					"text" : "s modeIndex"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-7",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 683.0, 142.0, 64.0, 22.0 ],
+					"text" : "s rootNote"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-19",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 819.5, 142.0, 48.0, 22.0 ],
+					"text" : "s mode"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"bgfillcolor_angle" : 270.0,
+					"bgfillcolor_autogradient" : 0.0,
+					"bgfillcolor_color" : [ 0.117647058823529, 0.117647058823529, 0.117647058823529, 1.0 ],
+					"bgfillcolor_color1" : [ 0.117647058823529, 0.117647058823529, 0.117647058823529, 1.0 ],
+					"bgfillcolor_color2" : [ 0.2, 0.2, 0.2, 1.0 ],
+					"bgfillcolor_proportion" : 0.5,
+					"bgfillcolor_type" : "gradient",
+					"fontname" : "Ableton Sans Bold",
+					"id" : "obj-10",
+					"items" : [ "Ionian", ",", "Dorian", ",", "Phrygian", ",", "Lydian", ",", "Mixolydian", ",", "Aeolian", ",", "Locrian" ],
+					"maxclass" : "umenu",
+					"numinlets" : 1,
+					"numoutlets" : 3,
+					"outlettype" : [ "int", "", "" ],
+					"parameter_enable" : 1,
+					"patching_rect" : [ 779.0, 77.0, 100.0, 23.0 ],
+					"saved_attribute_attributes" : 					{
+						"valueof" : 						{
+							"parameter_enum" : [ "Ionian", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Aeolian", "Locrian" ],
+							"parameter_initial" : [ 0.0 ],
+							"parameter_initial_enable" : 1,
+							"parameter_longname" : "umenu[6]",
+							"parameter_mmax" : 6,
+							"parameter_modmode" : 0,
+							"parameter_shortname" : "umenu[5]",
+							"parameter_type" : 2
+						}
+
+					}
+,
+					"varname" : "mode"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"annotation" : "",
+					"id" : "obj-33",
+					"maxclass" : "live.dial",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "float" ],
+					"parameter_enable" : 1,
+					"patching_rect" : [ 683.0, 77.0, 44.0, 48.0 ],
+					"prototypename" : "pitch",
+					"saved_attribute_attributes" : 					{
+						"valueof" : 						{
+							"parameter_initial" : [ 60 ],
+							"parameter_initial_enable" : 1,
+							"parameter_linknames" : 1,
+							"parameter_longname" : "pitch",
+							"parameter_mmax" : 120.0,
+							"parameter_modmode" : 0,
+							"parameter_shortname" : "Pitch",
+							"parameter_type" : 0,
+							"parameter_unitstyle" : 8
+						}
+
+					}
+,
+					"varname" : "pitch"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-5",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "bang" ],
+					"patching_rect" : [ 683.0, 29.5, 58.0, 22.0 ],
+					"text" : "loadbang"
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-23",
 					"lastchannelcount" : 0,
 					"maxclass" : "live.gain~",
@@ -261,6 +372,20 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-11", 0 ],
+					"source" : [ "obj-10", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-19", 0 ],
+					"source" : [ "obj-10", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-20", 1 ],
 					"source" : [ "obj-13", 1 ]
 				}
@@ -373,6 +498,20 @@
 			}
 , 			{
 				"patchline" : 				{
+					"destination" : [ "obj-7", 0 ],
+					"source" : [ "obj-33", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-33", 0 ],
+					"source" : [ "obj-5", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
 					"destination" : [ "obj-6", 0 ],
 					"source" : [ "obj-8", 0 ]
 				}
@@ -380,9 +519,11 @@
 			}
  ],
 		"parameters" : 		{
+			"obj-10" : [ "umenu[6]", "umenu[5]", 0 ],
 			"obj-20" : [ "live.gain~", "Harmony", 0 ],
 			"obj-21" : [ "live.gain~[1]", "Melody", 0 ],
 			"obj-23" : [ "drums", "Drums", 0 ],
+			"obj-33" : [ "pitch", "Pitch", 0 ],
 			"parameterbanks" : 			{
 				"0" : 				{
 					"index" : 0,

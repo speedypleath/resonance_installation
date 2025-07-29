@@ -273,6 +273,9 @@ export const generateMelody = (
     const insertOrnament =
       result.length > 0 && Math.random() < ornamentChance && ticks >= 240;
 
+    const jumpOneScale = Math.random() > 0.2 * state.valence ? 12 : 0;
+    const realValue = modeValues[currentDegree - 1] + jumpOneScale;
+
     if (insertOrnament) {
       const shortDur = "16n";
       const shortTicks = durationToTicks[shortDur];
@@ -285,7 +288,7 @@ export const generateMelody = (
 
       totalTicks += shortTicks * 2;
     } else {
-      result.push([modeValues[currentDegree - 1], velocity, duration]);
+      result.push([realValue, velocity, duration]);
       totalTicks += ticks;
     }
 
