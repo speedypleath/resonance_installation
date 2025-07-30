@@ -1,6 +1,6 @@
 # Resonance interactive installation
 
-**Resonance** is an interactive audiovisual installation driven by real-time emotion detection and biometric feedback. It generates immersive soundscapes and visuals in response to participants' emotional states using a custom software pipeline.
+**Resonance** is an interactive audiovisual installation driven by real-time emotion detection and biometric feedback. It generates an audio-visual output in response to participants' emotional states.
 
 ## Dependencies
 
@@ -11,8 +11,6 @@
 - Python >= 3.9
 
 ## Visuals (TouchDesigner)
-
-The visual component is created in TouchDesigner and integrated into the feedback loop via a real-time streaming pipeline.
 
 ### Streaming Pipeline for MPEG artifacts
 
@@ -44,9 +42,15 @@ The built-in Chroma Key tool in TouchDesigner is made for Intel and doesn’t wo
    - Use the custom `background.tox` component included with this project to process the camera feed.
    - This component takes the green-screened input and applies chroma keying internally.
 
-## Audio / Max
+## Audio (Max)
+
+The audio engine is built in Max and structured around three core components: **harmony**, **melody**, and **percussive** elements. The project also contains a node server that exposes an API to Max for different methods.
+
+### Harmony
+
+The harmony system uses **modal harmony**, with chords generated based on a root note and mode (e.g., Dorian, Phrygian, Lydian). A custom Node.js function handles the generation of triads by analyzing the mode's scale, filtering out harmonically unstable chords (like those with diatonic tritones), and weighting chords that contain the mode’s characteristic note. Emotional data influences chord selection: lower valence favors minor and diminished chords, while higher valence favors major chords.
 
 ### Melody
 
-* generate melody using the generateMelody from the node server
-* markov chains
+- generate melody using the generateMelody from the node server
+- markov chains
