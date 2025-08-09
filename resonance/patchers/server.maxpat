@@ -91,7 +91,7 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 194.0, 314.0, 142.0, 22.0 ],
+									"patching_rect" : [ 326.0, 229.0, 142.0, 22.0 ],
 									"text" : "udpsend localhost 10000"
 								}
 
@@ -299,14 +299,6 @@
 								"patchline" : 								{
 									"destination" : [ "obj-15", 0 ],
 									"order" : 3,
-									"source" : [ "obj-4", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-3", 0 ],
-									"order" : 4,
 									"source" : [ "obj-4", 0 ]
 								}
 
@@ -873,6 +865,8 @@
 					"saved_object_attributes" : 					{
 						"autostart" : 1,
 						"defer" : 0,
+						"node_bin_path" : "",
+						"npm_bin_path" : "",
 						"watch" : 1
 					}
 ,
