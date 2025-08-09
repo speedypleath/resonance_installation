@@ -3802,6 +3802,11 @@ import_max_api.default.addHandler("nextChord", () => {
 import_max_api.default.addHandler("getMode", () => {
   return state.mode;
 });
+import_max_api.default.addHandler("setState", (valence, arousal, dominance) => {
+  state.set("valence", valence);
+  state.set("arousal", arousal);
+  state.set("dominance", dominance);
+});
 import_max_api.default.addHandler("setMode", (mode) => {
   state.set("mode", mode.toLowerCase());
   console.log(`Mode: ${state.mode}`);

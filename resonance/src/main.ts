@@ -329,6 +329,12 @@ MaxAPI.addHandler("getMode", () => {
   return state.mode;
 });
 
+MaxAPI.addHandler("setState", (valence: number, arousal: number, dominance: number) => {
+  state.set("valence", valence);
+  state.set("arousal", arousal);
+  state.set("dominance", dominance);
+});
+
 MaxAPI.addHandler("setMode", (mode: string) => {
   state.set("mode", mode.toLowerCase());
   console.log(`Mode: ${state.mode}`);
