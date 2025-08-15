@@ -10,7 +10,7 @@
 		}
 ,
 		"classnamespace" : "box",
-		"rect" : [ 34.0, 87.0, 1372.0, 715.0 ],
+		"rect" : [ 34.0, 87.0, 975.0, 715.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -330,7 +330,7 @@
  ]
 					}
 ,
-					"patching_rect" : [ 418.229108167919833, 266.899122804403305, 103.141381583064856, 22.0 ],
+					"patching_rect" : [ 418.067529215845809, 287.377192988991737, 103.141381583064856, 22.0 ],
 					"saved_object_attributes" : 					{
 						"description" : "",
 						"digest" : "",
@@ -361,7 +361,7 @@
 					"maxclass" : "newobj",
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 236.5, 327.0, 76.0, 22.0 ],
+					"patching_rect" : [ 169.5, 387.0, 76.0, 22.0 ],
 					"text" : "s~ readhead"
 				}
 
@@ -2716,19 +2716,6 @@
 			}
 , 			{
 				"box" : 				{
-					"id" : "obj-29",
-					"linecount" : 2,
-					"maxclass" : "comment",
-					"numinlets" : 1,
-					"numoutlets" : 0,
-					"patching_rect" : [ 565.0, 13.0, 269.5, 33.0 ],
-					"presentation_linecount" : 2,
-					"text" : "With de-clicking, sample region selection, and one-shot/loop mode"
-				}
-
-			}
-, 			{
-				"box" : 				{
 					"id" : "obj-1",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
@@ -2757,7 +2744,7 @@
 						}
 ,
 						"classnamespace" : "box",
-						"rect" : [ 367.0, 374.0, 640.0, 480.0 ],
+						"rect" : [ 367.0, 322.0, 640.0, 480.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -3091,6 +3078,7 @@
 						"style" : "",
 						"subpatcher_template" : "",
 						"assistshowspatchername" : 0,
+						"visible" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
 									"id" : "obj-4",
@@ -3207,8 +3195,8 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 164.0, 55.0, 315.0, 22.0 ],
-									"text" : "loadmess readfolder /Volumes/KINGSTON/samples/vocal"
+									"patching_rect" : [ 164.0, 55.0, 278.0, 22.0 ],
+									"text" : "loadmess readfolder /Users/andrei/Music/samples/"
 								}
 
 							}
@@ -3358,7 +3346,7 @@
 , 			{
 				"box" : 				{
 					"id" : "obj-62",
-					"items" : [ "samples.1", ",", "samples.2", ",", "samples.3", ",", "samples.4", ",", "samples.5", ",", "samples.6", ",", "samples.7", ",", "samples.8", ",", "samples.9", ",", "samples.10", ",", "samples.11", ",", "samples.12", ",", "samples.13", ",", "samples.14", ",", "samples.15", ",", "samples.16", ",", "samples.17", ",", "samples.18", ",", "samples.19", ",", "samples.20", ",", "samples.21" ],
+					"items" : [ "samples.1", ",", "samples.2", ",", "samples.3", ",", "samples.4", ",", "samples.5", ",", "samples.6", ",", "samples.7", ",", "samples.8", ",", "samples.9", ",", "samples.10", ",", "samples.11", ",", "samples.12", ",", "samples.13", ",", "samples.14", ",", "samples.15", ",", "samples.16", ",", "samples.17", ",", "samples.18", ",", "samples.19", ",", "samples.20", ",", "samples.21", ",", "samples.22", ",", "samples.23", ",", "samples.24", ",", "samples.25", ",", "samples.26", ",", "samples.27", ",", "samples.28", ",", "samples.29", ",", "samples.30", ",", "samples.31", ",", "samples.32", ",", "samples.33", ",", "samples.34" ],
 					"maxclass" : "umenu",
 					"numinlets" : 1,
 					"numoutlets" : 3,
@@ -3387,7 +3375,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
-					"patching_rect" : [ 73.0, 118.5, 77.0, 22.0 ],
+					"patching_rect" : [ 73.0, 111.0, 77.0, 22.0 ],
 					"text" : "loadmess 60"
 				}
 
@@ -3444,7 +3432,7 @@
 					"numoutlets" : 1,
 					"outlettype" : [ "" ],
 					"parameter_enable" : 0,
-					"patching_rect" : [ 322.067529215845752, 199.254385977983475, 262.807894760370232, 62.245614022016525 ],
+					"patching_rect" : [ 322.067529215845809, 219.377192988991737, 262.807894760370232, 62.245614022016525 ],
 					"size" : 1.0,
 					"thickness" : 25.0
 				}
@@ -3464,13 +3452,13 @@
 			}
 , 			{
 				"box" : 				{
-					"buffername" : "samples.21",
+					"buffername" : "samples.1",
 					"id" : "obj-93",
 					"maxclass" : "waveform~",
 					"numinlets" : 5,
 					"numoutlets" : 6,
 					"outlettype" : [ "float", "float", "float", "float", "list", "" ],
-					"patching_rect" : [ 322.067529215845752, 199.254385977983475, 259.403947380185173, 63.649122804403305 ],
+					"patching_rect" : [ 322.067529215845809, 219.377192988991737, 259.403947380185173, 63.649122804403305 ],
 					"selectioncolor" : [ 0.929411764705882, 0.929411764705882, 0.352941176470588, 0.47 ],
 					"setmode" : 1
 				}
@@ -3482,66 +3470,7 @@
 					"maxclass" : "ezdac~",
 					"numinlets" : 2,
 					"numoutlets" : 0,
-					"patching_rect" : [ 427.0, 518.0, 45.0, 45.0 ]
-				}
-
-			}
-, 			{
-				"box" : 				{
-					"basictuning" : 440,
-					"clipheight" : 40.666666666666664,
-					"data" : 					{
-						"clips" : [ 							{
-								"absolutepath" : "KINGSTON:/Samples/vocal/bonie_baxter.wav",
-								"filename" : "bonie_baxter.wav",
-								"filekind" : "audiofile",
-								"id" : "u432005344",
-								"loop" : 0,
-								"content_state" : 								{
-									"loop" : 0
-								}
-
-							}
-, 							{
-								"absolutepath" : "/Volumes/KINGSTON/Samples/vocal/i_tried_to_stay.wav",
-								"filename" : "i_tried_to_stay.wav",
-								"filekind" : "audiofile",
-								"id" : "u310012108",
-								"loop" : 0,
-								"content_state" : 								{
-
-								}
-
-							}
-, 							{
-								"absolutepath" : "/Volumes/KINGSTON/Samples/vocal/back_charli.wav",
-								"filename" : "back_charli.wav",
-								"filekind" : "audiofile",
-								"id" : "u586005613",
-								"loop" : 0,
-								"content_state" : 								{
-
-								}
-
-							}
- ]
-					}
-,
-					"followglobaltempo" : 0,
-					"formantcorrection" : 0,
-					"id" : "obj-2",
-					"maxclass" : "playlist~",
-					"mode" : "basic",
-					"numinlets" : 1,
-					"numoutlets" : 5,
-					"originallength" : [ 0.0, "ticks" ],
-					"originaltempo" : 120.0,
-					"outlettype" : [ "signal", "signal", "signal", "", "dictionary" ],
-					"parameter_enable" : 0,
-					"patching_rect" : [ 667.0, 126.0, 198.0, 125.0 ],
-					"pitchcorrection" : 0,
-					"quality" : "basic",
-					"timestretch" : [ 0 ]
+					"patching_rect" : [ 72.5, 466.0, 45.0, 45.0 ]
 				}
 
 			}
@@ -3599,13 +3528,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-13", 0 ],
-					"source" : [ "obj-12", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-179", 0 ],
 					"source" : [ "obj-13", 0 ]
 				}
@@ -3627,22 +3549,6 @@
 			}
 , 			{
 				"patchline" : 				{
-					"destination" : [ "obj-3", 1 ],
-					"order" : 0,
-					"source" : [ "obj-2", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
-					"destination" : [ "obj-3", 0 ],
-					"order" : 1,
-					"source" : [ "obj-2", 0 ]
-				}
-
-			}
-, 			{
-				"patchline" : 				{
 					"destination" : [ "obj-117", 0 ],
 					"source" : [ "obj-208", 0 ]
 				}
@@ -3651,7 +3557,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-38", 0 ],
-					"midpoints" : [ 427.729108167919833, 314.125, 82.0, 314.125 ],
+					"midpoints" : [ 427.567529215845809, 314.125, 82.0, 314.125 ],
 					"source" : [ "obj-31", 0 ]
 				}
 
@@ -3675,7 +3581,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-47", 0 ],
-					"order" : 0,
+					"order" : 1,
 					"source" : [ "obj-38", 1 ]
 				}
 
@@ -3683,7 +3589,7 @@
 , 			{
 				"patchline" : 				{
 					"destination" : [ "obj-50", 0 ],
-					"order" : 1,
+					"order" : 0,
 					"source" : [ "obj-38", 1 ]
 				}
 
@@ -3762,31 +3668,10 @@
 			}
  ],
 		"dependency_cache" : [ 			{
-				"name" : "back_charli.wav",
-				"bootpath" : "/Volumes/KINGSTON/Samples/vocal",
-				"patcherrelativepath" : "../../../../../../Volumes/KINGSTON/Samples/vocal",
-				"type" : "WAVE",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "bonie_baxter.wav",
-				"bootpath" : "/Volumes/KINGSTON/Samples/vocal",
-				"patcherrelativepath" : "../../../../../../Volumes/KINGSTON/Samples/vocal",
-				"type" : "WAVE",
-				"implicit" : 1
-			}
-, 			{
 				"name" : "custom.euclidean.maxpat",
 				"bootpath" : "~/Documents/Max 8/Packages/Custom Patches/patchers",
 				"patcherrelativepath" : "../../../../Documents/Max 8/Packages/Custom Patches/patchers",
 				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "i_tried_to_stay.wav",
-				"bootpath" : "/Volumes/KINGSTON/Samples/vocal",
-				"patcherrelativepath" : "../../../../../../Volumes/KINGSTON/Samples/vocal",
-				"type" : "WAVE",
 				"implicit" : 1
 			}
  ],
