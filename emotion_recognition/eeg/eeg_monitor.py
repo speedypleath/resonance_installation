@@ -106,7 +106,7 @@ class MuseEEGWebStreamer:
                         'fragment_id': fragment['fragment_id'],
                         'duration': fragment['duration'],
                         'shape': fragment['data'].shape,
-                        'timestamp': fragment['created_at'].isoformat()
+                        'timestamp': str(fragment['created_at'].isoformat())
                     })
                 return jsonify({'error': 'No fragments available'})
         

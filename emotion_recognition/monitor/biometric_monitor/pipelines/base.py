@@ -74,12 +74,33 @@ class BiometricPipeline(ABC):
         if self.is_running:
             return True
         
-        if not self.model or not self.model.is_loaded:
+        # Check if it's a dummy model (for visualization pipelines like EEG)
+        is_dummy_model = (hasattr(self.model, '__class__') and 
+                         'Dummy' in self.model.__class__.__name__)
+        
+        print(f"Starting pipeline '{self.name}'...")
+        print(f" - Model: {self.model.__class__.__name__ if self.model else 'None'}")
+        print(f" - Is dummy model: {is_dummy_model}")
+
+        # Check model requirement - allow dummy models for visualization
+        if self.model is None and not is_dummy_model:
+            print(f"Cannot start pipeline '{self.name}': no model provided")
+            return False
+        
+        # Check if it's a real model that needs to be loaded
+        is_loaded = getattr(self.model, 'is_loaded', False)
+        
+        if not is_dummy_model and not is_loaded:
             print(f"Cannot start pipeline '{self.name}': model not loaded")
-            return True
+            return False
+        
+        if is_dummy_model:
+            print(f"Pipeline '{self.name}' starting with dummy model for visualization")
         
         self._stop_event.clear()
         self._pause_event.clear()
+        
+        # Use the method returned by _get_run_loop() instead of hardcoded _run_loop
         run_method = self._get_run_loop()
         self._thread = threading.Thread(target=run_method, daemon=True)
         self._thread.start()

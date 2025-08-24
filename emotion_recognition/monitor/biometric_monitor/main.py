@@ -12,7 +12,7 @@ from .models.base import ModelRegistry
 from .models.face import ResNetEmotionModel
 from .pipelines.base import PipelineManager
 from .pipelines.face import EmotionPipeline
-from .pipelines.eeg import EEGPipeline
+from .pipelines.eeg import DummyEEGModel, EEGPipeline
 from .osc.osc_client import OSCRouter, OSCClient
 from .web.app import BiometricWebApp
 
@@ -125,10 +125,12 @@ class BiometricMonitorSystem:
                 )
                 self.pipeline_manager.register_pipeline(emotion_pipeline)
                 print("Emotion recognition pipeline initialized")
-            
+                    # Explicitly create dummy model
+            dummy_model = DummyEEGModel()
+
             # Initialize EEG pipeline
             eeg_pipeline = EEGPipeline(
-                model=None,  # No EEG model for now
+                model=dummy_model,  # No EEG model for now
                 osc_client=osc_client,
                 fragment_duration=self.config.eeg.fragment_duration,
                 window_step=self.config.eeg.window_step,
