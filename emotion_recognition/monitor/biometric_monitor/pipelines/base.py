@@ -32,7 +32,7 @@ class BiometricPipeline(ABC):
         self.osc_client = osc_client
         
         # Pipeline state
-        self.is_running = True
+        self.is_running = False
         self.is_paused = False
         self.process_count = 0
         self.error_count = 0
