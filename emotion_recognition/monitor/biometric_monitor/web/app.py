@@ -253,7 +253,7 @@ class BiometricWebApp:
                 print(f"Error sending initial stats: {e}")
         
         @self.socketio.on('disconnect')
-        def handle_disconnect():
+        def handle_disconnect(**kwargs):
             self.connected_clients = max(0, self.connected_clients - 1)
             print(f"WebSocket client disconnected (ID: {request.sid}). Total clients: {self.connected_clients}")
         

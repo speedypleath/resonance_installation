@@ -763,13 +763,13 @@ class EEGPipeline(BiometricPipeline):
         
         predictions = result.predictions
         
-        for fragment in predictions.get("fragments", []):
-            avg_channels = np.mean(fragment['data'], axis=0).tolist()
-            self.osc_client.send_eeg_data(avg_channels, fragment['fragment_id'])
+        # for fragment in predictions.get("fragments", []):
+        #     avg_channels = np.mean(fragment['data'], axis=0).tolist()
+        #     self.osc_client.send_eeg_data(avg_channels, fragment['fragment_id'])
         
-        for segment in predictions.get("segments", []):
-            segment_data = segment['data'].tolist()
-            self.osc_client.send_eeg_segment(segment['segment_id'], segment_data)
+        # for segment in predictions.get("segments", []):
+        #     segment_data = segment['data'].tolist()
+        #     self.osc_client.send_eeg_segment(segment['segment_id'], segment_data)
     
     def _get_run_loop(self):
         """Override to use LSL data collection loop instead of queue-based loop."""
