@@ -23,7 +23,7 @@ class BiometricWebApp:
         # Initialize Flask app
         self.app = Flask(__name__)
         self.app.config['SECRET_KEY'] = config.secret_key
-        self.socketio = SocketIO(self.app, cors_allowed_origins="*", async_mode='threading')
+        self.socketio = SocketIO(self.app, cors_allowed_origins=['http://127.0.0.1:5001'], async_mode='threading')
         
         # Statistics
         self.connected_clients = 0
@@ -227,7 +227,7 @@ class BiometricWebApp:
         """Set up SocketIO event handlers."""
         
         @self.socketio.on('connect')
-        def handle_connect():
+        def handle_connect(auth):
             self.connected_clients += 1
             print(f"WebSocket client connected (ID: {request.sid}). Total clients: {self.connected_clients}")
             emit('connection_status', {
@@ -253,7 +253,7 @@ class BiometricWebApp:
                 print(f"Error sending initial stats: {e}")
         
         @self.socketio.on('disconnect')
-        def handle_disconnect(**kwargs):
+        def handle_disconnect(auth):
             self.connected_clients = max(0, self.connected_clients - 1)
             print(f"WebSocket client disconnected (ID: {request.sid}). Total clients: {self.connected_clients}")
         

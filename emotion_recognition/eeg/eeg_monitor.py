@@ -116,7 +116,7 @@ class MuseEEGWebStreamer:
             emit('status', {'message': 'Connected to EEG streamer'})
         
         @self.socketio.on('disconnect')
-        def handle_disconnect(**kwargs):
+        def handle_disconnect():
             print(f"Client disconnected: {threading.current_thread().ident}")
         
         @self.socketio.on('request_start_stream')

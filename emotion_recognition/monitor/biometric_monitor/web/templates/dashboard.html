@@ -558,47 +558,45 @@
               <div class="fps-counter" id="fpsCounter">FPS: 0</div>
             </div>
           </div>
-        </div>     
-          <!-- Emotion Probability Chart -->
+        </div>
+        <!-- Emotion Probability Chart -->
 
         <div class="plot-container">
-        <h3>Emotion Probabilities</h3>
-        <div id="emotionProbPlot"></div>
+          <h3>Emotion Probabilities</h3>
+          <div id="emotionProbPlot"></div>
         </div>
 
-
-
         <!-- Emotion Recognition Display -->
-          <div class="plot-container full-width">
-            <h3>Real-Time Emotion Recognition</h3>
-            <div class="emotion-display">
-              <div class="current-emotion" id="currentEmotion">Neutral</div>
-              <div class="confidence-bar">
-                <div
-                  class="confidence-fill"
-                  id="confidenceBar"
-                  style="width: 0%"
-                ></div>
-              </div>
-              <div>Confidence: <span id="confidenceText">0%</span></div>
+        <div class="plot-container full-width">
+          <h3>Real-Time Emotion Recognition</h3>
+          <div class="emotion-display">
+            <div class="current-emotion" id="currentEmotion">Neutral</div>
+            <div class="confidence-bar">
+              <div
+                class="confidence-fill"
+                id="confidenceBar"
+                style="width: 0%"
+              ></div>
+            </div>
+            <div>Confidence: <span id="confidenceText">0%</span></div>
 
-              <div class="vad-display">
-                <div class="vad-item">
-                  <div>Valence</div>
-                  <div class="vad-value" id="valenceValue">0.000</div>
-                </div>
-                <div class="vad-item">
-                  <div>Arousal</div>
-                  <div class="vad-value" id="arousalValue">0.000</div>
-                </div>
-                <div class="vad-item">
-                  <div>Dominance</div>
-                  <div class="vad-value" id="dominanceValue">0.000</div>
-                </div>
+            <div class="vad-display">
+              <div class="vad-item">
+                <div>Valence</div>
+                <div class="vad-value" id="valenceValue">0.000</div>
+              </div>
+              <div class="vad-item">
+                <div>Arousal</div>
+                <div class="vad-value" id="arousalValue">0.000</div>
+              </div>
+              <div class="vad-item">
+                <div>Dominance</div>
+                <div class="vad-value" id="dominanceValue">0.000</div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
       <!-- EEG Individual Channel Monitoring -->
       <div class="eeg-section">
@@ -645,7 +643,7 @@
     <script>
       // WebSocket connection
       const socket = io();
-    const channelNames = ["TP9", "AF7", "AF8", "TP10"];
+      const channelNames = ["TP9", "AF7", "AF8", "TP10"];
 
       // Global state
       let emotionCount = 0;
@@ -1065,32 +1063,28 @@
         };
 
         const emptyEEG = {
-            xaxis: {
-              title: "Time (s)",
-              color: "white",
-              gridcolor: "rgba(255,255,255,0.1)",
-              showline: true,
-              linecolor: "rgba(255,255,255,0.3)",
-            },
-            yaxis: {
-              title: "μV",
-              color: "white",
-              gridcolor: "rgba(255,255,255,0.1)",
-              showline: true,
-              linecolor: "rgba(255,255,255,0.3)",
-            },
-            paper_bgcolor: "rgba(0,0,0,0)",
-            plot_bgcolor: "rgba(255,255,255,0.05)",
-            font: { color: "white", size: 10 },
-            margin: { t: 20, b: 40, l: 50, r: 20 },
-          };
+          xaxis: {
+            title: "Time (s)",
+            color: "white",
+            gridcolor: "rgba(255,255,255,0.1)",
+            showline: true,
+            linecolor: "rgba(255,255,255,0.3)",
+          },
+          yaxis: {
+            title: "μV",
+            color: "white",
+            gridcolor: "rgba(255,255,255,0.1)",
+            showline: true,
+            linecolor: "rgba(255,255,255,0.3)",
+          },
+          paper_bgcolor: "rgba(0,0,0,0)",
+          plot_bgcolor: "rgba(255,255,255,0.05)",
+          font: { color: "white", size: 10 },
+          margin: { t: 20, b: 40, l: 50, r: 20 },
+        };
 
         Plotly.newPlot("emotionProbPlot", [], emptyLayout);
-        for (
-          let ch = 0;
-          ch < channelNames.length;
-          ch++
-        ) {
+        for (let ch = 0; ch < channelNames.length; ch++) {
           const plotId = `eegPlot${channelNames[ch]}`;
           Plotly.newPlot(plotId, [], emptyEEG);
         }
