@@ -4,6 +4,7 @@ import argparse
 import sys
 import time
 import signal
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -16,6 +17,8 @@ from .pipelines.eeg import DummyEEGModel, EEGPipeline
 from .osc.osc_client import OSCRouter, OSCClient
 from .web.app import BiometricWebApp
 
+# https://bugs.python.org/issue30385 fucking god i hate my life
+os.environ["no_proxy"] = "*"
 
 class BiometricMonitorSystem:
     """Main system orchestrator for biometric monitoring."""
