@@ -4,6 +4,7 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import time
+import threading
 from typing import Any, Dict, Optional, Tuple
 from PIL import Image
 
@@ -34,8 +35,9 @@ class EmotionPipeline(BiometricPipeline):
             min_tracking_confidence=0.3    # Lowered from 0.5
         )
         
-        # Camera setup
+        # Camera setup with thread safety
         self.cap = None
+        self.camera_lock = threading.Lock()  # Protect camera access
         self.last_process_time = 0.0
         self.frame_count = 0
         self.last_emotion = "Neutral"
@@ -177,37 +179,67 @@ class EmotionPipeline(BiometricPipeline):
         print("Emotion recognition loop ended")
     
     def _reconnect_camera(self) -> bool:
-        """Attempt to reconnect to the camera."""
+        """Attempt to reconnect to the camera with thread safety."""
         print("Attempting camera reconnection...")
         
-        if self.cap:
-            self.cap.release()
-        
-        # Try original camera ID first
-        self.cap = cv2.VideoCapture(self.camera_id)
-        if self.cap.isOpened():
-            ret, test_frame = self.cap.read()
-            if ret:
-                print(f"Camera {self.camera_id} reconnected successfully")
-                return True
-        
-        # Try alternative camera IDs
-        for alt_id in [0, 1, 2, -1]:
-            if alt_id == self.camera_id:
-                continue
-                
-            print(f"Trying camera {alt_id}...")
-            self.cap = cv2.VideoCapture(alt_id)
-            if self.cap.isOpened():
-                ret, test_frame = self.cap.read()
-                if ret:
-                    print(f"Switched to camera {alt_id}")
-                    self.camera_id = alt_id
-                    return True
-            self.cap.release()
-        
-        print("Camera reconnection failed")
-        return False
+        with self.camera_lock:
+            # Safely release existing camera
+            if self.cap:
+                try:
+                    self.cap.release()
+                except Exception as e:
+                    print(f"Warning: Error releasing camera: {e}")
+                self.cap = None
+            
+            # Try original camera ID first
+            try:
+                self.cap = cv2.VideoCapture(self.camera_id)
+                if self.cap.isOpened():
+                    ret, test_frame = self.cap.read()
+                    if ret:
+                        print(f"Camera {self.camera_id} reconnected successfully")
+                        return True
+                    else:
+                        self.cap.release()
+                        self.cap = None
+            except Exception as e:
+                print(f"Error testing camera {self.camera_id}: {e}")
+                if self.cap:
+                    self.cap.release()
+                    self.cap = None
+            
+            # Try alternative camera IDs
+            for alt_id in [0, 1, 2, -1]:
+                if alt_id == self.camera_id:
+                    continue
+                    
+                print(f"Trying camera {alt_id}...")
+                try:
+                    self.cap = cv2.VideoCapture(alt_id)
+                    if self.cap.isOpened():
+                        ret, test_frame = self.cap.read()
+                        if ret:
+                            print(f"Switched to camera {alt_id}")
+                            self.camera_id = alt_id
+                            return True
+                        else:
+                            self.cap.release()
+                            self.cap = None
+                    else:
+                        if self.cap:
+                            self.cap.release()
+                            self.cap = None
+                except Exception as e:
+                    print(f"Error testing camera {alt_id}: {e}")
+                    if self.cap:
+                        try:
+                            self.cap.release()
+                        except:
+                            pass
+                        self.cap = None
+            
+            print("Camera reconnection failed")
+            return False
     
     def _log_processing_issue(self, result: PipelineResult) -> None:
         """Log processing issues with appropriate frequency."""
@@ -478,12 +510,17 @@ class EmotionPipeline(BiometricPipeline):
                 time.sleep(0.1)
     
     def capture_frame(self) -> Optional[np.ndarray]:
-        """Capture a single frame from camera."""
-        if not self.cap or not self.cap.isOpened():
-            return None
-        
-        ret, frame = self.cap.read()
-        return frame if ret else None
+        """Capture a single frame from camera with thread safety."""
+        with self.camera_lock:
+            if not self.cap or not self.cap.isOpened():
+                return None
+            
+            try:
+                ret, frame = self.cap.read()
+                return frame if ret else None
+            except Exception as e:
+                print(f"Error capturing frame: {e}")
+                return None
     
     def run_webcam_loop(self, show_display: bool = True) -> None:
         """Run continuous webcam emotion recognition."""

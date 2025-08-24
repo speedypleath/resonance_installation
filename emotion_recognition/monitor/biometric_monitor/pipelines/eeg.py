@@ -86,25 +86,8 @@ class EEGPipeline(BiometricPipeline):
             streams = resolve_bypred('type', 'EEG', timeout=timeout)
             
             if not streams:
-                print("No EEG streams found! Trying any LSL streams...")
-                # Correct usage: resolve_bypred with no arguments gets all streams
-                from pylsl import resolve_streams
-                all_streams = resolve_streams(timeout)
-                if all_streams:
-                    print(f"Found {len(all_streams)} streams:")
-                    for i, stream in enumerate(all_streams):
-                        print(f"  {i+1}. {stream.name()} - Type: {stream.type()} - Channels: {stream.channel_count()}")
-                    
-                    # Look for Muse-like streams
-                    muse_streams = [s for s in all_streams if 'muse' in s.name().lower() or s.channel_count() == 4]
-                    if muse_streams:
-                        streams = [muse_streams[0]]
-                        print(f"Using Muse-like stream: {streams[0].name()}")
-                    else:
-                        return False
-                else:
-                    return False
-            
+                return False
+
             self.stream_info = streams[0]
             print(f"Found EEG stream: {self.stream_info.name()}")
             print(f"Sampling rate: {self.stream_info.nominal_srate()} Hz")
@@ -387,6 +370,85 @@ class EEGPipeline(BiometricPipeline):
             segment_data = segment['data'].tolist()
             self.osc_client.send_eeg_segment(segment['segment_id'], segment_data)
     
+    def _lsl_data_collection_loop(self) -> None:
+        """Main LSL data collection and processing loop."""
+        if not self.inlet:
+            print("ERROR: No LSL inlet available for EEG data collection")
+            return
+        
+        print(f"Starting EEG data collection from LSL stream...")
+        print(f"Stream: {self.stream_info.name()} ({self.n_channels} channels @ {self.sampling_rate}Hz)")
+        
+        consecutive_failures = 0
+        max_failures = 50  # 5 seconds at 10 attempts per second
+        
+        while not self._stop_event.is_set():
+            try:
+                # Wait if paused
+                if self._pause_event.is_set():
+                    time.sleep(0.1)
+                    continue
+                
+                # Pull data from LSL stream
+                samples, timestamps = self.inlet.pull_chunk(timeout=0.1, max_samples=32)
+                
+                if samples and timestamps:
+                    consecutive_failures = 0
+                    
+                    # Process the data chunk
+                    result = self.process_data((samples, timestamps))
+                    
+                    # Update statistics
+                    self.process_count += 1
+                    if not result.success:
+                        self.error_count += 1
+                    
+                    # Send to output queue (non-blocking)
+                    try:
+                        self.output_queue.put(result, block=False)
+                    except:
+                        # Queue full, remove old results
+                        try:
+                            self.output_queue.get_nowait()
+                            self.output_queue.put(result, block=False)
+                        except:
+                            pass
+                    
+                    # Call result callbacks
+                    for callback in self.result_callbacks:
+                        try:
+                            callback(result)
+                        except Exception as e:
+                            print(f"Error in EEG callback: {e}")
+                    
+                    # Send OSC data if successful
+                    if result.success and self.osc_client:
+                        try:
+                            self._send_osc_data(result)
+                        except Exception as e:
+                            print(f"Error sending EEG OSC data: {e}")
+                    
+                    # Log new fragments and segments (less frequently)
+                    for fragment in result.predictions.get("fragments", []):
+                        print(f"EEG Fragment {fragment['fragment_id']}: "
+                              f"{fragment['duration']:.2f}s, {len(fragment['data'])} samples")
+                
+                else:
+                    # No data received
+                    consecutive_failures += 1
+                    if consecutive_failures > max_failures:
+                        print(f"WARNING: No EEG data received for {max_failures * 0.1:.1f} seconds")
+                        consecutive_failures = 0  # Reset to avoid spam
+                    
+                    time.sleep(0.1)  # Wait before trying again
+                
+            except Exception as e:
+                self.error_count += 1
+                print(f"Error in EEG data collection: {e}")
+                time.sleep(0.1)
+        
+        print("EEG data collection loop ended")
+    
     def collect_lsl_data(self) -> None:
         """Continuously collect data from LSL stream."""
         if not self.inlet:
@@ -535,343 +597,3 @@ class EEGDataProcessor:
         return artifacts
 
 
-class EEGPipeline(BiometricPipeline):
-    """Pipeline for real-time EEG data processing and segmentation."""
-    
-    def __init__(self, model: Optional[EEGModel] = None, osc_client: Optional[OSCClient] = None,
-                 fragment_duration: float = 10.0, window_step: float = 5.0,
-                 segment_duration: float = 2.0, segment_overlap: float = 0.5):
-        super().__init__("eeg_processing", model, osc_client)
-        
-        self.fragment_duration = fragment_duration
-        self.window_step = window_step
-        self.segment_duration = segment_duration
-        self.segment_overlap = segment_overlap
-        
-        # Stream parameters (will be updated when stream is found)
-        self.sampling_rate = 256
-        self.n_channels = 4
-        self.channel_names = ['TP9', 'AF7', 'AF8', 'TP10']
-        
-        # Calculate buffer sizes
-        self._update_buffer_sizes()
-        
-        # Data storage
-        self.data_buffer = deque(maxlen=self.fragment_samples * 2)
-        self.timestamps_buffer = deque(maxlen=self.fragment_samples * 2)
-        self.fragments = []
-        self.current_segments = []
-        
-        # LSL stream
-        self.inlet = None
-        self.stream_info = None
-        
-        # Statistics
-        self.fragment_count = 0
-        self.segment_count = 0
-        self.last_fragment_time = None
-        self.samples_received = 0
-    
-    def _update_buffer_sizes(self) -> None:
-        """Update buffer sizes based on sampling rate."""
-        self.fragment_samples = int(self.fragment_duration * self.sampling_rate)
-        self.window_step_samples = int(self.window_step * self.sampling_rate)
-        self.segment_samples = int(self.segment_duration * self.sampling_rate)
-    
-    def find_eeg_stream(self, timeout: float = 10.0) -> bool:
-        """Find and connect to EEG LSL stream."""
-        print("Looking for EEG stream...")
-        
-        try:
-            streams = resolve_bypred('type', 'EEG', timeout=timeout)
-            
-            if not streams:
-                print("No EEG streams found! Trying any LSL streams...")
-                all_streams = resolve_bypred(timeout=timeout)
-                if all_streams:
-                    print(f"Found {len(all_streams)} streams:")
-                    for i, stream in enumerate(all_streams):
-                        print(f"  {i+1}. {stream.name()} - Type: {stream.type()} - Channels: {stream.channel_count()}")
-                    
-                    muse_streams = [s for s in all_streams if 'muse' in s.name().lower() or s.channel_count() == 4]
-                    if muse_streams:
-                        streams = [muse_streams[0]]
-                        print(f"Using Muse-like stream: {streams[0].name()}")
-                    else:
-                        return False
-                else:
-                    return False
-            
-            self.stream_info = streams[0]
-            print(f"Found EEG stream: {self.stream_info.name()}")
-            
-            self.inlet = StreamInlet(self.stream_info, max_buflen=360, max_chunklen=12)
-            self.sampling_rate = int(self.stream_info.nominal_srate())
-            self.n_channels = self.stream_info.channel_count()
-            
-            if self.n_channels != len(self.channel_names):
-                self.channel_names = [f'Ch{i+1}' for i in range(self.n_channels)]
-            
-            self._update_buffer_sizes()
-            return True
-            
-        except Exception as e:
-            print(f"Error connecting to EEG stream: {e}")
-            return False
-    
-    def start(self) -> bool:
-        """Start EEG data collection."""
-        if not self.inlet and not self.find_eeg_stream():
-            print("Cannot start EEG pipeline: no stream available")
-            return False
-        
-        return super().start()
-    
-    def validate_input(self, data: Any) -> bool:
-        """Validate EEG data input."""
-        return isinstance(data, (list, tuple)) and len(data) == 2
-    
-    def process_data(self, samples_chunk: Tuple[List, List]) -> PipelineResult:
-        """Process EEG samples chunk."""
-        timestamp = time.time()
-        samples, timestamps = samples_chunk
-        
-        try:
-            for sample, ts in zip(samples, timestamps):
-                self.data_buffer.append(sample)
-                self.timestamps_buffer.append(ts)
-            
-            self.samples_received += len(samples)
-            
-            fragments_created = []
-            segments_created = []
-            
-            if len(self.data_buffer) >= self.fragment_samples:
-                if (self.last_fragment_time is None or 
-                    timestamp - self.last_fragment_time >= self.window_step):
-                    
-                    fragment, segments = self._create_fragment_and_segments()
-                    if fragment:
-                        fragments_created.append(fragment)
-                        segments_created.extend(segments)
-                        self.last_fragment_time = timestamp
-            
-            return PipelineResult(
-                timestamp=timestamp,
-                data_type="eeg",
-                predictions={
-                    "fragments": fragments_created,
-                    "segments": segments_created,
-                    "buffer_status": {
-                        "size": len(self.data_buffer),
-                        "capacity": self.fragment_samples * 2
-                    }
-                },
-                raw_data={
-                    "samples": samples,
-                    "timestamps": timestamps,
-                    "n_samples": len(samples)
-                },
-                metadata={
-                    "sampling_rate": self.sampling_rate,
-                    "n_channels": self.n_channels,
-                    "fragment_count": self.fragment_count,
-                    "segment_count": self.segment_count
-                },
-                success=True
-            )
-            
-        except Exception as e:
-            return PipelineResult(
-                timestamp=timestamp,
-                data_type="eeg",
-                predictions={},
-                raw_data={"samples": samples, "timestamps": timestamps},
-                metadata={},
-                success=False,
-                error_message=str(e)
-            )
-    
-    def _create_fragment_and_segments(self) -> Tuple[Optional[Dict], List[Dict]]:
-        """Create fragment and segments from current buffer."""
-        try:
-            fragment_data = np.array(list(self.data_buffer)[-self.fragment_samples:])
-            fragment_timestamps = np.array(list(self.timestamps_buffer)[-self.fragment_samples:])
-            
-            fragment = {
-                'data': fragment_data,
-                'timestamps': fragment_timestamps,
-                'fragment_id': self.fragment_count,
-                'start_time': fragment_timestamps[0],
-                'end_time': fragment_timestamps[-1],
-                'duration': fragment_timestamps[-1] - fragment_timestamps[0],
-                'created_at': str(datetime.now(timezone.utc))
-            }
-            
-            self.fragments.append(fragment)
-            self.fragment_count += 1
-            
-            segments = self._create_segments_from_fragment(fragment)
-            self.current_segments = segments
-            
-            if len(self.fragments) > 50:
-                self.fragments.pop(0)
-            
-            return fragment, segments
-            
-        except Exception as e:
-            print(f"Error creating fragment and segments: {e}")
-            return None, []
-    
-    def _create_segments_from_fragment(self, fragment: Dict) -> List[Dict]:
-        """Create segments from a fragment."""
-        data = fragment['data']
-        timestamps = fragment['timestamps']
-        time_axis = timestamps - timestamps[0]
-        
-        overlap_samples = int(self.segment_samples * self.segment_overlap)
-        step_samples = self.segment_samples - overlap_samples
-        
-        segments = []
-        segment_id = 0
-        
-        for start_idx in range(0, len(data) - self.segment_samples + 1, step_samples):
-            end_idx = start_idx + self.segment_samples
-            
-            segment = {
-                'segment_id': segment_id,
-                'fragment_id': fragment['fragment_id'],
-                'data': data[start_idx:end_idx],
-                'time': time_axis[start_idx:end_idx],
-                'timestamps': timestamps[start_idx:end_idx],
-                'start_time': float(time_axis[start_idx]),
-                'end_time': float(time_axis[end_idx-1]),
-                'duration': float(time_axis[end_idx-1] - time_axis[start_idx]),
-                'created_at': str(datetime.now(timezone.utc))
-            }
-            
-            segments.append(segment)
-            segment_id += 1
-            self.segment_count += 1
-        
-        return segments
-    
-    def _send_osc_data(self, result: PipelineResult) -> None:
-        """Send EEG data via OSC."""
-        if not result.success:
-            return
-        
-        predictions = result.predictions
-        
-        # for fragment in predictions.get("fragments", []):
-        #     avg_channels = np.mean(fragment['data'], axis=0).tolist()
-        #     self.osc_client.send_eeg_data(avg_channels, fragment['fragment_id'])
-        
-        # for segment in predictions.get("segments", []):
-        #     segment_data = segment['data'].tolist()
-        #     self.osc_client.send_eeg_segment(segment['segment_id'], segment_data)
-    
-    def _get_run_loop(self):
-        """Override to use LSL data collection loop instead of queue-based loop."""
-        return self._lsl_data_collection_loop
-    
-    def _lsl_data_collection_loop(self) -> None:
-        """Main LSL data collection and processing loop."""
-        if not self.inlet:
-            print("ERROR: No LSL inlet available for EEG data collection")
-            return
-        
-        print(f"Starting EEG data collection from LSL stream...")
-        print(f"Stream: {self.stream_info.name()} ({self.n_channels} channels @ {self.sampling_rate}Hz)")
-        
-        consecutive_failures = 0
-        max_failures = 50  # 5 seconds at 10 attempts per second
-        
-        while not self._stop_event.is_set():
-            try:
-                # Wait if paused
-                if self._pause_event.is_set():
-                    time.sleep(0.1)
-                    continue
-                
-                # Pull data from LSL stream
-                samples, timestamps = self.inlet.pull_chunk(timeout=0.1, max_samples=32)
-                
-                if samples and timestamps:
-                    consecutive_failures = 0
-                    
-                    # Process the data chunk
-                    result = self.process_data((samples, timestamps))
-                    
-                    # Update statistics
-                    self.process_count += 1
-                    if not result.success:
-                        self.error_count += 1
-                    
-                    # Send to output queue (non-blocking)
-                    try:
-                        self.output_queue.put(result, block=False)
-                    except:
-                        # Queue full, remove old results
-                        try:
-                            self.output_queue.get_nowait()
-                            self.output_queue.put(result, block=False)
-                        except:
-                            pass
-                    
-                    # Call result callbacks
-                    for callback in self.result_callbacks:
-                        try:
-                            callback(result)
-                        except Exception as e:
-                            print(f"Error in EEG callback: {e}")
-                    
-                    # Send OSC data if successful
-                    if result.success and self.osc_client:
-                        try:
-                            self._send_osc_data(result)
-                        except Exception as e:
-                            print(f"Error sending EEG OSC data: {e}")
-                    
-                    # Log new fragments and segments
-                    for fragment in result.predictions.get("fragments", []):
-                        print(f"EEG Fragment {fragment['fragment_id']}: "
-                              f"{fragment['duration']:.2f}s, {len(fragment['data'])} samples")
-                    
-                    for segment in result.predictions.get("segments", []):
-                        print(f"  Segment {segment['segment_id']}: "
-                              f"{segment['duration']:.2f}s")
-                
-                else:
-                    # No data received
-                    consecutive_failures += 1
-                    if consecutive_failures > max_failures:
-                        print(f"WARNING: No EEG data received for {max_failures * 0.1:.1f} seconds")
-                        consecutive_failures = 0  # Reset to avoid spam
-                    
-                    time.sleep(0.1)  # Wait before trying again
-                
-            except Exception as e:
-                self.error_count += 1
-                print(f"Error in EEG data collection: {e}")
-                time.sleep(0.1)
-        
-        print("EEG data collection loop ended")
-    
-    def get_eeg_stats(self) -> Dict[str, Any]:
-        """Get EEG-specific statistics."""
-        stats = self.get_stats()
-        stats.update({
-            "fragment_count": self.fragment_count,
-            "segment_count": self.segment_count,
-            "samples_received": self.samples_received,
-            "buffer_utilization": len(self.data_buffer) / max(self.fragment_samples * 2, 1),
-            "inlet_connected": self.inlet is not None and hasattr(self.inlet, 'info'),
-            "stream_info": {
-                "name": self.stream_info.name() if self.stream_info else None,
-                "sampling_rate": self.sampling_rate,
-                "n_channels": self.n_channels,
-                "channel_names": self.channel_names
-            }
-        })
-        return stats

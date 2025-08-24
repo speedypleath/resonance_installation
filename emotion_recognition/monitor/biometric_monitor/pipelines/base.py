@@ -32,7 +32,7 @@ class BiometricPipeline(ABC):
         self.osc_client = osc_client
         
         # Pipeline state
-        self.is_running = False
+        self.is_running = True
         self.is_paused = False
         self.process_count = 0
         self.error_count = 0
@@ -273,7 +273,7 @@ class PipelineManager:
     def start_pipeline(self, name: str) -> bool:
         """Start specific pipeline."""
         pipeline = self.pipelines.get(name)
-        if pipeline:
+        if pipeline and not pipeline.is_running:
             return pipeline.start()
         return False
     

@@ -275,25 +275,55 @@ class BiometricWebApp:
             success = False
             message = ""
             
+            # Prevent race conditions by checking current pipeline state
+            pipeline = self.pipeline_manager.get_pipeline(pipeline_name)
+            if not pipeline:
+                emit('pipeline_control_response', {
+                    'success': False,
+                    'action': action,
+                    'pipeline': pipeline_name,
+                    'message': f"Pipeline {pipeline_name} not found"
+                })
+                return
+            
             if action == 'start':
-                success = self.pipeline_manager.start_pipeline(pipeline_name)
-                message = f"Pipeline {pipeline_name} {'started' if success else 'failed to start'}"
+                # Check if already running to avoid multiple start attempts
+                if pipeline.is_running:
+                    success = True
+                    message = f"Pipeline {pipeline_name} already running"
+                else:
+                    success = self.pipeline_manager.start_pipeline(pipeline_name)
+                    message = f"Pipeline {pipeline_name} {'started' if success else 'failed to start'}"
             elif action == 'stop':
-                self.pipeline_manager.stop_pipeline(pipeline_name)
-                success = True
-                message = f"Pipeline {pipeline_name} stopped"
+                if not pipeline.is_running:
+                    success = True
+                    message = f"Pipeline {pipeline_name} already stopped"
+                else:
+                    self.pipeline_manager.stop_pipeline(pipeline_name)
+                    success = True
+                    message = f"Pipeline {pipeline_name} stopped"
             elif action == 'pause':
-                pipeline = self.pipeline_manager.get_pipeline(pipeline_name)
-                if pipeline:
+                if pipeline.is_paused:
+                    success = True
+                    message = f"Pipeline {pipeline_name} already paused"
+                elif pipeline.is_running:
                     pipeline.pause()
                     success = True
                     message = f"Pipeline {pipeline_name} paused"
+                else:
+                    success = False
+                    message = f"Pipeline {pipeline_name} not running, cannot pause"
             elif action == 'resume':
-                pipeline = self.pipeline_manager.get_pipeline(pipeline_name)
-                if pipeline:
+                if not pipeline.is_paused:
+                    success = True  
+                    message = f"Pipeline {pipeline_name} already running"
+                else:
                     pipeline.resume()
                     success = True
                     message = f"Pipeline {pipeline_name} resumed"
+            else:
+                success = False
+                message = f"Unknown action: {action}"
             
             emit('pipeline_control_response', {
                 'success': success,

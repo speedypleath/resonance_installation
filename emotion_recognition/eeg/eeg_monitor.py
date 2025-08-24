@@ -111,12 +111,12 @@ class MuseEEGWebStreamer:
                 return jsonify({'error': 'No fragments available'})
         
         @self.socketio.on('connect')
-        def handle_connect():
+        def handle_connect(auth):
             print(f"Client connected: {threading.current_thread().ident}")
             emit('status', {'message': 'Connected to EEG streamer'})
         
         @self.socketio.on('disconnect')
-        def handle_disconnect():
+        def handle_disconnect(auth):
             print(f"Client disconnected: {threading.current_thread().ident}")
         
         @self.socketio.on('request_start_stream')
@@ -144,20 +144,7 @@ class MuseEEGWebStreamer:
             
             if not streams:
                 print("No EEG streams found! Trying any LSL streams...")
-                all_streams = resolve_bypred(timeout=timeout)
-                if all_streams:
-                    print(f"Found {len(all_streams)} streams:")
-                    for i, stream in enumerate(all_streams):
-                        print(f"  {i+1}. {stream.name()} - Type: {stream.type()} - Channels: {stream.channel_count()}")
-                    
-                    muse_streams = [s for s in all_streams if 'muse' in s.name().lower() or s.channel_count() == 4]
-                    if muse_streams:
-                        streams = [muse_streams[0]]
-                        print(f"Using Muse-like stream: {streams[0].name()}")
-                    else:
-                        return False
-                else:
-                    return False
+                return False
             
             stream_info = streams[0]
             print(f"Found EEG stream: {stream_info.name()}")
