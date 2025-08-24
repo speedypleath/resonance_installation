@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -232,6 +233,13 @@
         margin-top: 20px;
       }
 
+      .eeg-visualization {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 20px;
+      }
+
       .plot-container {
         background: rgba(255, 255, 255, 0.08);
         padding: 20px;
@@ -241,11 +249,28 @@
         min-height: 400px;
       }
 
+      .eeg-plot-container {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 15px;
+        border-radius: 12px;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        min-height: 280px;
+        display: grid;
+      }
+
       .plot-container h3 {
         margin-bottom: 15px;
         text-align: center;
         color: #ffd700;
         font-size: 1.4rem;
+      }
+
+      .eeg-plot-container h4 {
+        margin-bottom: 10px;
+        text-align: center;
+        color: #ffd700;
+        font-size: 1.1rem;
       }
 
       .emotion-display {
@@ -384,8 +409,28 @@
         text-align: center;
       }
 
+      .eeg-section {
+        background: rgba(255, 255, 255, 0.08);
+        padding: 25px;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        margin-bottom: 25px;
+      }
+
+      .eeg-section h2 {
+        color: #ffd700;
+        margin-bottom: 20px;
+        font-size: 1.8rem;
+        text-align: center;
+      }
+
       @media (max-width: 768px) {
         .data-visualization {
+          grid-template-columns: 1fr;
+        }
+
+        .eeg-visualization {
           grid-template-columns: 1fr;
         }
 
@@ -513,52 +558,75 @@
               <div class="fps-counter" id="fpsCounter">FPS: 0</div>
             </div>
           </div>
+        </div>     
+          <!-- Emotion Probability Chart -->
+
+        <div class="plot-container">
+        <h3>Emotion Probabilities</h3>
+        <div id="emotionProbPlot"></div>
         </div>
 
-        <!-- Emotion Recognition Display -->
-        <div class="plot-container">
-          <h3>Real-Time Emotion Recognition</h3>
-          <div class="emotion-display">
-            <div class="current-emotion" id="currentEmotion">Neutral</div>
-            <div class="confidence-bar">
-              <div
-                class="confidence-fill"
-                id="confidenceBar"
-                style="width: 0%"
-              ></div>
-            </div>
-            <div>Confidence: <span id="confidenceText">0%</span></div>
 
-            <div class="vad-display">
-              <div class="vad-item">
-                <div>Valence</div>
-                <div class="vad-value" id="valenceValue">0.000</div>
+
+        <!-- Emotion Recognition Display -->
+          <div class="plot-container full-width">
+            <h3>Real-Time Emotion Recognition</h3>
+            <div class="emotion-display">
+              <div class="current-emotion" id="currentEmotion">Neutral</div>
+              <div class="confidence-bar">
+                <div
+                  class="confidence-fill"
+                  id="confidenceBar"
+                  style="width: 0%"
+                ></div>
               </div>
-              <div class="vad-item">
-                <div>Arousal</div>
-                <div class="vad-value" id="arousalValue">0.000</div>
-              </div>
-              <div class="vad-item">
-                <div>Dominance</div>
-                <div class="vad-value" id="dominanceValue">0.000</div>
+              <div>Confidence: <span id="confidenceText">0%</span></div>
+
+              <div class="vad-display">
+                <div class="vad-item">
+                  <div>Valence</div>
+                  <div class="vad-value" id="valenceValue">0.000</div>
+                </div>
+                <div class="vad-item">
+                  <div>Arousal</div>
+                  <div class="vad-value" id="arousalValue">0.000</div>
+                </div>
+                <div class="vad-item">
+                  <div>Dominance</div>
+                  <div class="vad-value" id="dominanceValue">0.000</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- EEG and Emotion Timeline -->
-      <div class="data-visualization">
-        <!-- EEG Data Display -->
-        <div class="plot-container">
-          <h3>EEG Signal Monitoring</h3>
-          <div id="eegPlot"></div>
-        </div>
+      <!-- EEG Individual Channel Monitoring -->
+      <div class="eeg-section">
+        <h2>EEG Channel Monitoring</h2>
+        <div class="eeg-visualization">
+          <!-- TP9 Channel -->
+          <div class="eeg-plot-container">
+            <h4>TP9 Channel</h4>
+            <div id="eegPlotTP9"></div>
+          </div>
 
-        <!-- Emotion Probability Chart -->
-        <div class="plot-container">
-          <h3>Emotion Probabilities</h3>
-          <div id="emotionProbPlot"></div>
+          <!-- AF7 Channel -->
+          <div class="eeg-plot-container">
+            <h4>AF7 Channel</h4>
+            <div id="eegPlotAF7"></div>
+          </div>
+
+          <!-- AF8 Channel -->
+          <div class="eeg-plot-container">
+            <h4>AF8 Channel</h4>
+            <div id="eegPlotAF8"></div>
+          </div>
+
+          <!-- TP10 Channel -->
+          <div class="eeg-plot-container">
+            <h4>TP10 Channel</h4>
+            <div id="eegPlotTP10"></div>
+          </div>
         </div>
       </div>
 
@@ -577,6 +645,7 @@
     <script>
       // WebSocket connection
       const socket = io();
+    const channelNames = ["TP9", "AF7", "AF8", "TP10"];
 
       // Global state
       let emotionCount = 0;
@@ -792,14 +861,12 @@
       function updateEEGDisplay(data) {
         if (data.fragments && data.fragments.length > 0) {
           const fragment = data.fragments[0];
-          updateEEGPlot(fragment);
+          updateEEGChannelPlots(fragment);
           addLog(`EEG Fragment ${fragment.fragment_id} processed`);
         }
       }
 
-      function updateEEGPlot(fragment) {
-        const traces = [];
-        const channelNames = ["TP9", "AF7", "AF8", "TP10"];
+      function updateEEGChannelPlots(fragment) {
         const colors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"];
 
         for (
@@ -812,41 +879,42 @@
             ? fragment.timestamps.map((ts, idx) => idx / 256)
             : fragment.data.map((_, idx) => idx / 256);
 
-          traces.push({
+          const trace = {
             x: timeAxis,
             y: channelData,
             type: "scatter",
             mode: "lines",
-            name: channelNames[ch],
             line: {
               width: 2,
-              color: colors[ch % colors.length],
+              color: colors[ch],
             },
-          });
+            showlegend: false,
+          };
+
+          const layout = {
+            xaxis: {
+              title: "Time (s)",
+              color: "white",
+              gridcolor: "rgba(255,255,255,0.1)",
+              showline: true,
+              linecolor: "rgba(255,255,255,0.3)",
+            },
+            yaxis: {
+              title: "μV",
+              color: "white",
+              gridcolor: "rgba(255,255,255,0.1)",
+              showline: true,
+              linecolor: "rgba(255,255,255,0.3)",
+            },
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(255,255,255,0.05)",
+            font: { color: "white", size: 10 },
+            margin: { t: 20, b: 40, l: 50, r: 20 },
+          };
+
+          const plotId = `eegPlot${channelNames[ch]}`;
+          Plotly.react(plotId, [trace], layout, { responsive: true });
         }
-
-        const layout = {
-          title: {
-            text: `EEG Fragment ${fragment.fragment_id}`,
-            font: { color: "white" },
-          },
-          xaxis: {
-            title: "Time (s)",
-            color: "white",
-            gridcolor: "rgba(255,255,255,0.1)",
-          },
-          yaxis: {
-            title: "Amplitude (μV)",
-            color: "white",
-            gridcolor: "rgba(255,255,255,0.1)",
-          },
-          paper_bgcolor: "rgba(0,0,0,0)",
-          plot_bgcolor: "rgba(255,255,255,0.05)",
-          font: { color: "white" },
-          margin: { t: 50, b: 50, l: 60, r: 20 },
-        };
-
-        Plotly.newPlot("eegPlot", traces, layout);
       }
 
       function updateEmotionProbChart(probabilities) {
@@ -996,8 +1064,36 @@
           font: { color: "white" },
         };
 
+        const emptyEEG = {
+            xaxis: {
+              title: "Time (s)",
+              color: "white",
+              gridcolor: "rgba(255,255,255,0.1)",
+              showline: true,
+              linecolor: "rgba(255,255,255,0.3)",
+            },
+            yaxis: {
+              title: "μV",
+              color: "white",
+              gridcolor: "rgba(255,255,255,0.1)",
+              showline: true,
+              linecolor: "rgba(255,255,255,0.3)",
+            },
+            paper_bgcolor: "rgba(0,0,0,0)",
+            plot_bgcolor: "rgba(255,255,255,0.05)",
+            font: { color: "white", size: 10 },
+            margin: { t: 20, b: 40, l: 50, r: 20 },
+          };
+
         Plotly.newPlot("emotionProbPlot", [], emptyLayout);
-        Plotly.newPlot("eegPlot", [], emptyLayout);
+        for (
+          let ch = 0;
+          ch < channelNames.length;
+          ch++
+        ) {
+          const plotId = `eegPlot${channelNames[ch]}`;
+          Plotly.newPlot(plotId, [], emptyEEG);
+        }
       }
     </script>
   </body>
