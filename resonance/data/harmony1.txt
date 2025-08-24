@@ -1,0 +1,19 @@
+{
+	"numins" : 4,
+	"numouts" : 2,
+	"gain" : 1,
+	"exclusive" : 0,
+	"offset" : 0,
+	"ramptime" : 10000,
+	"connections" : [ 		{
+			"in" : 3,
+			"out" : 1,
+			"gain" : 0.6
+		}
+, 		{
+			"in" : 2,
+			"out" : 0,
+			"gain" : 0.6
+		}
+ ]
+}
