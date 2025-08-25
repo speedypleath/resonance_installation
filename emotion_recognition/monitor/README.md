@@ -20,7 +20,7 @@ biometric-monitor/
 │   ├── pipelines/
 │   │   ├── __init__.py
 │   │   ├── base.py             # Base pipeline interface
-│   │   ├── emotion_pipeline.py # Emotion recognition pipeline
+│   │   ├── face_pipeline.py # Emotion recognition pipeline
 │   │   └── eeg_pipeline.py     # EEG processing pipeline
 │   ├── communication/
 │   │   ├── __init__.py

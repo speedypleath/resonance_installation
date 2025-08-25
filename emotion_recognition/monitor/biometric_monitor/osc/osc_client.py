@@ -161,7 +161,7 @@ class OSCRouter:
         """Broadcast emotion data to all configured clients."""
         sent_count = 0
         
-        for client_name in self.routes.get("emotion", []):
+        for client_name in self.routes.get("facial", []):
             if client_name in self.clients:
                 if self.clients[client_name].send_emotion_data(
                     emotion, confidence, valence, arousal, dominance):

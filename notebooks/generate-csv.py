@@ -41,10 +41,10 @@ def extract_session_id(filename_or_path):
     return match.group(1) if match else None
 
 
-def extract_label_from_json(json_path):
+def extract_valence_from_json(json_path):
     """
-    Extract label from JSON file.
-    
+    Extract valence from JSON file.
+
     Args:
         json_path: Path to the JSON file
         
@@ -67,6 +67,31 @@ def extract_label_from_json(json_path):
         logger.error(f"Error reading JSON file {json_path}: {e}")
         return "Error"
 
+def extract_arousal_from_json(json_path):
+    """
+    Extract arousal from JSON file.
+
+    Args:
+        json_path: Path to the JSON file
+
+    Returns:
+        Label extracted from JSON, or None if not found
+    """
+    try:
+        with open(json_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        # Common label fields in EEG JSON files
+        # You may need to adjust these based on your specific JSON structure
+        description = data.get('TaskDescription', None)
+        description = description.split(',')
+        avg_arousal = float([item for item in description if 'AVG_Arousal' in item][0].split(':')[1])
+
+        return avg_arousal
+
+    except (json.JSONDecodeError, FileNotFoundError, IOError) as e:
+        logger.error(f"Error reading JSON file {json_path}: {e}")
+        return "Error"
 
 def process_directory(root_directory, output_csv):
     """
@@ -118,28 +143,32 @@ def process_directory(root_directory, output_csv):
                 json_file = session_dir / f"{base_name}.json"
                 
                 if json_file.exists():
-                    label = extract_label_from_json(json_file)
-                    logger.info(f"    Found pair: {edf_file.name} with label '{label}'")
+                    valence = extract_valence_from_json(json_file)
+                    arousal = extract_arousal_from_json(json_file)
+                    logger.info(f"    Found pair: {edf_file.name} with valence '{valence}' and arousal '{arousal}'")
                 else:
                     # Look for any JSON file in the directory as fallback
                     if json_files:
-                        label = extract_label_from_json(json_files[0])
+                        valence = extract_valence_from_json(json_files[0])
+                        arousal = extract_arousal_from_json(json_files[0])
                         logger.warning(f"    Using fallback JSON file for {edf_file.name}")
                     else:
-                        label = "No_JSON"
+                        valence = "No_JSON"
+                        arousal = "No_JSON"
                         logger.warning(f"    No JSON file found for {edf_file.name}")
                 
                 results.append({
                     'subject_id': subject_id,
                     'trial_id': trial_id,
-                    'label': label,
+                    'valence': valence,
+                    'arousal': arousal,
                     'file_path': str(edf_file.absolute())
                 })
     
     # Write results to CSV
     if results:
         with open(output_csv, 'w', newline='', encoding='utf-8') as csvfile:
-            fieldnames = ['subject_id', 'trial_id', 'label', 'file_path']
+            fieldnames = ['subject_id', 'trial_id', 'valence', 'arousal', 'file_path']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             
             writer.writeheader()

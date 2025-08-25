@@ -5,22 +5,22 @@ import mediapipe as mp
 import numpy as np
 import time
 import threading
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 from PIL import Image
 
 from .base import BiometricPipeline, PipelineResult
-from ..models.base import EmotionModel
+from ..models.base import FaceModel
 from ..osc.osc_client import OSCClient
-from ..utils.image_processing import normalize_coordinates, get_face_box
+from ..utils.image_processing import get_face_box
 
 
-class EmotionPipeline(BiometricPipeline):
+class FacePipeline(BiometricPipeline):
     """Pipeline for real-time emotion recognition from webcam."""
     
-    def __init__(self, model: EmotionModel, osc_client: Optional[OSCClient] = None,
-                 camera_id: int = 0, target_fps: int = 15, confidence_threshold: float = 0.5):
-        super().__init__("emotion_recognition", model, osc_client)
+    def __init__(self, model: FaceModel, osc_client: Optional[OSCClient] = None,
+                 camera_id: int = 0, target_fps: int = 15, confidence_threshold: float = 0.5):        
         
+        super().__init__("facial_emotion", model, osc_client)
         self.camera_id = camera_id
         self.target_fps = target_fps
         self.frame_interval = 1.0 / target_fps
@@ -130,12 +130,13 @@ class EmotionPipeline(BiometricPipeline):
                         # Send to output queue for web interface (non-blocking)
                         try:
                             self.output_queue.put(result, block=False)
-                        except:
+                        except Exception as e:
                             # Queue full, clear old results
                             try:
                                 self.output_queue.get_nowait()
                                 self.output_queue.put(result, block=False)
-                            except:
+                            except Exception as e:
+                                print(f"Error managing output queue: {e}")
                                 pass  # Skip if still can't add
                         
                         # Call result callbacks (for web interface updates)
@@ -234,8 +235,8 @@ class EmotionPipeline(BiometricPipeline):
                     if self.cap:
                         try:
                             self.cap.release()
-                        except:
-                            pass
+                        except Exception as e:
+                            print(f"Error releasing camera: {e}")
                         self.cap = None
             
             print("Camera reconnection failed")
@@ -344,7 +345,7 @@ class EmotionPipeline(BiometricPipeline):
                         # Face too small
                         return PipelineResult(
                             timestamp=timestamp,
-                            data_type="emotion",
+                            data_type="facial",
                             predictions={
                                 "emotion": self.last_emotion,
                                 "confidence": self.last_confidence,
@@ -373,7 +374,7 @@ class EmotionPipeline(BiometricPipeline):
                         
                         return PipelineResult(
                             timestamp=timestamp,
-                            data_type="emotion",
+                            data_type="facial",
                             predictions=prediction,
                             raw_data={"frame": frame, "bbox": bbox},
                             metadata={
@@ -388,7 +389,7 @@ class EmotionPipeline(BiometricPipeline):
                         # Low confidence
                         return PipelineResult(
                             timestamp=timestamp,
-                            data_type="emotion",
+                            data_type="facial",
                             predictions=prediction,
                             raw_data={"frame": frame, "bbox": bbox},
                             metadata={
@@ -405,7 +406,7 @@ class EmotionPipeline(BiometricPipeline):
             
             return PipelineResult(
                 timestamp=timestamp,
-                data_type="emotion",
+                data_type="facial",
                 predictions={
                     "emotion": self.last_emotion,
                     "confidence": self.last_confidence,
@@ -425,7 +426,7 @@ class EmotionPipeline(BiometricPipeline):
         except Exception as e:
             return PipelineResult(
                 timestamp=timestamp,
-                data_type="emotion",
+                data_type="facial",
                 predictions={},
                 raw_data={"frame": frame},
                 metadata={},
@@ -483,7 +484,8 @@ class EmotionPipeline(BiometricPipeline):
                     # Send to output queue for web interface
                     try:
                         self.output_queue.put(result, timeout=0.01)
-                    except:
+                    except Exception as e:
+                        print(f"Error putting result in output queue: {e}")
                         pass  # Queue full, skip
                     
                     # Call result callbacks (for web interface updates)
@@ -581,6 +583,9 @@ class EmotionPipeline(BiometricPipeline):
             startX, startY, endX, endY = bbox
             
             emotion = result.predictions["emotion"]
+            print(f"Detected emotion: {emotion}")
+            print(f"Confidence: {result.predictions['confidence']:.1%}")
+            print(result.predictions)
             confidence = result.predictions["confidence"]
             
             # Draw bounding box and label
@@ -590,28 +595,6 @@ class EmotionPipeline(BiometricPipeline):
                       cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 255), 2)
         
         cv2.imshow('Emotion Recognition', display_frame)
-    
-    def _display_frame(self, frame: np.ndarray) -> None:
-        """Display frame with emotion overlay."""
-        # Get latest result for display
-        try:
-            result = self.output_queue.get_nowait()
-            if result.success and result.raw_data.get("bbox"):
-                bbox = result.raw_data["bbox"]
-                startX, startY, endX, endY = bbox
-                
-                emotion = result.predictions["emotion"]
-                confidence = result.predictions["confidence"]
-                
-                # Draw bounding box and label
-                cv2.rectangle(frame, (startX, startY), (endX, endY), (255, 0, 255), 2)
-                label = f"{emotion} {confidence:.1%}"
-                cv2.putText(frame, label, (startX, startY-10), 
-                          cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 255), 2)
-        except:
-            pass
-        
-        cv2.imshow('Emotion Recognition', frame)
     
     def _print_emotion_result(self, result: PipelineResult) -> None:
         """Print emotion recognition result to console."""

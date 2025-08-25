@@ -1,10 +1,9 @@
 """Base classes for biometric models."""
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple, Union
 import numpy as np
 import torch
-import torch.nn as nn
 from pathlib import Path
 
 
@@ -45,7 +44,7 @@ class BiometricModel(ABC):
         }
 
 
-class EmotionModel(BiometricModel):
+class FaceModel(BiometricModel):
     """Base class for emotion recognition models."""
     
     def __init__(self, model_path: Optional[str] = None, device: str = "cpu"):
@@ -94,7 +93,6 @@ class EEGModel(BiometricModel):
             "n_channels": self.n_channels,
             "channel_names": self.channel_names
         }
-
 
 class ModelRegistry:
     """Registry for managing multiple models."""

@@ -223,14 +223,14 @@ def test_pipeline_creation():
         
         # Test emotion pipeline (more likely to segfault)
         from biometric_monitor.models.face import ResNetEmotionModel
-        from biometric_monitor.pipelines.face import EmotionPipeline
+        from biometric_monitor.pipelines.face import FacePipeline
         
         emotion_model = ResNetEmotionModel(
             backbone_path="models/FER_static_ResNet50_AffectNet.pt",
             lstm_path="models/FER_dinamic_LSTM_Aff-Wild2.pt"
         )
         
-        emotion_pipeline = EmotionPipeline(
+        face_pipeline = FacePipeline(
             model=emotion_model,
             camera_id=0,
             target_fps=10

@@ -7,9 +7,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 from PIL import Image
 from torchvision import transforms
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
-from .base import EmotionModel
+from .base import FaceModel
 
 
 class Conv2dSame(torch.nn.Conv2d):
@@ -145,8 +145,8 @@ class LSTMEmotionModel(nn.Module):
         return x
 
 
-class ResNetEmotionModel(EmotionModel):
-    """ResNet-based emotion recognition model."""
+class ResNetEmotionModel(FaceModel):
+    """ResNet-based face recognition model."""
     
     def __init__(self, backbone_path: str, lstm_path: str, device: str = "cpu", sadness_boost: float = 1.0):
         super().__init__(device=device)

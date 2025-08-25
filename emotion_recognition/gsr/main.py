@@ -14,12 +14,197 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from scipy.signal import butter, filtfilt, savgol_filter
+from pathlib import Path
 import scipy.signal as sp_signal
 import cvxpy as cp
 import pickle
 import joblib
 import warnings
 warnings.filterwarnings('ignore')
+tf.config.set_visible_devices([], 'GPU')
+class ImprovedWESADDataLoader:
+    """
+    Enhanced WESAD dataset loader with better data quality control
+    """
+    
+    def __init__(self, wesad_path):
+        self.wesad_path = Path(wesad_path)
+        self.label_sampling_rate = 700
+        self.eda_sampling_rate = 4
+        self.label_mapping = {
+            0: 'not_defined', 1: 'baseline', 2: 'stress', 3: 'amusement',
+            4: 'meditation', 5: 'recovery', 6: 'transient', 7: 'other'
+        }
+        
+    def get_available_subjects(self):
+        """Get list of available subject IDs with data quality check"""
+        subjects = []
+        for subject_dir in self.wesad_path.iterdir():
+            if subject_dir.is_dir() and subject_dir.name.startswith('S'):
+                pkl_file = subject_dir / f"{subject_dir.name}.pkl"
+                if pkl_file.exists():
+                    # Quick data quality check
+                    try:
+                        with open(pkl_file, 'rb') as f:
+                            data = pickle.load(f, encoding='latin1')
+                        
+                        # Check if essential data exists
+                        if ('signal' in data and 'wrist' in data['signal'] and 
+                            'EDA' in data['signal']['wrist'] and 'label' in data):
+                            subjects.append(subject_dir.name)
+                    except:
+                        print(f"⚠️  Skipping {subject_dir.name} - data quality issues")
+                        continue
+        return sorted(subjects)
+    
+    def load_subject(self, subject_id):
+        """Enhanced subject loading with better error handling"""
+        subject_path = self.wesad_path / subject_id / f"{subject_id}.pkl"
+        
+        if not subject_path.exists():
+            raise FileNotFoundError(f"Subject data not found: {subject_path}")
+        
+        print(f"Loading subject {subject_id}...")
+        
+        try:
+            with open(subject_path, 'rb') as f:
+                data = pickle.load(f, encoding='latin1')
+        except Exception as e:
+            raise Exception(f"Failed to load {subject_id}: {e}")
+        
+        # Extract and validate data
+        try:
+            eda_signal = data['signal']['wrist']['EDA'].flatten()
+            labels_700hz = data['label'].flatten()
+        except Exception as e:
+            raise Exception(f"Failed to extract data from {subject_id}: {e}")
+        
+        # Data quality checks
+        if len(eda_signal) == 0 or len(labels_700hz) == 0:
+            raise Exception(f"Empty data in {subject_id}")
+        
+        # Remove extreme outliers in EDA signal
+        eda_q1, eda_q3 = np.percentile(eda_signal, [25, 75])
+        eda_iqr = eda_q3 - eda_q1
+        eda_lower = eda_q1 - 3 * eda_iqr
+        eda_upper = eda_q3 + 3 * eda_iqr
+        
+        outlier_mask = (eda_signal >= eda_lower) & (eda_signal <= eda_upper)
+        if np.sum(outlier_mask) < len(eda_signal) * 0.8:  # Too many outliers
+            print(f"  Warning: {subject_id} has many outliers, using robust preprocessing")
+        
+        # Downsample labels
+        downsample_factor = int(self.label_sampling_rate // self.eda_sampling_rate)
+        labels_4hz = labels_700hz[::downsample_factor]
+        
+        # Ensure same length
+        min_length = min(len(eda_signal), len(labels_4hz))
+        eda_signal = eda_signal[:min_length]
+        labels_4hz = labels_4hz[:min_length]
+        
+        # Final data validation
+        if len(eda_signal) < 1000:  # Less than ~4 minutes
+            raise Exception(f"Insufficient data in {subject_id}")
+        
+        print(f"  EDA signal: {len(eda_signal)} samples at {self.eda_sampling_rate} Hz")
+        print(f"  Duration: {len(eda_signal) / self.eda_sampling_rate / 60:.1f} minutes")
+        
+        # Check label distribution
+        unique_labels, counts = np.unique(labels_4hz, return_counts=True)
+        baseline_count = counts[unique_labels == 1][0] if 1 in unique_labels else 0
+        stress_count = counts[unique_labels == 2][0] if 2 in unique_labels else 0
+        
+        print(f"  Baseline: {baseline_count} samples ({baseline_count/self.eda_sampling_rate/60:.1f} min)")
+        print(f"  Stress: {stress_count} samples ({stress_count/self.eda_sampling_rate/60:.1f} min)")
+        
+        if baseline_count < 120 or stress_count < 120:  # Less than 30 seconds each
+            print(f"  Warning: {subject_id} has insufficient baseline or stress data")
+        
+        return {
+            'subject_id': subject_id,
+            'eda_signal': eda_signal,
+            'labels': labels_4hz,
+            'sampling_rate': self.eda_sampling_rate,
+            'data_quality': {
+                'outlier_ratio': 1 - np.sum(outlier_mask) / len(outlier_mask),
+                'baseline_duration': baseline_count / self.eda_sampling_rate,
+                'stress_duration': stress_count / self.eda_sampling_rate
+            }
+        }
+    
+    def extract_condition_segments(self, subject_data, baseline_label=1, stress_label=2, 
+                                 min_segment_length=10, max_segment_length=20):
+        """Enhanced segment extraction with better quality control"""
+        eda_signal = subject_data['eda_signal']
+        labels = subject_data['labels']
+        sampling_rate = subject_data['sampling_rate']
+        
+        min_samples = int(min_segment_length * sampling_rate)
+        max_samples = int(max_segment_length * sampling_rate)
+        
+        baseline_segments = []
+        stress_segments = []
+        
+        for target_label, segment_list in [(baseline_label, baseline_segments), 
+                                         (stress_label, stress_segments)]:
+            
+            label_mask = (labels == target_label)
+            if not np.any(label_mask):
+                continue
+            
+            # Find continuous segments
+            label_indices = np.where(label_mask)[0]
+            segments = []
+            current_segment = [label_indices[0]]
+            
+            for i in range(1, len(label_indices)):
+                if label_indices[i] == label_indices[i-1] + 1:
+                    current_segment.append(label_indices[i])
+                else:
+                    if len(current_segment) >= min_samples:
+                        segments.append(current_segment)
+                    current_segment = [label_indices[i]]
+            
+            if len(current_segment) >= min_samples:
+                segments.append(current_segment)
+            
+            # Extract and quality-filter segments
+            for segment_indices in segments:
+                segment_eda = eda_signal[segment_indices]
+                
+                # Quality check: remove segments with too many artifacts
+                # Check for unrealistic values or excessive noise
+                if len(segment_eda) < min_samples:
+                    continue
+                
+                # Check signal quality (not too flat, not too noisy)
+                signal_std = np.std(segment_eda)
+                signal_range = np.max(segment_eda) - np.min(segment_eda)
+                
+                if signal_std < 0.001 or signal_range < 0.01:  # Too flat
+                    continue
+                
+                if signal_std > 2.0:  # Too noisy
+                    continue
+                
+                # Split long segments
+                if len(segment_eda) > max_samples:
+                    step_size = int(max_samples // 3)  # More overlap for better training
+                    for start in range(0, len(segment_eda) - max_samples + 1, step_size):
+                        window = segment_eda[start:start + max_samples]
+                        if len(window) == max_samples:  # Ensure consistent length
+                            segment_list.append(window)
+                else:
+                    segment_list.append(segment_eda)
+        
+        print(f"  Extracted {len(baseline_segments)} baseline segments")
+        print(f"  Extracted {len(stress_segments)} stress segments")
+        
+        return {
+            'baseline_segments': baseline_segments,
+            'stress_segments': stress_segments,
+            'subject_id': subject_data['subject_id']
+        }
 
 class GSRStressTrainer:
     """GSR Stress Detection Trainer - Paper's Exact Method"""
@@ -38,7 +223,6 @@ class GSRStressTrainer:
         
     def load_wesad_data(self, wesad_path):
         """Load WESAD with 20-second segments"""
-        from wesad_loader import ImprovedWESADDataLoader
         
         loader = ImprovedWESADDataLoader(wesad_path)
         all_subjects = loader.get_available_subjects()

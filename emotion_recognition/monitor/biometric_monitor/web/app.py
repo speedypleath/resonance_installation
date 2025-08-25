@@ -97,9 +97,9 @@ class BiometricWebApp:
         def video_feed():
             """Video streaming route for camera feed."""
             try:
-                emotion_pipeline = self.pipeline_manager.get_pipeline('emotion_recognition')
-                if emotion_pipeline and emotion_pipeline.is_running and hasattr(emotion_pipeline, 'cap') and emotion_pipeline.cap:
-                    return self._generate_video_stream(emotion_pipeline)
+                face_pipeline = self.pipeline_manager.get_pipeline('facial_emotion')
+                if face_pipeline and face_pipeline.is_running and hasattr(face_pipeline, 'cap') and face_pipeline.cap:
+                    return self._generate_video_stream(face_pipeline)
                 else:
                     # Return error response
                     from flask import Response
@@ -110,7 +110,7 @@ class BiometricWebApp:
                 from flask import Response
                 return Response(f"Video feed error: {str(e)}", mimetype='text/plain', status=500)
     
-    def _generate_video_stream(self, emotion_pipeline):
+    def _generate_video_stream(self, face_pipeline):
         """Generate video stream with emotion overlays."""
         from flask import Response
         import cv2
@@ -120,17 +120,17 @@ class BiometricWebApp:
             last_result = None
             
             try:
-                while emotion_pipeline.is_running and emotion_pipeline.cap and emotion_pipeline.cap.isOpened():
+                while face_pipeline.is_running and face_pipeline.cap and face_pipeline.cap.isOpened():
                     try:
                         # Get latest frame directly from camera
-                        frame = emotion_pipeline.capture_frame()
+                        frame = face_pipeline.capture_frame()
                         if frame is None:
                             continue
                         
                         # Try to get the most recent result from the pipeline
                         try:
-                            while not emotion_pipeline.output_queue.empty():
-                                last_result = emotion_pipeline.output_queue.get_nowait()
+                            while not face_pipeline.output_queue.empty():
+                                last_result = face_pipeline.output_queue.get_nowait()
                         except:
                             pass
                         
@@ -350,7 +350,7 @@ class BiometricWebApp:
         
         def handle_emotion_result(pipeline_name: str, result: PipelineResult):
             """Handle emotion recognition results."""
-            if result.data_type == "emotion":
+            if result.data_type == "facial":
                 try:
                     # Always send data, even if not successful
                     data = {
@@ -383,7 +383,7 @@ class BiometricWebApp:
                     
                     # Debug logging
                     if self.messages_sent % 50 == 1:  # Every ~3 seconds
-                        print(f"Sent emotion update #{self.messages_sent}: {data.get('emotion')} ({data.get('confidence', 0):.1%})")
+                        print(f"Sent emotion update #{self.messages_sent}: {data.get('facial')} ({data.get('confidence', 0):.1%})")
                 
                 except Exception as e:
                     print(f"Error in emotion callback: {e}")

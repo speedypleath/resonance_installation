@@ -457,11 +457,15 @@
         </div>
         <div class="status-indicator">
           <div id="emotionStatus" class="status-dot status-disconnected"></div>
-          <span>Emotion Recognition</span>
+          <span>Facial Emotion Recognition</span>
         </div>
         <div class="status-indicator">
           <div id="eegStatus" class="status-dot status-disconnected"></div>
           <span>EEG Monitoring</span>
+        </div>
+        <div class="status-indicator">
+          <div id="gsrStatus" class="status-dot status-disconnected"></div>
+        <span>GSR Monitoring</span>
         </div>
       </div>
       <div class="controls">
@@ -509,13 +513,13 @@
         <div class="pipeline-controls">
           <button
             class="btn btn-primary"
-            onclick="startPipeline('emotion_recognition')"
+            onclick="startPipeline('facial_emotion')"
           >
             Start Emotion
           </button>
           <button
             class="btn btn-danger"
-            onclick="stopPipeline('emotion_recognition')"
+            onclick="stopPipeline('facial_emotion')"
           >
             Stop Emotion
           </button>
@@ -677,6 +681,7 @@
         const cameraFeed = document.getElementById("cameraFeed");
         if (cameraFeed.src) {
           // Add timestamp to bypass cache
+          cameraStatus.textContent = "Camera: Refreshing...";
           const baseUrl = "/video_feed";
           const timestamp = new Date().getTime();
           cameraFeed.src = `${baseUrl}?t=${timestamp}`;
@@ -763,12 +768,14 @@
       }
 
       function startAllPipelines() {
-        startPipeline("emotion_recognition");
+        startPipeline("facial_emotion");
+        startPipeline("gsr_stress_detection");
         startPipeline("eeg_processing");
       }
 
       function stopAllPipelines() {
-        stopPipeline("emotion_recognition");
+        stopPipeline("facial_emotion");
+        stopPipeline("gsr_stress_detection");
         stopPipeline("eeg_processing");
       }
 
@@ -985,14 +992,16 @@
       function updatePipelineStatus(pipeline, action, success) {
         let statusElement;
 
-        if (pipeline === "emotion_recognition") {
+        if (pipeline === "facial_emotion") {
           statusElement = document.getElementById("emotionStatus");
         } else if (pipeline === "eeg_processing") {
           statusElement = document.getElementById("eegStatus");
         }
 
         if (statusElement) {
-          if (action === "start" && success) {
+          if (success) {
+            statusElement.className = "status-dot status-connected";
+          } else if (action === "start" && success) {
             statusElement.className = "status-dot status-processing";
           } else if (action === "stop") {
             statusElement.className = "status-dot status-disconnected";
@@ -1043,6 +1052,8 @@
       window.addEventListener("load", function () {
         addLog("Dashboard initialized");
 
+        initializeCameraFeed();
+        startAllPipelines();
         // Initialize empty plots
         initializeEmptyPlots();
 

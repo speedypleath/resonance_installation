@@ -6,7 +6,7 @@ import os
 
 
 @dataclass
-class EmotionConfig:
+class FacialConfig:
     """Configuration for emotion recognition."""
     backbone_model_path: str = "models/FER_static_ResNet50_AffectNet.pt"
     lstm_model_path: str = "models/FER_dinamic_LSTM_Aff-Wild2.pt"
@@ -33,6 +33,14 @@ class EEGConfig:
 
 
 @dataclass
+class GSRConfig:
+    """Configuration for GSR monitoring."""
+    model_path: str = "models/wesad_gsr_stress_cnn_random_forest_20s_4hz.joblib"
+    window_size: int = 20
+    overlap: float = 5
+
+
+@dataclass
 class OSCConfig:
     """Configuration for OSC communication."""
     host: str = "127.0.0.1"
@@ -52,8 +60,9 @@ class WebConfig:
 @dataclass
 class MonitorConfig:
     """Main configuration class."""
-    emotion: EmotionConfig
+    facial: FacialConfig
     eeg: EEGConfig
+    gsr: GSRConfig
     osc: OSCConfig
     web: WebConfig
     
@@ -61,8 +70,9 @@ class MonitorConfig:
     def from_dict(cls, config_dict: Dict[str, Any]) -> 'MonitorConfig':
         """Create configuration from dictionary."""
         return cls(
-            emotion=EmotionConfig(**config_dict.get('emotion', {})),
+            facial=FacialConfig(**config_dict.get('facial', {})),
             eeg=EEGConfig(**config_dict.get('eeg', {})),
+            gsr=GSRConfig(**config_dict.get('gsr', {})),
             osc=OSCConfig(**config_dict.get('osc', {})),
             web=WebConfig(**config_dict.get('web', {}))
         )
@@ -71,8 +81,9 @@ class MonitorConfig:
     def default(cls) -> 'MonitorConfig':
         """Create default configuration."""
         return cls(
-            emotion=EmotionConfig(),
+            facial=FacialConfig(),
             eeg=EEGConfig(),
+            gsr=GSRConfig(),
             osc=OSCConfig(),
             web=WebConfig()
         )
@@ -102,8 +113,9 @@ class ConfigManager:
         if self.config_path:
             import json
             config_dict = {
-                'emotion': config.emotion.__dict__,
+                'facial': config.facial.__dict__,
                 'eeg': config.eeg.__dict__,
+                'gsr': config.gsr.__dict__,
                 'osc': config.osc.__dict__,
                 'web': config.web.__dict__
             }
@@ -113,8 +125,9 @@ class ConfigManager:
     def validate_model_files(self, config: MonitorConfig) -> bool:
         """Validate that required model files exist."""
         required_files = [
-            config.emotion.backbone_model_path,
-            config.emotion.lstm_model_path
+            config.facial.backbone_model_path,
+            config.facial.lstm_model_path,
+            config.gsr.model_path
         ]
         
         missing_files = []

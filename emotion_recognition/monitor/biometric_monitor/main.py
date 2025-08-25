@@ -5,16 +5,17 @@ import sys
 import time
 import signal
 import os
-from pathlib import Path
 from typing import Optional
 
 from .config import ConfigManager, MonitorConfig
 from .models.base import ModelRegistry
 from .models.face import ResNetEmotionModel
+from .models.gsr import GSRStressModel
 from .pipelines.base import PipelineManager
-from .pipelines.face import EmotionPipeline
+from .pipelines.face import FacePipeline
 from .pipelines.eeg import DummyEEGModel, EEGPipeline
-from .osc.osc_client import OSCRouter, OSCClient
+from .pipelines.gsr import GSRPipeline
+from .osc.osc_client import OSCRouter
 from .web.app import BiometricWebApp
 
 # https://bugs.python.org/issue30385 fucking god i hate my life
@@ -57,12 +58,12 @@ class BiometricMonitorSystem:
         # Initialize OSC clients
         self._initialize_osc()
         
+        # Initialize web application
+        self._initialize_web_app()
+        
         # Initialize pipelines
         if not self._initialize_pipelines():
             return False
-        
-        # Initialize web application
-        self._initialize_web_app()
         
         print("System initialization complete!")
         return True
@@ -71,20 +72,34 @@ class BiometricMonitorSystem:
         """Initialize and register models."""
         try:
             # Load emotion recognition model
-            emotion_model = ResNetEmotionModel(
-                backbone_path=self.config.emotion.backbone_model_path,
-                lstm_path=self.config.emotion.lstm_model_path,
-                sadness_boost=self.config.emotion.sadness_boost
+            face_model = ResNetEmotionModel(
+                backbone_path=self.config.facial.backbone_model_path,
+                lstm_path=self.config.facial.lstm_model_path,
+                sadness_boost=self.config.facial.sadness_boost
             )
-            
-            if emotion_model.is_loaded:
-                self.model_registry.register_model("emotion_resnet_lstm", emotion_model)
-                self.model_registry.set_active_model("emotion", "emotion_resnet_lstm")
-                print("Emotion recognition model loaded successfully")
+
+            if face_model.is_loaded:
+                self.model_registry.register_model("emotion_resnet_lstm", face_model)
+                self.model_registry.set_active_model("facial", "emotion_resnet_lstm")
+                print("Facial emotion recognition model loaded successfully")
             else:
-                print("Warning: Emotion recognition model failed to load")
+                print("Warning: Facial emotion recognition model failed to load")
                 return False
-            
+
+            gsr_model = GSRStressModel(
+                model_path=self.config.gsr.model_path,
+                window_size=self.config.gsr.window_size,
+                overlap=self.config.gsr.overlap
+            )
+
+            if gsr_model.is_loaded:
+                self.model_registry.register_model("gsr_stress", gsr_model)
+                self.model_registry.set_active_model("gsr", "gsr_stress")
+                print("GSR stress model loaded successfully")
+            else:
+                print("Warning: GSR stress model failed to load")
+                return False
+
             return True
             
         except Exception as e:
@@ -99,9 +114,10 @@ class BiometricMonitorSystem:
                 self.osc_router.add_client("default", self.config.osc)
                 
                 # Set up routing
-                self.osc_router.add_route("emotion", "default")
+                self.osc_router.add_route("facial", "default")
                 self.osc_router.add_route("vad", "default")
                 self.osc_router.add_route("eeg", "default")
+                self.osc_router.add_route("gsr", "default")
                 
                 print(f"OSC communication initialized: {self.config.osc.host}:{self.config.osc.port}")
                 
@@ -115,23 +131,23 @@ class BiometricMonitorSystem:
         try:
             # Get OSC client for pipelines
             osc_client = self.osc_router.clients.get("default")
-            
-            # Initialize emotion recognition pipeline
-            emotion_model = self.model_registry.get_active_model("emotion")
-            if emotion_model:
-                emotion_pipeline = EmotionPipeline(
-                    model=emotion_model,
+
+            # Initialize facial emotion recognition pipeline
+            face_model = self.model_registry.get_active_model("facial")
+            if face_model:
+                face_pipeline = FacePipeline(
+                    model=face_model,
                     osc_client=osc_client,
-                    camera_id=self.config.emotion.camera_id,
-                    target_fps=self.config.emotion.target_fps,
-                    confidence_threshold=self.config.emotion.confidence_threshold
+                    camera_id=self.config.facial.camera_id,
+                    target_fps=self.config.facial.target_fps,
+                    confidence_threshold=self.config.facial.confidence_threshold
                 )
-                self.pipeline_manager.register_pipeline(emotion_pipeline)
+                self.pipeline_manager.register_pipeline(face_pipeline)
                 print("Emotion recognition pipeline initialized")
                     # Explicitly create dummy model
-            dummy_model = DummyEEGModel()
 
             # Initialize EEG pipeline
+            dummy_model = DummyEEGModel()
             eeg_pipeline = EEGPipeline(
                 model=dummy_model,  # No EEG model for now
                 osc_client=osc_client,
@@ -142,7 +158,18 @@ class BiometricMonitorSystem:
             )
             self.pipeline_manager.register_pipeline(eeg_pipeline)
             print("EEG processing pipeline initialized")
-            
+
+            # Initialize GSR pipeline
+            gsr_model = self.model_registry.get_active_model("gsr")
+            if gsr_model:
+                gsr_pipeline = GSRPipeline(
+                    model=gsr_model,
+                    osc_client=osc_client,
+                    window_size=self.config.gsr.window_size,
+                )
+                self.pipeline_manager.register_pipeline(gsr_pipeline)
+                print("GSR processing pipeline initialized")
+
             return True
             
         except Exception as e:
@@ -208,7 +235,7 @@ class BiometricMonitorSystem:
     def _print_status_summary(self) -> None:
         """Print status summary to console."""
         stats = self.pipeline_manager.get_summary_stats()
-        print(f"\n--- Status Update ---")
+        print("\n--- Status Update ---")
         print(f"Running pipelines: {stats['running_pipelines']}/{stats['total_pipelines']}")
         print(f"Total processes: {stats['total_processes']}")
         print(f"Error rate: {stats['error_rate']:.2%}")
@@ -245,10 +272,12 @@ def create_argument_parser() -> argparse.ArgumentParser:
     )
     
     # Pipeline selection
-    parser.add_argument("--emotion", action="store_true", 
-                       help="Enable emotion recognition pipeline")
+    parser.add_argument("--face", action="store_true", 
+                       help="Enable face emotion recognition pipeline")
     parser.add_argument("--eeg", action="store_true", 
                        help="Enable EEG monitoring pipeline")
+    parser.add_argument("--gsr", action="store_true",
+                       help="Enable GSR monitoring pipeline")
     parser.add_argument("--auto-start", action="store_true",
                        help="Automatically start enabled pipelines")
     
@@ -328,25 +357,26 @@ def main():
         config.osc.enabled = False
     
     if args.camera_id is not None:
-        config.emotion.camera_id = args.camera_id
+        config.facial.camera_id = args.camera_id
     if args.target_fps:
-        config.emotion.target_fps = args.target_fps
+        config.facial.target_fps = args.target_fps
     if args.sadness_boost:
-        config.emotion.sadness_boost = args.sadness_boost
+        config.facial.sadness_boost = args.sadness_boost
     if args.confidence_threshold:
-        config.emotion.confidence_threshold = args.confidence_threshold
-    
+        config.facial.confidence_threshold = args.confidence_threshold
+
     if args.emotion_backbone:
-        config.emotion.backbone_model_path = args.emotion_backbone
+        config.facial.backbone_model_path = args.emotion_backbone
     if args.emotion_lstm:
-        config.emotion.lstm_model_path = args.emotion_lstm
-    
+        config.facial.lstm_model_path = args.emotion_lstm
+
     # Validate model files
     if not config_manager.validate_model_files(config):
         print("Error: Required model files are missing!")
         print("Please ensure the following files exist:")
-        print(f"  - {config.emotion.backbone_model_path}")
-        print(f"  - {config.emotion.lstm_model_path}")
+        print(f"  - {config.facial.backbone_model_path}")
+        print(f"  - {config.facial.lstm_model_path}")
+        print(f"  - {config.gsr.model_path}")
         return 1
     
     # Create and initialize system

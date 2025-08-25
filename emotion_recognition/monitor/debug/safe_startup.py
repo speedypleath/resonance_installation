@@ -28,7 +28,7 @@ def start_emotion_only():
     try:
         from biometric_monitor.config import MonitorConfig
         from biometric_monitor.models.face import ResNetEmotionModel
-        from biometric_monitor.pipelines.face import EmotionPipeline
+        from biometric_monitor.pipelines.face import FacePipeline
         from biometric_monitor.osc.osc_client import OSCClient, OSCConfig
         
         print("Imports successful")
@@ -51,7 +51,7 @@ def start_emotion_only():
         osc_client = OSCClient(osc_config)
         
         # Create pipeline
-        pipeline = EmotionPipeline(
+        pipeline = FacePipeline(
             model=emotion_model,
             osc_client=osc_client,
             camera_id=0,
@@ -205,7 +205,7 @@ def main():
         print("Running diagnostics first...")
         os.system("python examples/debug.py")
         return
-    elif mode == "emotion":
+    elif mode == "facial:
         success = start_emotion_only()
     elif mode == "eeg":
         success = start_eeg_only()

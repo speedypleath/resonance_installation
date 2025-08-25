@@ -23,12 +23,12 @@ __all__ = [
 # biometric_monitor/models/__init__.py
 """Biometric models package."""
 
-from .models.base import BiometricModel, EmotionModel, EEGModel, ModelRegistry
+from .models.base import BiometricModel, FaceModel, EEGModel, ModelRegistry
 from .models.face import ResNetEmotionModel
 
 __all__ = [
     "BiometricModel",
-    "EmotionModel", 
+    "FaceModel", 
     "EEGModel",
     "ModelRegistry",
     "ResNetEmotionModel"
@@ -39,14 +39,14 @@ __all__ = [
 """Data processing pipelines package."""
 
 from .pipelines.base import BiometricPipeline, PipelineResult, PipelineManager
-from .pipelines.face import EmotionPipeline
+from .pipelines.face import FacePipeline
 from .pipelines.eeg import EEGPipeline
 
 __all__ = [
     "BiometricPipeline",
     "PipelineResult", 
     "PipelineManager",
-    "EmotionPipeline",
+    "FacePipeline",
     "EEGPipeline"
 ]
 
