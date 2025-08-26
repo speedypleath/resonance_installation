@@ -5,8 +5,8 @@ import time
 from typing import Any, Dict, List, Optional, Tuple
 from collections import deque
 from datetime import datetime, timezone
-from pylsl import StreamInlet, resolve_bypred
-
+from pylsl import StreamInlet, resolve_byprop
+import tensorflow 
 from .base import BiometricPipeline, PipelineResult
 from ..models.gsr import GSRStressModel
 from ..osc.osc_client import OSCClient
@@ -62,11 +62,11 @@ class GSRPipeline(BiometricPipeline):
         
         try:
             # Look for GSR streams first by type
-            streams = resolve_bypred('type', 'GSR', timeout=timeout)
+            streams = resolve_byprop('type', 'GSR', timeout=timeout)
             
             if not streams:
                 # Try broader search for EDA streams
-                streams = resolve_bypred('type', 'EDA', timeout=timeout)
+                streams = resolve_byprop('type', 'EDA', timeout=timeout)
 
             if not streams:
                 print("No GSR/EDA streams found")
@@ -211,19 +211,18 @@ class GSRPipeline(BiometricPipeline):
             
             # Make stress prediction using the trained model
             prediction_result = self.model.predict(window_data)
+            print(prediction_result)
             
             # Create prediction record
             prediction = {
                 'window_id': self.window_count,
                 'prediction_id': self.prediction_count,
-                'stress_level': prediction_result.get('stress_level', 'Unknown'),
-                'confidence': prediction_result.get('confidence', 0.0),
-                'arousal_score': prediction_result.get('arousal_score', 0.0),
-                'probabilities': prediction_result.get('probabilities', {}),
-                'signal_quality': prediction_result.get('signal_quality', {}),
-                'features': prediction_result.get('features', {}),
                 'created_at': str(datetime.now(timezone.utc)),
-                'model_info': self.model.get_model_info()
+                'model_info': self.model.get_model_info(),
+                'stress_level': prediction_result.get("stress_level"),
+                'confidence': prediction_result.get("confidence", 0.0),
+                **self._make_json_serializable(prediction_result),
+                'raw_data': self._make_json_serializable(window)
             }
             
             # Store records
@@ -277,6 +276,23 @@ class GSRPipeline(BiometricPipeline):
             # Send average GSR value for the window
             avg_gsr = float(np.mean(window['data']))
             self.osc_client.send_message("/gsr/avg", avg_gsr)
+    
+    def _make_json_serializable(self, obj):
+        """Convert numpy arrays and other non-JSON types to JSON serializable types."""
+        if isinstance(obj, dict):
+            return {k: self._make_json_serializable(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self._make_json_serializable(item) for item in obj]
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, (np.bool_, bool)):
+            return bool(obj)
+        else:
+            return obj
     
     def _lsl_data_collection_loop(self) -> None:
         """Main LSL data collection and processing loop."""
@@ -337,6 +353,8 @@ class GSRPipeline(BiometricPipeline):
                         except Exception as e:
                             print(f"Error sending GSR OSC data: {e}")
                     
+                    stats = self.get_stats()
+
                     # Log new predictions (less frequently)
                     for prediction in result.predictions.get("stress_predictions", []):
                         stress = prediction['stress_level']
@@ -345,6 +363,9 @@ class GSRPipeline(BiometricPipeline):
                         print(f"GSR Analysis {prediction['window_id']}: {stress} "
                               f"(confidence: {confidence:.2%}, quality: {quality:.3f})")
                 
+                    stats.update({
+                        "stress_predictions": result.predictions.get("stress_predictions", [])
+                    })
                 else:
                     # No data received
                     consecutive_failures += 1

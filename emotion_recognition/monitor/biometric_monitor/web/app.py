@@ -344,6 +344,24 @@ class BiometricWebApp:
                 }
             }
             emit('stats_update', stats)
+            
+    def _make_json_serializable(self, obj):
+        import numpy as np
+        """Convert numpy arrays and other non-JSON types to JSON serializable types."""
+        if isinstance(obj, dict):
+            return {k: self._make_json_serializable(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self._make_json_serializable(item) for item in obj]
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        elif isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, (np.bool_, bool)):
+            return bool(obj)
+        else:
+            return obj
     
     def _setup_pipeline_callbacks(self):
         """Set up callbacks for pipeline results."""
@@ -426,10 +444,37 @@ class BiometricWebApp:
                 except Exception as e:
                     print(f"Error in EEG callback: {e}")
         
+        def handle_gsr_result(pipeline_name: str, result: PipelineResult):
+            """Handle GSR processing results."""
+            if result.success and result.data_type == "gsr_stress":
+                try:
+                    data = {
+                        'timestamp': result.timestamp,
+                        'buffer_status': result.predictions.get('buffer_status'),
+                        'metadata': result.metadata,
+                        'analysis_windows': result.predictions.get('analysis_windows', []),
+                        'raw_data': self._make_json_serializable(result.raw_data),
+                        'stress_level': result.predictions.get('stress_level', 0.0),
+                        'confidence': result.predictions.get('confidence', 0.0)
+                    }
+
+                    for prediction in result.predictions.get('stress_predictions', []):
+                        if 'data' in prediction and hasattr(prediction['data'], 'tolist'):
+                            prediction_copy = prediction.copy()
+                            prediction_copy['data'] = prediction['data'].tolist()
+                            data['stress_predictions'].append(prediction_copy)
+
+                    self.socketio.emit('gsr_update', self._make_json_serializable(data))
+                    self.messages_sent += 1
+
+                except Exception as e:
+                    print(f"Error in GSR callback: {e}")
+
         # Register callbacks with debug output
         print("Setting up pipeline callbacks...")
         self.pipeline_manager.add_global_callback(handle_emotion_result)
         self.pipeline_manager.add_global_callback(handle_eeg_result)
+        self.pipeline_manager.add_global_callback(handle_gsr_result)
         print("Pipeline callbacks registered")
     
     def run(self) -> None:

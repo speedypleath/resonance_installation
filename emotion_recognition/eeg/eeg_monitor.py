@@ -8,7 +8,7 @@ import numpy as np
 import time
 import json
 from collections import deque
-from pylsl import StreamInlet, resolve_bypred
+from pylsl import StreamInlet, resolve_byprop
 import threading
 from datetime import datetime, timezone
 from flask import Flask, render_template, jsonify
@@ -140,7 +140,7 @@ class MuseEEGWebStreamer:
         
         try:
             # Look for EEG streams
-            streams = resolve_bypred('type', 'EEG', timeout=timeout)
+            streams = resolve_byprop('type', 'EEG', timeout=timeout)
             
             if not streams:
                 print("No EEG streams found! Trying any LSL streams...")

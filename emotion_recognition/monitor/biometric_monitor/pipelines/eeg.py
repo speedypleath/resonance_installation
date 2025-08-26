@@ -5,7 +5,7 @@ import time
 from typing import Any, Dict, List, Optional, Tuple
 from collections import deque
 from datetime import datetime, timezone
-from pylsl import StreamInlet, resolve_bypred
+from pylsl import StreamInlet, resolve_byprop
 
 from .base import BiometricPipeline, PipelineResult
 from ..models.base import EEGModel
@@ -83,7 +83,7 @@ class EEGPipeline(BiometricPipeline):
         
         try:
             # Look for EEG streams
-            streams = resolve_bypred('type', 'EEG', timeout=timeout)
+            streams = resolve_byprop('type', 'EEG', timeout=timeout)
             
             if not streams:
                 return False

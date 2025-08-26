@@ -53,7 +53,7 @@ class WebConfig:
     """Configuration for web interface."""
     host: str = "127.0.0.1"
     port: int = 5001
-    debug: bool = False
+    debug: bool = True
     secret_key: str = "biometric_monitor_secret"
 
 
