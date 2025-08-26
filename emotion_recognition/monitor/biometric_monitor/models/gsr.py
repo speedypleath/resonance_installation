@@ -9,6 +9,7 @@ from scipy.signal import detrend, savgol_filter, butter, sosfilt, filtfilt
 from sklearn.preprocessing import RobustScaler
 import warnings
 from .base import BiometricModel
+import numpy as np
 warnings.filterwarnings('ignore')
 
 class GSRFeatureExtractor:
@@ -126,7 +127,7 @@ class GSRFeatureExtractor:
             return self._highpass_fallback(signal)
         
         return phasic, tonic
-    
+        
     def _highpass_fallback(self, signal: np.ndarray):
         """Fallback high-pass filter when cvxEDA fails."""
         if len(signal) < 3:
@@ -146,7 +147,7 @@ class GSRFeatureExtractor:
             else:
                 phasic = np.diff(signal, prepend=signal[0])
                 tonic = signal - phasic
-        except:
+        except Exception:
             # Ultimate fallback
             phasic = signal * 0.1
             tonic = signal * 0.9
@@ -412,6 +413,42 @@ class GSRStressModel(BiometricModel):
             self.is_loaded = False
             return False
     
+    def _assess_signal_quality(self, gsr_data: np.ndarray) -> float:
+        """Assess the quality of the GSR signal, returning a value from 0 to 1."""
+        try:
+            # Check for constant signal (sensor disconnected)
+            if np.std(gsr_data) < 1e-6 or np.all(gsr_data == 0):
+                return 0.0
+            
+            # Signal-to-noise ratio estimate
+            signal_power = np.var(gsr_data)
+            noise_estimate = np.var(np.diff(gsr_data))
+            snr = signal_power / (noise_estimate + 1e-8)
+            snr_score = snr / (snr + 1.0)  # Normalize to 0-1
+            
+            # Signal stability
+            try:
+                processed = self.feature_extractor.preprocess_signal(gsr_data.copy())
+                stability = 1.0 / (1.0 + np.std(processed))
+            except Exception:
+                stability = 0.5  # Default if preprocessing fails
+            
+            # Artifact detection
+            diff = np.diff(gsr_data)
+            artifact_threshold = 3 * np.std(diff)
+            artifact_count = np.sum(np.abs(diff) > artifact_threshold)
+            artifact_ratio = artifact_count / len(diff) if len(diff) > 0 else 0.0
+            artifact_score = 1.0 - artifact_ratio
+            
+            # Overall quality score (weighted average)
+            overall_quality = 0.4 * snr_score + 0.4 * stability + 0.2 * artifact_score
+            
+            # Clamp to 0-1 range
+            return float(np.clip(overall_quality, 0.0, 1.0))
+            
+        except Exception:
+            return 0.0  # Return 0 if any error occurs
+
     def preprocess(self, data):
         """Preprocess GSR data for model input."""
         if not self.is_loaded:
@@ -423,10 +460,6 @@ class GSRStressModel(BiometricModel):
         try:
             # Extract features using training method
             features = self.feature_extractor.extract_statistical_features(data)
-            
-            # Debug: Check feature dimensions
-            print(f"Debug: Extracted features shape: {features.shape}")
-            print(f"Debug: Features: {features}")
             
             # Ensure we have exactly 10 features
             if features.size != 10:
@@ -532,7 +565,7 @@ class GSRStressModel(BiometricModel):
             arousal_score = float(prediction_proba[1]) if len(prediction_proba) > 1 else 0.0
             
             # Compute signal quality
-            # signal_quality = self._assess_signal_quality(gsr_data)
+            signal_quality = self._assess_signal_quality(gsr_data)
             
             return {
                 "stress_level": stress_level,
@@ -547,8 +580,8 @@ class GSRStressModel(BiometricModel):
                     "Low": float(prediction_proba[0]),
                     "High": float(prediction_proba[1])
                 },
-                # "signal_quality": signal_quality,
-                "features": self._extract_feature_dict(features),
+                "signal_quality": signal_quality,
+                "num_peaks": int(self._extract_feature_dict(scaled_features).get("num_peaks", 0)),
                 "raw_output": prediction_proba.tolist()
             }
             
@@ -589,5 +622,3 @@ class GSRStressModel(BiometricModel):
         except Exception as e:
             print(f"Error extracting feature dict: {e}")
             return {"mean_gsr": 0.0, "num_peaks": 0, "max_amplitude": 0.0, "peak_rate": 0.0, "signal_std": 0.0}
-
-    # Keep all other existing methods unchanged (load_model, preprocess, _assess_signal_quality, etc.)

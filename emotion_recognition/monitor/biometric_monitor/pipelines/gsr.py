@@ -137,25 +137,25 @@ class GSRPipeline(BiometricPipeline):
             self.samples_received += len(sample_values)
             
             # Check if we can create a new analysis window
-            windows_created = []
-            predictions_made = []
-            
+            window = None
+            prediction = None
+
             if len(self.data_buffer) >= self.window_samples:
                 if (self.last_analysis_time is None or 
                     timestamp - self.last_analysis_time >= self.window_step):
                     
                     window, prediction = self._create_analysis_window()
-                    if window and prediction:
-                        windows_created.append(window)
-                        predictions_made.append(prediction)
-                        self.last_analysis_time = timestamp
-            
+          
             return PipelineResult(
                 timestamp=timestamp,
                 data_type="gsr_stress",
                 predictions={
-                    "analysis_windows": windows_created,
-                    "stress_predictions": predictions_made,
+                    "analysis_window": window,
+                    "stress_level": prediction.get("stress_level"),
+                    "confidence": prediction.get("confidence"),
+                    "arousal_score": prediction.get("arousal_score"),
+                    "signal_quality": prediction.get("signal_quality"),
+                    "num_peaks": prediction.get("num_peaks"),
                     "buffer_status": {
                         "size": len(self.data_buffer),
                         "capacity": self.window_samples * 3,
@@ -211,7 +211,6 @@ class GSRPipeline(BiometricPipeline):
             
             # Make stress prediction using the trained model
             prediction_result = self.model.predict(window_data)
-            print(prediction_result)
             
             # Create prediction record
             prediction = {
@@ -220,11 +219,12 @@ class GSRPipeline(BiometricPipeline):
                 'created_at': str(datetime.now(timezone.utc)),
                 'model_info': self.model.get_model_info(),
                 'stress_level': prediction_result.get("stress_level"),
-                'confidence': prediction_result.get("confidence", 0.0),
-                **self._make_json_serializable(prediction_result),
-                'raw_data': self._make_json_serializable(window)
+                'confidence': prediction_result.get("confidence"),
+                'arousal_score': prediction_result.get("arousal_score"),
+                'signal_quality': prediction_result.get("signal_quality"),
+                'num_peaks': prediction_result.get("num_peaks", 0),
             }
-            
+
             # Store records
             self.analysis_windows.append(window)
             self.stress_predictions.append(prediction)
@@ -232,11 +232,6 @@ class GSRPipeline(BiometricPipeline):
             # Update counters
             self.window_count += 1
             self.prediction_count += 1
-            
-            # Update signal quality history
-            if 'signal_quality' in prediction_result:
-                overall_quality = prediction_result['signal_quality'].get('overall', 0)
-                self.signal_quality_history.append(overall_quality)
             
             # Keep memory usage reasonable
             if len(self.analysis_windows) > 50:
@@ -263,13 +258,6 @@ class GSRPipeline(BiometricPipeline):
             self.osc_client.send_message("/stress/level", stress_binary)
             self.osc_client.send_message("/stress/confidence", prediction['confidence'])
             self.osc_client.send_message("/stress/arousal", prediction['arousal_score'])
-            
-            # Send feature data
-            features = prediction.get('features', {})
-            if features:
-                self.osc_client.send_message("/gsr/mean", features.get('mean_gsr', 0.0))
-                self.osc_client.send_message("/gsr/peaks", features.get('num_peaks', 0))
-                self.osc_client.send_message("/gsr/max_amp", features.get('max_amplitude', 0.0))
         
         # Send window data
         for window in predictions.get("analysis_windows", []):
@@ -322,7 +310,6 @@ class GSRPipeline(BiometricPipeline):
                     
                     # Process the data chunk
                     result = self.process_data((samples, timestamps))
-                    
                     # Update statistics
                     self.process_count += 1
                     if not result.success:
@@ -352,20 +339,6 @@ class GSRPipeline(BiometricPipeline):
                             self._send_osc_data(result)
                         except Exception as e:
                             print(f"Error sending GSR OSC data: {e}")
-                    
-                    stats = self.get_stats()
-
-                    # Log new predictions (less frequently)
-                    for prediction in result.predictions.get("stress_predictions", []):
-                        stress = prediction['stress_level']
-                        confidence = prediction['confidence']
-                        quality = prediction.get('signal_quality', {}).get('overall', 0)
-                        print(f"GSR Analysis {prediction['window_id']}: {stress} "
-                              f"(confidence: {confidence:.2%}, quality: {quality:.3f})")
-                
-                    stats.update({
-                        "stress_predictions": result.predictions.get("stress_predictions", [])
-                    })
                 else:
                     # No data received
                     consecutive_failures += 1

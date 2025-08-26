@@ -178,9 +178,7 @@ socket.on("eeg_update", function (data) {
 
 socket.on("gsr_update", function (data) {
   updateGSRDisplay(data);
-  if (data.predictions && data.predictions.stress_predictions) {
-    gsrAnalysisCount += data.predictions.stress_predictions.length;
-  }
+  gsrAnalysisCount = data.prediction_count
   updateStats();
 });
 
@@ -302,9 +300,9 @@ function updateStressDisplay(prediction) {
   if (prediction.arousal_score !== undefined) {
     document.getElementById("arousalScore").textContent = prediction.arousal_score.toFixed(3);
   }
-  
-  if (prediction.signal_quality && prediction.signal_quality.overall !== undefined) {
-    document.getElementById("signalQuality").textContent = prediction.signal_quality.overall.toFixed(3);
+
+  if (prediction.signal_quality !== undefined) {
+    document.getElementById("signalQuality").textContent = prediction.signal_quality.toFixed(3);
   }
   
   if (prediction.features && prediction.features.num_peaks !== undefined) {

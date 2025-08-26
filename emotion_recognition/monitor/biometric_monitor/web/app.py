@@ -452,18 +452,18 @@ class BiometricWebApp:
                         'timestamp': result.timestamp,
                         'buffer_status': result.predictions.get('buffer_status'),
                         'metadata': result.metadata,
-                        'analysis_windows': result.predictions.get('analysis_windows', []),
                         'raw_data': self._make_json_serializable(result.raw_data),
-                        'stress_level': result.predictions.get('stress_level', 0.0),
-                        'confidence': result.predictions.get('confidence', 0.0)
                     }
 
-                    for prediction in result.predictions.get('stress_predictions', []):
-                        if 'data' in prediction and hasattr(prediction['data'], 'tolist'):
-                            prediction_copy = prediction.copy()
-                            prediction_copy['data'] = prediction['data'].tolist()
-                            data['stress_predictions'].append(prediction_copy)
+                    if result.predictions.get('stress_level') and result.predictions.get('confidence'):
+                        data['stress_level'] = result.predictions.get('stress_level')
+                        data['confidence'] = result.predictions.get('confidence')
+                        data['num_peaks'] = result.predictions.get('num_peaks', 0)
+                        data['arousal_score'] = result.predictions.get('arousal_score', 0.0)
+                        data['signal_quality'] = result.predictions.get('signal_quality', 0.0)
 
+                    if result.metadata.get('prediction_count'):
+                        data['prediction_count'] = result.metadata.get('prediction_count')
                     self.socketio.emit('gsr_update', self._make_json_serializable(data))
                     self.messages_sent += 1
 
