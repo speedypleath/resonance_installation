@@ -9,7 +9,7 @@ from pylsl import StreamInlet, resolve_byprop
 import tensorflow 
 from .base import BiometricPipeline, PipelineResult
 from ..models.gsr import GSRStressModel
-from ..osc.smooth_vad import get_smooth_vad_manager
+from ..osc.osc_client import get_osc_client
 
 
 class GSRPipeline(BiometricPipeline):
@@ -21,8 +21,8 @@ class GSRPipeline(BiometricPipeline):
         
         super().__init__("gsr_stress_detection", model)
         
-        # Initialize smooth VAD manager for centralized OSC output
-        self.smooth_vad_manager = get_smooth_vad_manager()
+        # Initialize OSC client for centralized OSC output
+        self.osc_client = get_osc_client()
         
         # Use model's configured parameters
         self.sampling_rate = model.sampling_rate  # 4Hz from training
@@ -248,7 +248,7 @@ class GSRPipeline(BiometricPipeline):
             return None, None
     
     def _send_osc_data(self, result: PipelineResult) -> None:
-        """Send GSR stress data via smooth VAD manager."""
+        """Send GSR stress data via OSC client."""
         if not result.success:
             return
         
@@ -265,8 +265,8 @@ class GSRPipeline(BiometricPipeline):
             # Use signal quality as dominance indicator
             dominance = float(predictions.get("signal_quality", 0.5))
             
-            # Send to smooth VAD manager
-            self.smooth_vad_manager.update_gsr(valence, arousal, dominance)
+            # Send to OSC client
+            self.osc_client.update_gsr(valence, arousal, dominance)
     
     def _make_json_serializable(self, obj):
         """Convert numpy arrays and other non-JSON types to JSON serializable types."""

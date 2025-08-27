@@ -9,7 +9,7 @@ from pylsl import StreamInlet, resolve_byprop
 
 from .base import BiometricPipeline, PipelineResult
 from ..models.base import EEGModel
-from ..osc.smooth_vad import get_smooth_vad_manager
+from ..osc.osc_client import get_osc_client
 
 
 class DummyEEGModel:
@@ -42,8 +42,8 @@ class EEGPipeline(BiometricPipeline):
         
         super().__init__("eeg_processing", model)
         
-        # Initialize smooth VAD manager for centralized OSC output
-        self.smooth_vad_manager = get_smooth_vad_manager()
+        # Initialize OSC client for centralized OSC output
+        self.osc_client = get_osc_client()
         
         self.fragment_duration = fragment_duration
         self.window_step = window_step
@@ -355,7 +355,7 @@ class EEGPipeline(BiometricPipeline):
         return segments
     
     def _send_osc_data(self, result: PipelineResult) -> None:
-        """Send EEG data via smooth VAD manager."""
+        """Send EEG data via OSC client."""
         if not result.success:
             return
         
@@ -373,8 +373,8 @@ class EEGPipeline(BiometricPipeline):
             valence = min(1.0, max(0.0, (np.mean(avg_channels) + 50) / 100.0))  # Normalize mean
             dominance = 0.5  # Default neutral dominance for EEG
             
-            # Send to smooth VAD manager
-            self.smooth_vad_manager.update_eeg(valence, arousal, dominance)
+            # Send to OSC client
+            self.osc_client.update_eeg(valence, arousal, dominance)
     
     def _lsl_data_collection_loop(self) -> None:
         """Main LSL data collection and processing loop."""

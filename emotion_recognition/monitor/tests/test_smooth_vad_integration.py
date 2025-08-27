@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Test script for smooth VAD integration with pipelines.
-This demonstrates how the pipelines now send data to the centralized smooth_vad manager.
+Test script for OSC client integration with pipelines.
+This demonstrates how the pipelines now send data to the centralized OSC client.
 
 Usage: uv run tests/test_smooth_vad_integration.py
 """
@@ -13,15 +13,15 @@ import os
 # Add the parent directory to Python path to import biometric_monitor
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from biometric_monitor.osc.smooth_vad import get_smooth_vad_manager
+from biometric_monitor.osc.osc_client import get_osc_client
 
 def test_integration():
-    """Test the smooth VAD integration."""
-    print("Testing Smooth VAD Integration")
+    """Test the OSC client integration."""
+    print("Testing OSC Client Integration")
     print("=" * 50)
     
-    # Get the smooth VAD manager instance
-    vad_manager = get_smooth_vad_manager(
+    # Get the OSC client instance
+    osc_client = get_osc_client(
         output_host="127.0.0.1",
         output_port=5002,
         tau_eeg=0.5,
@@ -37,26 +37,26 @@ def test_integration():
     
     # Simulate facial emotion pipeline data
     print("1. Simulating Facial Pipeline:")
-    vad_manager.update_facial(0.7, 0.6, 0.8)  # Happy, medium arousal, confident
+    osc_client.update_facial(0.7, 0.6, 0.8)  # Happy, medium arousal, confident
     time.sleep(1)
     
     # Simulate EEG pipeline data
     print("2. Simulating EEG Pipeline:")
-    vad_manager.update_eeg(0.5, 0.4, 0.5)  # Neutral, low arousal, neutral dominance
+    osc_client.update_eeg(0.5, 0.4, 0.5)  # Neutral, low arousal, neutral dominance
     time.sleep(1)
     
     # Simulate GSR stress detection pipeline data
     print("3. Simulating GSR Pipeline (No Stress):")
-    vad_manager.update_gsr(0.7, 0.3, 0.6)  # Positive valence, low arousal, good signal
+    osc_client.update_gsr(0.7, 0.3, 0.6)  # Positive valence, low arousal, good signal
     time.sleep(2)
     
     print("4. Simulating GSR Pipeline (Stress Detected):")
-    vad_manager.update_gsr(0.2, 0.8, 0.7)  # Negative valence, high arousal, good signal
+    osc_client.update_gsr(0.2, 0.8, 0.7)  # Negative valence, high arousal, good signal
     time.sleep(1)
     
     # Show combined state
-    combined_vad = vad_manager.vad_state.get_vad()
-    status = vad_manager.vad_state.get_status()
+    combined_vad = osc_client.vad_state.get_vad()
+    status = osc_client.vad_state.get_status()
     
     print()
     print("Final Combined State:")

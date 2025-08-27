@@ -7,7 +7,6 @@ __author__ = "Biometric Monitor Team"
 from .config import MonitorConfig, ConfigManager
 from .models.base import ModelRegistry
 from .pipelines.base import PipelineManager
-from .osc.osc_client import OSCRouter
 from .main import BiometricMonitorSystem
 
 __all__ = [
@@ -15,7 +14,7 @@ __all__ = [
     "ConfigManager", 
     "ModelRegistry",
     "PipelineManager",
-    "OSCRouter",
+    "OSCClient",
     "BiometricMonitorSystem"
 ]
 
@@ -54,11 +53,10 @@ __all__ = [
 # biometric_monitor/communication/__init__.py
 """Communication modules package."""
 
-from .osc.osc_client import OSCClient, OSCRouter
+from .osc.osc_client import OSCClient
 
 __all__ = [
-    "OSCClient",
-    "OSCRouter"
+    "OSCClient"
 ]
 
 

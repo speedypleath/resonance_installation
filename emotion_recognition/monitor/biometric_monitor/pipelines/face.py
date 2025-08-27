@@ -10,7 +10,7 @@ from PIL import Image
 
 from .base import BiometricPipeline, PipelineResult
 from ..models.base import FaceModel
-from ..osc.smooth_vad import get_smooth_vad_manager
+from ..osc.osc_client import get_osc_client
 from ..utils.image_processing import get_face_box
 
 
@@ -22,8 +22,8 @@ class FacePipeline(BiometricPipeline):
         
         super().__init__("facial_emotion", model)
         
-        # Initialize smooth VAD manager for centralized OSC output
-        self.smooth_vad_manager = get_smooth_vad_manager()
+        # Initialize OSC client for centralized OSC output
+        self.osc_client = get_osc_client()
         self.camera_id = camera_id
         self.target_fps = target_fps
         self.frame_interval = 1.0 / target_fps
@@ -467,11 +467,11 @@ class FacePipeline(BiometricPipeline):
         return fps
     
     def _send_osc_data(self, result: PipelineResult) -> None:
-        """Send emotion data via smooth VAD manager."""
+        """Send emotion data via OSC client."""
         if result.success and "vad" in result.predictions:
             vad = result.predictions["vad"]
-            # Send to smooth VAD manager instead of direct OSC
-            self.smooth_vad_manager.update_facial(
+            # Send to OSC client instead of direct OSC
+            self.osc_client.update_facial(
                 vad["valence"], vad["arousal"], vad["dominance"]
             )
     
@@ -573,10 +573,10 @@ class FacePipeline(BiometricPipeline):
                     if result.success:
                         self._print_emotion_result(result)
                         
-                        # Send data to smooth VAD manager
+                        # Send data to OSC client
                         if "vad" in result.predictions:
                             vad = result.predictions["vad"]
-                            self.smooth_vad_manager.update_facial(
+                            self.osc_client.update_facial(
                                 vad["valence"], vad["arousal"], vad["dominance"]
                             )
                     else:
