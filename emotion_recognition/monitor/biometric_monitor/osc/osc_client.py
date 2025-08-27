@@ -215,6 +215,16 @@ class OSCClient:
         self.vad_state.update_gsr((valence, arousal, dominance))
         print(f"GSR VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
         self._send_combined_vad()
+
+    def send_facial_label(self, label):
+        """Send facial emotion label via OSC."""
+        print(f"Facial Emotion Label: {label}")
+        if self.osc_client:
+            try:
+                self.osc_client.send_message("/emotion", label)
+                print(f"→ OSC sent: Facial Label={label}")
+            except Exception as e:
+                print(f"Error sending OSC facial label: {e}")
     
     def _send_combined_vad(self):
         """Send the combined VAD values via OSC."""

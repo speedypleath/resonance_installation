@@ -521,6 +521,11 @@ class FacePipeline(BiometricPipeline):
                     # Send OSC data if successful
                     if result.success and self.osc_client:
                         self._send_osc_data(result)
+
+                    # Send OSC label every 5 seconds
+                    if self.process_count % (self.target_fps * 5) == 0:
+                        if "emotion" in result.predictions:
+                            self.osc_client.send_facial_label(result.predictions["emotion"])
                     
                     # Print to console
                     if result.success:
