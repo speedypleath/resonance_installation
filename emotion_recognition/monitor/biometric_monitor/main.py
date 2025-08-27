@@ -294,7 +294,18 @@ class BiometricMonitorSystem:
         # Give threads time to clean up
         time.sleep(1)
         
-        # Web app cleanup is handled automatically by Flask-SocketIO on process exit
+        # Shutdown web server via API endpoint
+        if self.web_app:
+            print("Shutting down web server...")
+            try:
+                # Try to shutdown via API endpoint
+                import requests
+                shutdown_url = f"http://{self.config.web.host}:{self.config.web.port}/api/shutdown"
+                requests.post(shutdown_url, timeout=2)
+                print("Web server shutdown request sent")
+            except Exception as e:
+                print(f"Note: Web server shutdown via API failed: {e}")
+                print("Web server will be terminated with process exit")
         
         # Clean up any remaining camera resources
         print("Cleaning up camera resources...")
