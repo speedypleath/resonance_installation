@@ -7,7 +7,6 @@ import time
 import queue
 from dataclasses import dataclass
 
-from ..osc.osc_client import OSCClient
 from ..models.base import BiometricModel
 
 
@@ -26,11 +25,10 @@ class PipelineResult:
 class BiometricPipeline(ABC):
     """Abstract base class for biometric data processing pipelines."""
     
-    def __init__(self, name: str, model: BiometricModel, osc_client: Optional[OSCClient] = None):
+    def __init__(self, name: str, model: BiometricModel):
         self.name = name
         self.model = model
-        self.osc_client = osc_client
-        
+
         # Pipeline state
         self.is_running = False
         self.is_paused = False
@@ -119,9 +117,22 @@ class BiometricPipeline(ABC):
         if not self.is_running:
             return
         
+        # Signal thread to stop
         self._stop_event.set()
+        
+        # Wait for thread to finish
         if self._thread and self._thread.is_alive():
-            self._thread.join(timeout=2.0)
+            print(f"Waiting for {self.name} thread to stop...")
+            self._thread.join(timeout=3.0)
+            
+            if self._thread.is_alive():
+                print(f"Warning: {self.name} thread did not stop gracefully")
+        
+        # Clear queues to free memory and resources
+        self.clear_queues()
+        
+        # Reset thread reference
+        self._thread = None
         
         self.is_running = False
         print(f"Pipeline '{self.name}' stopped")
@@ -196,7 +207,7 @@ class BiometricPipeline(ABC):
                         print(f"Error in result callback: {e}")
                 
                 # Send OSC data if configured
-                if result.success and self.osc_client:
+                if result.success:
                     self._send_osc_data(result)
                 
             except Exception as e:
@@ -228,7 +239,6 @@ class BiometricPipeline(ABC):
             "input_queue_size": self.input_queue.qsize(),
             "output_queue_size": self.output_queue.qsize(),
             "model_info": self.model.get_model_info() if self.model else None,
-            "osc_stats": self.osc_client.get_stats() if self.osc_client else None
         }
     
     def clear_queues(self) -> None:

@@ -10,17 +10,20 @@ from PIL import Image
 
 from .base import BiometricPipeline, PipelineResult
 from ..models.base import FaceModel
-from ..osc.osc_client import OSCClient
+from ..osc.smooth_vad import get_smooth_vad_manager
 from ..utils.image_processing import get_face_box
 
 
 class FacePipeline(BiometricPipeline):
     """Pipeline for real-time emotion recognition from webcam."""
     
-    def __init__(self, model: FaceModel, osc_client: Optional[OSCClient] = None,
+    def __init__(self, model: FaceModel,
                  camera_id: int = 0, target_fps: int = 15, confidence_threshold: float = 0.5):        
         
-        super().__init__("facial_emotion", model, osc_client)
+        super().__init__("facial_emotion", model)
+        
+        # Initialize smooth VAD manager for centralized OSC output
+        self.smooth_vad_manager = get_smooth_vad_manager()
         self.camera_id = camera_id
         self.target_fps = target_fps
         self.frame_interval = 1.0 / target_fps
@@ -147,7 +150,7 @@ class FacePipeline(BiometricPipeline):
                                 print(f"Error in result callback: {e}")
                         
                         # Send OSC data if successful
-                        if result.success and self.osc_client:
+                        if result.success:
                             try:
                                 self._send_osc_data(result)
                             except Exception as e:
@@ -307,11 +310,30 @@ class FacePipeline(BiometricPipeline):
     
     def stop(self) -> None:
         """Stop the pipeline and release camera."""
+        print(f"Stopping {self.name} pipeline...")
+        
+        # Stop the parent pipeline first
         super().stop()
-        if self.cap:
-            self.cap.release()
-            cv2.destroyAllWindows()
-            self.cap = None
+        
+        # Clean up camera resources with thread safety
+        with self.camera_lock:
+            if self.cap:
+                try:
+                    print("Releasing camera...")
+                    self.cap.release()
+                    self.cap = None
+                    
+                    # Clean up OpenCV windows
+                    cv2.destroyAllWindows()
+                    
+                    # Give time for resources to be released
+                    time.sleep(0.5)
+                    
+                except Exception as e:
+                    print(f"Warning: Error releasing camera: {e}")
+                    self.cap = None
+        
+        print(f"{self.name} pipeline stopped")
     
     def validate_input(self, data: Any) -> bool:
         """Validate input frame data."""
@@ -445,10 +467,11 @@ class FacePipeline(BiometricPipeline):
         return fps
     
     def _send_osc_data(self, result: PipelineResult) -> None:
-        """Send emotion data via OSC."""
+        """Send emotion data via smooth VAD manager."""
         if result.success and "vad" in result.predictions:
             vad = result.predictions["vad"]
-            self.osc_client.send_vad_data(
+            # Send to smooth VAD manager instead of direct OSC
+            self.smooth_vad_manager.update_facial(
                 vad["valence"], vad["arousal"], vad["dominance"]
             )
     
@@ -550,10 +573,10 @@ class FacePipeline(BiometricPipeline):
                     if result.success:
                         self._print_emotion_result(result)
                         
-                        # Send OSC data if available
-                        if self.osc_client and "vad" in result.predictions:
+                        # Send data to smooth VAD manager
+                        if "vad" in result.predictions:
                             vad = result.predictions["vad"]
-                            self.osc_client.send_vad_data(
+                            self.smooth_vad_manager.update_facial(
                                 vad["valence"], vad["arousal"], vad["dominance"]
                             )
                     else:

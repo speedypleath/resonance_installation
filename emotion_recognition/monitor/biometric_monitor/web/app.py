@@ -4,21 +4,16 @@ import json
 import time
 from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
-from typing import Dict, Any, Optional
-
+from typing import Dict, Any
 from ..config import WebConfig
 from ..pipelines.base import PipelineManager, PipelineResult
-from ..osc.osc_client import OSCRouter
-
 
 class BiometricWebApp:
     """Flask web application for real-time biometric monitoring."""
     
-    def __init__(self, config: WebConfig, pipeline_manager: PipelineManager, 
-                 osc_router: OSCRouter):
+    def __init__(self, config: WebConfig, pipeline_manager: PipelineManager):
         self.config = config
         self.pipeline_manager = pipeline_manager
-        self.osc_router = osc_router
         
         # Initialize Flask app
         self.app = Flask(__name__)
@@ -49,7 +44,6 @@ class BiometricWebApp:
                 'connected_clients': self.connected_clients,
                 'messages_sent': self.messages_sent,
                 'pipelines': self.pipeline_manager.get_summary_stats(),
-                'osc': self.osc_router.get_router_stats()
             })
         
         @self.app.route('/api/pipelines')
@@ -81,17 +75,6 @@ class BiometricWebApp:
                 pipeline.resume()
                 return jsonify({'success': True, 'pipeline': pipeline_name})
             return jsonify({'success': False, 'error': 'Pipeline not found'})
-        
-        @self.app.route('/api/osc/test', methods=['POST'])
-        def test_osc():
-            data = request.get_json()
-            client_name = data.get('client', 'default')
-            
-            if client_name in self.osc_router.clients:
-                success = self.osc_router.clients[client_name].test_connection()
-                return jsonify({'success': success, 'client': client_name})
-            
-            return jsonify({'success': False, 'error': 'Client not found'})
         
         @self.app.route('/video_feed')
         def video_feed():
@@ -241,7 +224,6 @@ class BiometricWebApp:
             try:
                 stats = {
                     'pipelines': self.pipeline_manager.get_all_stats(),
-                    'osc': self.osc_router.get_router_stats(),
                     'server': {
                         'uptime': time.time() - self.start_time,
                         'connected_clients': self.connected_clients,
@@ -336,7 +318,6 @@ class BiometricWebApp:
         def handle_stats_request():
             stats = {
                 'pipelines': self.pipeline_manager.get_all_stats(),
-                'osc': self.osc_router.get_router_stats(),
                 'server': {
                     'uptime': time.time() - self.start_time,
                     'connected_clients': self.connected_clients,

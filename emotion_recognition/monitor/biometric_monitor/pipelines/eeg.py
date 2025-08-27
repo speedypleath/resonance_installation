@@ -9,7 +9,7 @@ from pylsl import StreamInlet, resolve_byprop
 
 from .base import BiometricPipeline, PipelineResult
 from ..models.base import EEGModel
-from ..osc.osc_client import OSCClient
+from ..osc.smooth_vad import get_smooth_vad_manager
 
 
 class DummyEEGModel:
@@ -31,7 +31,7 @@ class DummyEEGModel:
 class EEGPipeline(BiometricPipeline):
     """Pipeline for real-time EEG data processing and segmentation."""
     
-    def __init__(self, model: Optional[EEGModel] = None, osc_client: Optional[OSCClient] = None,
+    def __init__(self, model: Optional[EEGModel] = None,
                  fragment_duration: float = 10.0, window_step: float = 5.0,
                  segment_duration: float = 2.0, segment_overlap: float = 0.5):
         
@@ -40,7 +40,10 @@ class EEGPipeline(BiometricPipeline):
             model = DummyEEGModel()
             print("EEG Pipeline: Created dummy model for visualization")
         
-        super().__init__("eeg_processing", model, osc_client)
+        super().__init__("eeg_processing", model)
+        
+        # Initialize smooth VAD manager for centralized OSC output
+        self.smooth_vad_manager = get_smooth_vad_manager()
         
         self.fragment_duration = fragment_duration
         self.window_step = window_step
@@ -193,7 +196,7 @@ class EEGPipeline(BiometricPipeline):
                         print(f"Error in EEG callback: {e}")
                 
                 # Send OSC data
-                if result.success and self.osc_client:
+                if result.success:
                     try:
                         self._send_osc_data(result)
                     except Exception as e:
@@ -352,23 +355,26 @@ class EEGPipeline(BiometricPipeline):
         return segments
     
     def _send_osc_data(self, result: PipelineResult) -> None:
-        """Send EEG data via OSC."""
+        """Send EEG data via smooth VAD manager."""
         if not result.success:
             return
         
         predictions = result.predictions
         
-        # Send fragment data
+        # For EEG, we need to convert raw data to VAD values
+        # For now, we'll generate mock VAD values based on EEG activity
+        # In a real implementation, you would use an EEG->VAD model
         for fragment in predictions.get("fragments", []):
-            # Send average channel values for the fragment
-            avg_channels = np.mean(fragment['data'], axis=0).tolist()
-            self.osc_client.send_eeg_data(avg_channels, fragment['fragment_id'])
-        
-        # Send segment data
-        for segment in predictions.get("segments", []):
-            # Send segment as flattened channel data
-            segment_data = segment['data'].tolist()
-            self.osc_client.send_eeg_segment(segment['segment_id'], segment_data)
+            # Calculate simple VAD values from EEG activity
+            avg_channels = np.mean(fragment['data'], axis=0)
+            
+            # Simple mapping: higher variance = higher arousal, positive mean = positive valence
+            arousal = min(1.0, max(0.0, np.std(avg_channels) / 50.0))  # Normalize std
+            valence = min(1.0, max(0.0, (np.mean(avg_channels) + 50) / 100.0))  # Normalize mean
+            dominance = 0.5  # Default neutral dominance for EEG
+            
+            # Send to smooth VAD manager
+            self.smooth_vad_manager.update_eeg(valence, arousal, dominance)
     
     def _lsl_data_collection_loop(self) -> None:
         """Main LSL data collection and processing loop."""
@@ -422,7 +428,7 @@ class EEGPipeline(BiometricPipeline):
                             print(f"Error in EEG callback: {e}")
                     
                     # Send OSC data if successful
-                    if result.success and self.osc_client:
+                    if result.success:
                         try:
                             self._send_osc_data(result)
                         except Exception as e:
@@ -448,6 +454,32 @@ class EEGPipeline(BiometricPipeline):
                 time.sleep(0.1)
         
         print("EEG data collection loop ended")
+    
+    def stop(self) -> None:
+        """Stop EEG pipeline and clean up LSL resources."""
+        print(f"Stopping {self.name} pipeline...")
+        
+        # Stop the parent pipeline first
+        super().stop()
+        
+        # Clean up LSL inlet
+        if self.inlet:
+            try:
+                print("Cleaning up LSL inlet...")
+                # Close the inlet
+                self.inlet.close_stream()
+                self.inlet = None
+            except Exception as e:
+                print(f"Warning: Error cleaning up LSL inlet: {e}")
+                self.inlet = None
+        
+        # Clear data buffers to free memory
+        self.data_buffer.clear()
+        self.timestamps_buffer.clear()
+        self.fragments.clear()
+        self.current_segments.clear()
+        
+        print(f"{self.name} pipeline stopped")
     
     def collect_lsl_data(self) -> None:
         """Continuously collect data from LSL stream."""

@@ -5,6 +5,8 @@ import sys
 import time
 import signal
 import os
+import threading
+import requests
 from typing import Optional
 
 from .config import ConfigManager, MonitorConfig
@@ -15,7 +17,6 @@ from .pipelines.base import PipelineManager
 from .pipelines.face import FacePipeline
 from .pipelines.eeg import DummyEEGModel, EEGPipeline
 from .pipelines.gsr import GSRPipeline
-from .osc.osc_client import OSCRouter
 from .web.app import BiometricWebApp
 
 # https://bugs.python.org/issue30385 fucking god i hate my life
@@ -30,7 +31,6 @@ class BiometricMonitorSystem:
         # Core components
         self.model_registry = ModelRegistry()
         self.pipeline_manager = PipelineManager()
-        self.osc_router = OSCRouter()
         self.web_app: Optional[BiometricWebApp] = None
         
         # System state
@@ -54,9 +54,6 @@ class BiometricMonitorSystem:
         # Initialize models
         if not self._initialize_models():
             return False
-        
-        # Initialize OSC clients
-        self._initialize_osc()
         
         # Initialize web application
         self._initialize_web_app()
@@ -106,38 +103,14 @@ class BiometricMonitorSystem:
             print(f"Error initializing models: {e}")
             return False
     
-    def _initialize_osc(self) -> None:
-        """Initialize OSC communication."""
-        if self.config.osc.enabled:
-            try:
-                # Add default OSC client
-                self.osc_router.add_client("default", self.config.osc)
-                
-                # Set up routing
-                self.osc_router.add_route("facial", "default")
-                self.osc_router.add_route("vad", "default")
-                self.osc_router.add_route("eeg", "default")
-                self.osc_router.add_route("gsr", "default")
-                
-                print(f"OSC communication initialized: {self.config.osc.host}:{self.config.osc.port}")
-                
-            except Exception as e:
-                print(f"Warning: OSC initialization failed: {e}")
-        else:
-            print("OSC communication disabled")
-    
     def _initialize_pipelines(self) -> bool:
         """Initialize processing pipelines."""
         try:
-            # Get OSC client for pipelines
-            osc_client = self.osc_router.clients.get("default")
-
             # Initialize facial emotion recognition pipeline
             face_model = self.model_registry.get_active_model("facial")
             if face_model:
                 face_pipeline = FacePipeline(
                     model=face_model,
-                    osc_client=osc_client,
                     camera_id=self.config.facial.camera_id,
                     target_fps=self.config.facial.target_fps,
                     confidence_threshold=self.config.facial.confidence_threshold
@@ -150,7 +123,6 @@ class BiometricMonitorSystem:
             dummy_model = DummyEEGModel()
             eeg_pipeline = EEGPipeline(
                 model=dummy_model,  # No EEG model for now
-                osc_client=osc_client,
                 fragment_duration=self.config.eeg.fragment_duration,
                 window_step=self.config.eeg.window_step,
                 segment_duration=self.config.eeg.segment_duration,
@@ -164,7 +136,6 @@ class BiometricMonitorSystem:
             if gsr_model:
                 gsr_pipeline = GSRPipeline(
                     model=gsr_model,
-                    osc_client=osc_client,
                     window_size=self.config.gsr.window_size,
                 )
                 self.pipeline_manager.register_pipeline(gsr_pipeline)
@@ -181,7 +152,6 @@ class BiometricMonitorSystem:
         self.web_app = BiometricWebApp(
             config=self.config.web,
             pipeline_manager=self.pipeline_manager,
-            osc_router=self.osc_router
         )
         print("Web application initialized")
     
@@ -192,32 +162,95 @@ class BiometricMonitorSystem:
         
         self.is_running = True
         
-        if auto_start_pipelines:
-            print("Auto-starting pipelines...")
-            results = self.pipeline_manager.start_all()
-            for pipeline, success in results.items():
-                status = "started" if success else "failed to start"
-                print(f"  {pipeline}: {status}")
+        # Don't start pipelines here - wait for web server in run_web_interface
+        # or start immediately in console mode
         
         print("Biometric Monitor System ready!")
         return True
     
-    def run_web_interface(self) -> None:
+    def _wait_for_web_server(self, timeout: int = 30) -> bool:
+        """Wait for web server to be ready."""
+        host = self.config.web.host
+        port = self.config.web.port
+        url = f"http://{host}:{port}/api/status"
+        
+        print(f"Waiting for web server to be ready at {host}:{port}...")
+        
+        for attempt in range(timeout):
+            try:
+                response = requests.get(url, timeout=1)
+                if response.status_code == 200:
+                    print(f"✅ Web server is ready! (took {attempt + 1}s)")
+                    return True
+            except (requests.exceptions.RequestException, requests.exceptions.ConnectionError):
+                pass
+            
+            time.sleep(1)
+            if attempt % 5 == 4:  # Print every 5 seconds
+                print(f"Still waiting for web server... ({attempt + 1}s elapsed)")
+        
+        print(f"❌ Web server failed to start within {timeout} seconds")
+        return False
+
+    def run_web_interface(self, auto_start_pipelines: bool = False) -> None:
         """Run the web interface (blocking)."""
         if not self.web_app:
             print("Web application not initialized")
             return
         
+        # Use a simpler approach: start web server with a delay for pipelines
+        def delayed_pipeline_start():
+            """Start pipelines after a delay to ensure web server is ready."""
+            if auto_start_pipelines:
+                print("Waiting for web server to initialize...")
+                time.sleep(3)  # Give web server time to start
+                
+                # Try to verify server is ready
+                max_retries = 10
+                for i in range(max_retries):
+                    try:
+                        response = requests.get(f"http://{self.config.web.host}:{self.config.web.port}/api/status", timeout=1)
+                        if response.status_code == 200:
+                            print("✅ Web server is ready - starting pipelines...")
+                            break
+                    except:
+                        if i < max_retries - 1:
+                            time.sleep(1)
+                            continue
+                    
+                    if i == max_retries - 1:
+                        print("⚠️  Starting pipelines anyway (web server check failed)")
+                
+                results = self.pipeline_manager.start_all()
+                for pipeline, success in results.items():
+                    status = "✅ started" if success else "❌ failed to start"
+                    print(f"  {pipeline}: {status}")
+        
+        # Start pipeline initialization in background
+        if auto_start_pipelines:
+            pipeline_thread = threading.Thread(target=delayed_pipeline_start, daemon=True)
+            pipeline_thread.start()
+        
         try:
+            print(f"Starting web server on http://{self.config.web.host}:{self.config.web.port}")
+            # Run web server in main thread to avoid signal issues
             self.web_app.run()
         except KeyboardInterrupt:
             print("\nShutting down web interface...")
         finally:
             self.shutdown()
     
-    def run_console_mode(self) -> None:
+    def run_console_mode(self, auto_start_pipelines: bool = False) -> None:
         """Run in console-only mode without web interface."""
         print("Running in console mode. Press Ctrl+C to stop.")
+        
+        # Start pipelines immediately in console mode
+        if auto_start_pipelines:
+            print("Starting pipelines...")
+            results = self.pipeline_manager.start_all()
+            for pipeline, success in results.items():
+                status = "✅ started" if success else "❌ failed to start"
+                print(f"  {pipeline}: {status}")
         
         try:
             while not self.shutdown_requested:
@@ -254,12 +287,19 @@ class BiometricMonitorSystem:
         
         print("Shutting down Biometric Monitor System...")
         
-        # Stop all pipelines
+        # Stop all pipelines first
+        print("Stopping pipelines...")
         self.pipeline_manager.stop_all()
         
-        # Disconnect OSC clients
-        for client in self.osc_router.clients.values():
-            client.disconnect()
+        # Give threads time to clean up
+        time.sleep(1)
+        
+        # Web app cleanup is handled automatically by Flask-SocketIO on process exit
+        
+        # Clean up any remaining camera resources
+        print("Cleaning up camera resources...")
+        import cv2
+        cv2.destroyAllWindows()
         
         self.is_running = False
         print("System shutdown complete.")
@@ -382,15 +422,15 @@ def main():
     # Create and initialize system
     system = BiometricMonitorSystem(config)
     
-    if not system.start(auto_start_pipelines=args.auto_start):
+    if not system.start():
         print("Failed to start system")
         return 1
     
     try:
         if args.console_only:
-            system.run_console_mode()
+            system.run_console_mode(auto_start_pipelines=args.auto_start)
         else:
-            system.run_web_interface()
+            system.run_web_interface(auto_start_pipelines=args.auto_start)
     except Exception as e:
         print(f"Error running system: {e}")
         return 1

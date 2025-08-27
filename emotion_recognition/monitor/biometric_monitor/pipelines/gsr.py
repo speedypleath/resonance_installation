@@ -9,17 +9,20 @@ from pylsl import StreamInlet, resolve_byprop
 import tensorflow 
 from .base import BiometricPipeline, PipelineResult
 from ..models.gsr import GSRStressModel
-from ..osc.osc_client import OSCClient
+from ..osc.smooth_vad import get_smooth_vad_manager
 
 
 class GSRPipeline(BiometricPipeline):
     """Pipeline for real-time GSR stress detection and data processing."""
     
-    def __init__(self, model: GSRStressModel, osc_client: Optional[OSCClient] = None,
+    def __init__(self, model: GSRStressModel,
                  window_size: float = 20.0, window_step: float = 10.0,
                  stream_name: str = "GSR", stream_type: str = "GSR"):
         
-        super().__init__("gsr_stress_detection", model, osc_client)
+        super().__init__("gsr_stress_detection", model)
+        
+        # Initialize smooth VAD manager for centralized OSC output
+        self.smooth_vad_manager = get_smooth_vad_manager()
         
         # Use model's configured parameters
         self.sampling_rate = model.sampling_rate  # 4Hz from training
@@ -245,25 +248,25 @@ class GSRPipeline(BiometricPipeline):
             return None, None
     
     def _send_osc_data(self, result: PipelineResult) -> None:
-        """Send GSR stress data via OSC."""
+        """Send GSR stress data via smooth VAD manager."""
         if not result.success:
             return
         
         predictions = result.predictions
         
-        # Send stress predictions
-        for prediction in predictions.get("stress_predictions", []):
-            # Send stress level as binary value
-            stress_binary = 1.0 if prediction['stress_level'] == "Stress" else 0.0
-            self.osc_client.send_message("/stress/level", stress_binary)
-            self.osc_client.send_message("/stress/confidence", prediction['confidence'])
-            self.osc_client.send_message("/stress/arousal", prediction['arousal_score'])
-        
-        # Send window data
-        for window in predictions.get("analysis_windows", []):
-            # Send average GSR value for the window
-            avg_gsr = float(np.mean(window['data']))
-            self.osc_client.send_message("/gsr/avg", avg_gsr)
+        # Convert GSR stress prediction to VAD values
+        if predictions.get("stress_level") and predictions.get("arousal_score") is not None:
+            # Map stress level to valence (stress = negative valence)
+            valence = 0.2 if predictions["stress_level"] == "Stress" else 0.7
+            
+            # Use arousal score directly (should be 0-1)
+            arousal = float(predictions.get("arousal_score", 0.5))
+            
+            # Use signal quality as dominance indicator
+            dominance = float(predictions.get("signal_quality", 0.5))
+            
+            # Send to smooth VAD manager
+            self.smooth_vad_manager.update_gsr(valence, arousal, dominance)
     
     def _make_json_serializable(self, obj):
         """Convert numpy arrays and other non-JSON types to JSON serializable types."""
@@ -334,7 +337,7 @@ class GSRPipeline(BiometricPipeline):
                             print(f"Error in GSR callback: {e}")
                     
                     # Send OSC data if successful
-                    if result.success and self.osc_client:
+                    if result.success:
                         try:
                             self._send_osc_data(result)
                         except Exception as e:
@@ -354,6 +357,33 @@ class GSRPipeline(BiometricPipeline):
                 time.sleep(0.1)
         
         print("GSR data collection loop ended")
+    
+    def stop(self) -> None:
+        """Stop GSR pipeline and clean up LSL resources."""
+        print(f"Stopping {self.name} pipeline...")
+        
+        # Stop the parent pipeline first
+        super().stop()
+        
+        # Clean up LSL inlet
+        if self.inlet:
+            try:
+                print("Cleaning up GSR LSL inlet...")
+                # Close the inlet
+                self.inlet.close_stream()
+                self.inlet = None
+            except Exception as e:
+                print(f"Warning: Error cleaning up GSR LSL inlet: {e}")
+                self.inlet = None
+        
+        # Clear data buffers to free memory
+        self.data_buffer.clear()
+        self.timestamps_buffer.clear()
+        self.analysis_windows.clear()
+        self.stress_predictions.clear()
+        self.signal_quality_history.clear()
+        
+        print(f"{self.name} pipeline stopped")
     
     def get_latest_window(self) -> Optional[Dict]:
         """Get the most recent analysis window."""
