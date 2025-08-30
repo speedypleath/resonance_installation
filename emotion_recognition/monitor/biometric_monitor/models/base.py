@@ -54,13 +54,13 @@ class FaceModel(BiometricModel):
             4: 'Fear', 5: 'Disgust', 6: 'Anger'
         }
         self.vad_mapping = {
-            0: ( 0.0,  0.0,  0.0),   # Neutral
-            1: (+0.8, +0.6, +0.6),   # Happiness
-            2: (-0.7, -0.4, -0.7),   # Sadness
-            3: (+0.3, +0.9, -0.1),   # Surprise
-            4: (-0.8, +0.9, -0.9),   # Fear
-            5: (-0.6, +0.4, -0.5),   # Disgust
-            6: (-0.7, +0.8, +0.7),   # Anger
+            0: (0.5, 0.5, 0.5),   # Neutral
+            1: (0.9, 0.8, 0.8),   # Happiness
+            2: (0.15, 0.3, 0.15), # Sadness
+            3: (0.65, 0.95, 0.45), # Surprise
+            4: (0.1, 0.95, 0.05), # Fear
+            5: (0.2, 0.7, 0.25),  # Disgust
+            6: (0.15, 0.9, 0.85), # Anger
         }
     
     def compute_vad(self, emotion_probs: np.ndarray) -> Tuple[float, float, float]:

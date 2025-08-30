@@ -1,202 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Biometric Monitor Dashboard</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly.min.js"></script>
-<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/dashboard.css') }}"></head>
-<body>
-  <div class="header">
-    <h1>Biometric Monitor Dashboard</h1>
-    <div class="status-bar">
-      <div class="status-indicator">
-        <div id="connectionStatus" class="status-dot status-disconnected"></div>
-        <span id="connectionText">Connecting...</span>
-      </div>
-      <div class="status-indicator">
-        <div id="emotionStatus" class="status-dot status-disconnected"></div>
-        <span>Facial Emotion</span>
-      </div>
-      <div class="status-indicator">
-        <div id="eegStatus" class="status-dot status-disconnected"></div>
-        <span>EEG Monitoring</span>
-      </div>
-      <div class="status-indicator">
-        <div id="gsrStatus" class="status-dot status-disconnected"></div>
-        <span>GSR Stress</span>
-      </div>
-    </div>
-    <div class="controls">
-      <button class="btn btn-primary" onclick="startAllPipelines()">Start All</button>
-      <button class="btn btn-danger" onclick="stopAllPipelines()">Stop All</button>
-      <button class="btn btn-warning" onclick="pauseAllPipelines()">Pause All</button>
-      <button class="btn btn-primary" onclick="resumeAllPipelines()">Resume All</button>
-      <button class="btn" onclick="testOSC()">Test OSC</button>
-      <button class="btn" onclick="clearLogs()">Clear Logs</button>
-    </div>
-  </div>
-
-  <div class="main-content">
-    <!-- Statistics Grid -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <h3 id="emotionCount">0</h3>
-        <p>Emotions Detected</p>
-      </div>
-      <div class="stat-card">
-        <h3 id="gsrAnalyses">0</h3>
-        <p>GSR Analyses</p>
-      </div>
-      <div class="stat-card">
-        <h3 id="eegFragments">0</h3>
-        <p>EEG Fragments</p>
-      </div>
-      <div class="stat-card">
-        <h3 id="oscMessages">0</h3>
-        <p>OSC Messages</p>
-      </div>
-      <div class="stat-card">
-        <h3 id="uptime">0s</h3>
-        <p>System Uptime</p>
-      </div>
-    </div>
-
-    <!-- Pipeline Controls -->
-    <div class="pipeline-section">
-      <h2>Individual Pipeline Controls</h2>
-      <div class="pipeline-controls">
-        <button class="btn btn-primary" onclick="startPipeline('facial_emotion')">Start Emotion</button>
-        <button class="btn btn-danger" onclick="stopPipeline('facial_emotion')">Stop Emotion</button>
-        <button class="btn btn-primary" onclick="startPipeline('eeg_processing')">Start EEG</button>
-        <button class="btn btn-danger" onclick="stopPipeline('eeg_processing')">Stop EEG</button>
-        <button class="btn btn-primary" onclick="startPipeline('gsr_stress_detection')">Start GSR</button>
-        <button class="btn btn-danger" onclick="stopPipeline('gsr_stress_detection')">Stop GSR</button>
-      </div>
-    </div>
-
-    <!-- Data Visualization -->
-    <div class="data-visualization">
-      <!-- Live Camera Feed -->
-      <div class="plot-container">
-        <h3>Live Camera Feed</h3>
-        <div class="camera-container">
-          <img id="cameraFeed" src="/video_feed" alt="Camera feed not available" style="width: 100%; height: auto; border-radius: 10px; background: rgba(255, 255, 255, 0.1);" />
-          <div class="camera-overlay">
-            <div class="camera-status" id="cameraStatus">Camera: Disconnected</div>
-            <div class="fps-counter" id="fpsCounter">FPS: 0</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Emotion Probability Chart -->
-      <div class="plot-container">
-        <h3>Emotion Probabilities</h3>
-        <div id="emotionProbPlot"></div>
-      </div>
-
-      <!-- Emotion Recognition Display -->
-      <div class="plot-container full-width">
-        <h3>Real-Time Emotion Recognition</h3>
-        <div class="emotion-display">
-          <div class="current-emotion" id="currentEmotion">Neutral</div>
-          <div class="confidence-bar">
-            <div class="confidence-fill" id="confidenceBar" style="width: 0%"></div>
-          </div>
-          <div>Confidence: <span id="confidenceText">0%</span></div>
-
-          <div class="vad-display">
-            <div class="vad-item">
-              <div>Valence</div>
-              <div class="vad-value" id="valenceValue">0.000</div>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Biometric Monitor Dashboard</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.26.0/plotly.min.js"></script>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="{{ url_for('static',filename='styles/dashboard.css') }}"
+        />
+    </head>
+    <body>
+        <div class="header">
+            <h1>Biometric Monitor Dashboard</h1>
+            <div class="status-bar">
+                <div class="status-indicator">
+                    <div
+                        id="connectionStatus"
+                        class="status-dot status-disconnected"
+                    ></div>
+                    <span id="connectionText">Connecting...</span>
+                </div>
+                <div class="status-indicator">
+                    <div
+                        id="emotionStatus"
+                        class="status-dot status-disconnected"
+                    ></div>
+                    <span>Facial Emotion</span>
+                </div>
+                <div class="status-indicator">
+                    <div
+                        id="eegStatus"
+                        class="status-dot status-disconnected"
+                    ></div>
+                    <span>EEG Monitoring</span>
+                </div>
+                <div class="status-indicator">
+                    <div
+                        id="gsrStatus"
+                        class="status-dot status-disconnected"
+                    ></div>
+                    <span>GSR Stress</span>
+                </div>
             </div>
-            <div class="vad-item">
-              <div>Arousal</div>
-              <div class="vad-value" id="arousalValue">0.000</div>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="startAllPipelines()">
+                    Start All
+                </button>
+                <button class="btn btn-danger" onclick="stopAllPipelines()">
+                    Stop All
+                </button>
+                <button class="btn btn-warning" onclick="pauseAllPipelines()">
+                    Pause All
+                </button>
+                <button class="btn btn-primary" onclick="resumeAllPipelines()">
+                    Resume All
+                </button>
+                <button class="btn" onclick="testOSC()">Test OSC</button>
+                <button class="btn" onclick="clearLogs()">Clear Logs</button>
             </div>
-            <div class="vad-item">
-              <div>Dominance</div>
-              <div class="vad-value" id="dominanceValue">0.000</div>
+        </div>
+
+        <div class="main-content">
+            <!-- Statistics Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="emotionCount">0</h3>
+                    <p>Emotions Detected</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="gsrAnalyses">0</h3>
+                    <p>GSR Analyses</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="eegFragments">0</h3>
+                    <p>EEG Fragments</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="oscMessages">0</h3>
+                    <p>OSC Messages</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="uptime">0s</h3>
+                    <p>System Uptime</p>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- GSR Stress Detection -->
-    <div class="eeg-section">
-      <h2>GSR Stress Detection</h2>
-      <div class="data-visualization">
-        <!-- Live GSR Signal -->
-        <div class="plot-container">
-          <h3>Live GSR Signal</h3>
-          <div id="gsrSignalPlot"></div>
-        </div>
-
-        <!-- Stress Detection Display -->
-        <div class="plot-container">
-          <h3>Stress Detection</h3>
-          <div class="emotion-display">
-            <div class="current-emotion" id="currentStress">No Stress</div>
-            <div class="confidence-bar">
-              <div class="confidence-fill" id="stressConfidenceBar" style="width: 0%"></div>
+            <!-- Pipeline Controls -->
+            <div class="pipeline-section">
+                <h2>Individual Pipeline Controls</h2>
+                <div class="pipeline-controls">
+                    <button
+                        class="btn btn-primary"
+                        onclick="startPipeline('facial_emotion')"
+                    >
+                        Start Emotion
+                    </button>
+                    <button
+                        class="btn btn-danger"
+                        onclick="stopPipeline('facial_emotion')"
+                    >
+                        Stop Emotion
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        onclick="startPipeline('eeg_processing')"
+                    >
+                        Start EEG
+                    </button>
+                    <button
+                        class="btn btn-danger"
+                        onclick="stopPipeline('eeg_processing')"
+                    >
+                        Stop EEG
+                    </button>
+                    <button
+                        class="btn btn-primary"
+                        onclick="startPipeline('gsr_stress_detection')"
+                    >
+                        Start GSR
+                    </button>
+                    <button
+                        class="btn btn-danger"
+                        onclick="stopPipeline('gsr_stress_detection')"
+                    >
+                        Stop GSR
+                    </button>
+                </div>
             </div>
-            <div>Confidence: <span id="stressConfidenceText">0%</span></div>
-            
-            <div class="vad-display">
-              <div class="vad-item">
-                <div>Arousal Score</div>
-                <div class="vad-value" id="arousalScore">0.000</div>
-              </div>
-              <div class="vad-item">
-                <div>Signal Quality</div>
-                <div class="vad-value" id="signalQuality">0.000</div>
-              </div>
-              <div class="vad-item">
-                <div>GSR Peaks</div>
-                <div class="vad-value" id="gsrPeaks">0</div>
-              </div>
+
+            <!-- Data Visualization -->
+            <div class="data-visualization">
+                <!-- Emotion Recognition Display -->
+                <div class="plot-container">
+                    <h3>Real-Time Emotion Recognition</h3>
+                    <div class="emotion-display">
+                        <div class="current-emotion" id="currentEmotion">
+                            Neutral
+                        </div>
+                        <div class="confidence-bar">
+                            <div
+                                class="confidence-fill"
+                                id="confidenceBar"
+                                style="width: 0%"
+                            ></div>
+                        </div>
+                        <div>
+                            Confidence: <span id="confidenceText">0%</span>
+                        </div>
+
+                        <div class="vad-display">
+                            <div class="vad-item">
+                                <div>Valence</div>
+                                <div class="vad-value" id="valenceValue">
+                                    0.000
+                                </div>
+                            </div>
+                            <div class="vad-item">
+                                <div>Arousal</div>
+                                <div class="vad-value" id="arousalValue">
+                                    0.000
+                                </div>
+                            </div>
+                            <div class="vad-item">
+                                <div>Dominance</div>
+                                <div class="vad-value" id="dominanceValue">
+                                    0.000
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- OSC Messages Panel -->
+                <div class="plot-container">
+                    <h3>OSC Messages</h3>
+                    <div class="osc-container">
+                        <div class="osc-controls">
+                            <button class="btn" onclick="clearOSCMessages()">
+                                Clear OSC Log
+                            </button>
+                            <label class="checkbox-label">
+                                <input
+                                    type="checkbox"
+                                    id="oscAutoScroll"
+                                    checked
+                                />
+                                Auto-scroll
+                            </label>
+                        </div>
+                        <div class="osc-log-container" id="oscLogContainer">
+                            <div class="osc-entry">
+                                <span class="osc-timestamp">[System]</span>
+                                <span class="osc-address">/system</span>
+                                <span class="osc-values"
+                                    >OSC logging ready</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- EEG Individual Channel Monitoring -->
-    <div class="eeg-section">
-      <h2>EEG Channel Monitoring</h2>
-      <div class="eeg-visualization">
-        <div class="eeg-plot-container">
-          <h4>TP9 Channel</h4>
-          <div id="eegPlotTP9"></div>
-        </div>
-        <div class="eeg-plot-container">
-          <h4>AF7 Channel</h4>
-          <div id="eegPlotAF7"></div>
-        </div>
-        <div class="eeg-plot-container">
-          <h4>AF8 Channel</h4>
-          <div id="eegPlotAF8"></div>
-        </div>
-        <div class="eeg-plot-container">
-          <h4>TP10 Channel</h4>
-          <div id="eegPlotTP10"></div>
-        </div>
-      </div>
-    </div>
+            <div class="sensor-section">
+                <h2>Facial Expression Recognition Detection</h2>
+                <div class="data-visualization">
+                    <!-- Live Camera Feed -->
+                    <div class="plot-container">
+                        <h3>Live Camera Feed</h3>
+                        <div class="camera-container">
+                            <img
+                                id="cameraFeed"
+                                src="/video_feed"
+                                alt="Camera feed not available"
+                                style="
+                                    width: 100%;
+                                    height: auto;
+                                    border-radius: 10px;
+                                    background: rgba(255, 255, 255, 0.1);
+                                "
+                            />
+                            <div class="camera-overlay">
+                                <div class="camera-status" id="cameraStatus">
+                                    Camera: Disconnected
+                                </div>
+                                <div class="fps-counter" id="fpsCounter">
+                                    FPS: 0
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-    <!-- Activity Log -->
-    <div class="pipeline-section">
-      <h2>Activity Log</h2>
-      <div class="log-container" id="logContainer">
-        <div class="log-entry">
-          <span class="log-timestamp">[System]</span> Dashboard loaded - Ready to connect
-        </div>
-      </div>
-    </div>
-  </div>
+                    <!-- Emotion Probability Chart -->
+                    <div class="plot-container">
+                        <h3>Emotion Probabilities</h3>
+                        <div id="emotionProbPlot"></div>
+                    </div>
+                </div>
+            </div>
 
-  <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
-</body>
+            <!-- GSR Stress Detection -->
+            <div class="sensor-section">
+                <h2>GSR Stress Detection</h2>
+                <div class="data-visualization">
+                    <!-- Live GSR Signal -->
+                    <div class="plot-container">
+                        <h3>Live GSR Signal</h3>
+                        <div id="gsrSignalPlot"></div>
+                    </div>
+
+                    <!-- Stress Detection Display -->
+                    <div class="plot-container">
+                        <h3>Stress Detection</h3>
+                        <div class="emotion-display">
+                            <div class="current-emotion" id="currentStress">
+                                No Stress
+                            </div>
+                            <div class="confidence-bar">
+                                <div
+                                    class="confidence-fill"
+                                    id="stressConfidenceBar"
+                                    style="width: 0%"
+                                ></div>
+                            </div>
+                            <div>
+                                Confidence:
+                                <span id="stressConfidenceText">0%</span>
+                            </div>
+
+                            <div class="vad-display">
+                                <div class="vad-item">
+                                    <div>Arousal Score</div>
+                                    <div class="vad-value" id="arousalScore">
+                                        0.000
+                                    </div>
+                                </div>
+                                <div class="vad-item">
+                                    <div>Signal Quality</div>
+                                    <div class="vad-value" id="signalQuality">
+                                        0.000
+                                    </div>
+                                </div>
+                                <div class="vad-item">
+                                    <div>GSR Peaks</div>
+                                    <div class="vad-value" id="gsrPeaks">0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EEG Individual Channel Monitoring -->
+            <div class="sensor-section">
+                <h2>EEG Channel Monitoring</h2>
+                <div class="eeg-visualization">
+                    <div class="eeg-plot-container">
+                        <h4>TP9 Channel</h4>
+                        <div id="eegPlotTP9"></div>
+                    </div>
+                    <div class="eeg-plot-container">
+                        <h4>AF7 Channel</h4>
+                        <div id="eegPlotAF7"></div>
+                    </div>
+                    <div class="eeg-plot-container">
+                        <h4>AF8 Channel</h4>
+                        <div id="eegPlotAF8"></div>
+                    </div>
+                    <div class="eeg-plot-container">
+                        <h4>TP10 Channel</h4>
+                        <div id="eegPlotTP10"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Log -->
+            <div class="pipeline-section">
+                <h2>Activity Log</h2>
+                <div class="log-container" id="logContainer">
+                    <div class="log-entry">
+                        <span class="log-timestamp">[System]</span> Dashboard
+                        loaded - Ready to connect
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="{{ url_for('static', filename='scripts/dashboard.js') }}"></script>
+    </body>
 </html>

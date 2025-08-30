@@ -54,9 +54,9 @@ class SmoothedVADState:
 
         alpha = self._calculate_alpha(tau, dt)
 
-        state_dict['valence'] = alpha * new_vad[0] + (1 - alpha) * state_dict['valence']
-        state_dict['arousal'] = alpha * new_vad[1] + (1 - alpha) * state_dict['arousal']
-        state_dict['dominance'] = alpha * new_vad[2] + (1 - alpha) * state_dict['dominance']
+        state_dict['valence'] = max(0.0, min(1.0, alpha * new_vad[0] + (1 - alpha) * state_dict['valence']))
+        state_dict['arousal'] = max(0.0, min(1.0, alpha * new_vad[1] + (1 - alpha) * state_dict['arousal']))
+        state_dict['dominance'] = max(0.0, min(1.0, alpha * new_vad[2] + (1 - alpha) * state_dict['dominance']))
 
         self.last_update[last_time_key] = now
         self._recalculate_combination()
@@ -76,23 +76,23 @@ class SmoothedVADState:
             return
         
         # Fixed: Include GSR in valence calculation and fix weight_eeg reference
-        self.valence = (
+        self.valence = max(0.0, min(1.0, (
             self.vad_eeg['valence'] * self.weight_eeg +
             self.vad_facial['valence'] * self.weight_facial +
             self.vad_gsr['valence'] * self.weight_gsr
-        ) / total_weight
+        ) / total_weight))
         
-        self.arousal = (
+        self.arousal = max(0.0, min(1.0, (
             self.vad_eeg['arousal'] * self.weight_eeg +
             self.vad_facial['arousal'] * self.weight_facial +
             self.vad_gsr['arousal'] * self.weight_gsr
-        ) / total_weight
+        ) / total_weight))
         
-        self.dominance = (
+        self.dominance = max(0.0, min(1.0, (
             self.vad_eeg['dominance'] * self.weight_eeg +
             self.vad_facial['dominance'] * self.weight_facial +
             self.vad_gsr['dominance'] * self.weight_gsr
-        ) / total_weight
+        ) / total_weight))
 
     def get_vad(self):
         """Final combined VAD"""

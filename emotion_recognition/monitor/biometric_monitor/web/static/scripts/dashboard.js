@@ -191,6 +191,12 @@ socket.on("stats_update", function (data) {
   updateSystemStats(data);
 });
 
+socket.on("osc_message", function (data) {
+  if (data.address && data.values !== undefined) {
+    addOSCMessage(data.address, data.values);
+  }
+});
+
 // GSR Display Functions
 function updateGSRDisplay(data) {
   console.log("GSR Data received:", data);
@@ -330,6 +336,16 @@ function updateEmotionDisplay(data) {
     document.getElementById("valenceValue").textContent = data.vad.valence.toFixed(3);
     document.getElementById("arousalValue").textContent = data.vad.arousal.toFixed(3);
     document.getElementById("dominanceValue").textContent = data.vad.dominance.toFixed(3);
+    
+    // Log OSC messages for VAD values
+    addOSCMessage("/valence", [data.vad.valence]);
+    addOSCMessage("/arousal", [data.vad.arousal]);
+    addOSCMessage("/dominance", [data.vad.dominance]);
+  }
+
+  // Log emotion label OSC message
+  if (data.emotion) {
+    addOSCMessage("/emotion", [data.emotion]);
   }
 
   // Update emotion probabilities chart
@@ -520,6 +536,45 @@ function addLog(message) {
 function clearLogs() {
   document.getElementById("logContainer").innerHTML = "";
   addLog("Logs cleared");
+}
+
+// OSC message logging functions
+function addOSCMessage(address, values) {
+  const oscContainer = document.getElementById("oscLogContainer");
+  const oscEntry = document.createElement("div");
+  oscEntry.className = "osc-entry";
+
+  const timestamp = new Date().toLocaleTimeString();
+  const valuesStr = Array.isArray(values) ? values.map(v => 
+    typeof v === 'number' ? v.toFixed(3) : v
+  ).join(', ') : values;
+
+  oscEntry.innerHTML = 
+    '<span class="osc-timestamp">[' + timestamp + ']</span>' +
+    '<span class="osc-address">' + address + '</span>' +
+    '<span class="osc-values">' + valuesStr + '</span>';
+
+  oscContainer.appendChild(oscEntry);
+
+  // Auto-scroll if enabled
+  const autoScroll = document.getElementById("oscAutoScroll").checked;
+  if (autoScroll) {
+    oscContainer.scrollTop = oscContainer.scrollHeight;
+  }
+
+  // Keep only last 200 OSC entries
+  while (oscContainer.children.length > 200) {
+    oscContainer.removeChild(oscContainer.firstChild);
+  }
+
+  // Update OSC message counter
+  oscMessageCount++;
+}
+
+function clearOSCMessages() {
+  const oscContainer = document.getElementById("oscLogContainer");
+  oscContainer.innerHTML = "";
+  addOSCMessage("/system", "OSC log cleared");
 }
 
 // Initialize dashboard

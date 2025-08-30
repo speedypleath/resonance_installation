@@ -186,7 +186,7 @@ body {
   border-radius: 20px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  margin-bottom: 25px;
+  margin: 0px;
 }
 
 .pipeline-section h2 {
@@ -257,6 +257,14 @@ body {
   border-radius: 20px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+  height: calc(100% - 50px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#emotionProbPlot {
+  height: calc(100% - 50px);
 }
 
 .current-emotion {
@@ -325,6 +333,73 @@ body {
   font-weight: bold;
 }
 
+/* OSC Messages Panel */
+.osc-container {
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 15px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.osc-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 15px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  accent-color: #ffd700;
+}
+
+.osc-log-container {
+  font-family: "Courier New", monospace;
+  max-height: 300px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.osc-entry {
+  margin: 6px 0;
+  padding: 6px 10px;
+  border-left: 3px solid #4CAF50;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.osc-timestamp {
+  color: #ffd700;
+  font-weight: bold;
+  min-width: 80px;
+}
+
+.osc-address {
+  color: #4CAF50;
+  font-weight: bold;
+  min-width: 100px;
+}
+
+.osc-values {
+  color: #87CEEB;
+  flex: 1;
+}
+
 .full-width {
   grid-column: 1 / -1;
 }
@@ -375,16 +450,16 @@ body {
   text-align: center;
 }
 
-.eeg-section {
+.sensor-section {
   background: rgba(255, 255, 255, 0.08);
   padding: 25px;
   border-radius: 20px;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  margin-bottom: 25px;
+  margin-bottom: 0px;
 }
 
-.eeg-section h2 {
+.sensor-section h2 {
   color: #ffd700;
   margin-bottom: 20px;
   font-size: 1.8rem;
