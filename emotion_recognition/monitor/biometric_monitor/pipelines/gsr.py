@@ -257,7 +257,7 @@ class GSRPipeline(BiometricPipeline):
         # Convert GSR stress prediction to VAD values
         if predictions.get("stress_level") and predictions.get("arousal_score") is not None:
             # Map stress level to valence (stress = negative valence)
-            valence = 0.2 if predictions["stress_level"] == "Stress" else 0.7
+            valence = 0.2 + predictions.get("stress_level") / 2
             
             # Use arousal score directly (should be 0-1)
             arousal = float(predictions.get("arousal_score", 0.5))

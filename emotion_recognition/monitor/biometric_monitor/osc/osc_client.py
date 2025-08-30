@@ -71,27 +71,36 @@ class SmoothedVADState:
         self._update_vad(self.vad_gsr, vad, self.tau_gsr, 'gsr')
 
     def _recalculate_combination(self):
-        total_weight = self.weight_eeg + self.weight_facial + self.weight_gsr
+        # Get sensor status to determine which sensors are available
+        status = self.get_status()
+        
+        # Adjust weights based on available sensors
+        active_weight_eeg = self.weight_eeg if status['eeg'] else 0.0
+        active_weight_facial = self.weight_facial if status['facial'] else 0.0
+        active_weight_gsr = self.weight_gsr if status['gsr'] else 0.0
+        
+        total_weight = active_weight_eeg + active_weight_facial + active_weight_gsr
         if total_weight == 0:
+            # No sensors available, keep current state
             return
         
-        # Fixed: Include GSR in valence calculation and fix weight_eeg reference
+        # Calculate combined VAD using only available sensors
         self.valence = max(0.0, min(1.0, (
-            self.vad_eeg['valence'] * self.weight_eeg +
-            self.vad_facial['valence'] * self.weight_facial +
-            self.vad_gsr['valence'] * self.weight_gsr
+            self.vad_eeg['valence'] * active_weight_eeg +
+            self.vad_facial['valence'] * active_weight_facial +
+            self.vad_gsr['valence'] * active_weight_gsr
         ) / total_weight))
         
         self.arousal = max(0.0, min(1.0, (
-            self.vad_eeg['arousal'] * self.weight_eeg +
-            self.vad_facial['arousal'] * self.weight_facial +
-            self.vad_gsr['arousal'] * self.weight_gsr
+            self.vad_eeg['arousal'] * active_weight_eeg +
+            self.vad_facial['arousal'] * active_weight_facial +
+            self.vad_gsr['arousal'] * active_weight_gsr
         ) / total_weight))
         
         self.dominance = max(0.0, min(1.0, (
-            self.vad_eeg['dominance'] * self.weight_eeg +
-            self.vad_facial['dominance'] * self.weight_facial +
-            self.vad_gsr['dominance'] * self.weight_gsr
+            self.vad_eeg['dominance'] * active_weight_eeg +
+            self.vad_facial['dominance'] * active_weight_facial +
+            self.vad_gsr['dominance'] * active_weight_gsr
         ) / total_weight))
 
     def get_vad(self):
@@ -106,46 +115,6 @@ class SmoothedVADState:
             'gsr': self.vad_gsr['valence'] > 0.5
         }
 
-def print_message(address: str, *args):
-    """Handle incoming OSC messages"""
-    global vad_state
-    
-    if address == "/eeg":
-        if len(args) >= 3:
-            valence, arousal, dominance = args[0], args[1], args[2]
-            vad_state.update_eeg((valence, arousal, dominance))
-            print(f"EEG VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
-            print_combined_state()
-    
-    elif address == "/facial":
-        if len(args) >= 3:
-            valence, arousal, dominance = args[0], args[1], args[2]
-            vad_state.update_facial((valence, arousal, dominance))
-            print(f"Facial VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
-            print_combined_state()
-
-    elif address == "/gsr/prediction/8s":
-        if len(args) >= 3:
-            valence, arousal, dominance = args[0], args[1], args[2]
-            vad_state.update_gsr((valence, arousal, dominance))
-            print(f"GSR Prediction 8s: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
-            print_combined_state()
-    
-    elif address == "/gsr/prediction/20s":
-        if len(args) >= 3:
-            valence, arousal, dominance = args[0], args[1], args[2]
-            vad_state.update_gsr((valence, arousal, dominance))
-            print(f"GSR Prediction 20s: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
-            print_combined_state()
-
-def print_combined_state():
-    """Print the combined emotional state and send via OSC"""
-    valence, arousal, dominance = vad_state.get_vad()
-    status = vad_state.get_status()
-    
-    print(f"Combined VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
-    print(f"Status: EEG={status['eeg']}, Facial={status['facial']}, GSR={status['gsr']}")
-    print("-" * 50)
 
 class OSCClient:
     """OSC client for centralized VAD processing that can be used by pipelines."""
@@ -170,24 +139,39 @@ class OSCClient:
             print(f"OSCClient: OSC output configured: {output_host}:{output_port}")
         except Exception as e:
             print(f"OSCClient: Could not create OSC client: {e}")
+        
+        # Rate limiting for debug output (3 second intervals)
+        self.last_print_time = 0.0
+        self.print_interval = 3.0
+    
+    def _should_print(self):
+        """Check if enough time has passed to print debug info."""
+        now = time.time()
+        if now - self.last_print_time >= self.print_interval:
+            self.last_print_time = now
+            return True
+        return False
     
     def update_eeg(self, valence, arousal, dominance):
         """Update EEG VAD values."""
         self.vad_state.update_eeg((valence, arousal, dominance))
-        print(f"EEG VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
         self._send_combined_vad()
+        if self._should_print():
+            print(f"EEG VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
     
     def update_facial(self, valence, arousal, dominance):
         """Update facial VAD values."""
         self.vad_state.update_facial((valence, arousal, dominance))
-        print(f"Facial VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
         self._send_combined_vad()
+        if self._should_print():
+            print(f"Facial VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
     
     def update_gsr(self, valence, arousal, dominance):
         """Update GSR VAD values."""
         self.vad_state.update_gsr((valence, arousal, dominance))
-        print(f"GSR VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
         self._send_combined_vad()
+        if self._should_print():
+            print(f"GSR VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
 
     def send_facial_label(self, label):
         """Send facial emotion label via OSC."""
@@ -199,14 +183,34 @@ class OSCClient:
             except Exception as e:
                 print(f"Error sending OSC facial label: {e}")
     
+    def _calculate_vaq(self, valence, arousal):
+        """Calculate Valence-Arousal Quadrant (VAQ).
+        Returns quadrant number 1-4 based on valence/arousal position:
+        1: High Valence, High Arousal (Happy/Excited)
+        2: Low Valence, High Arousal (Angry/Stressed)  
+        3: Low Valence, Low Arousal (Sad/Depressed)
+        4: High Valence, Low Arousal (Calm/Relaxed)
+        """
+        if valence >= 0.5 and arousal >= 0.5:
+            return 1  # Happy/Excited
+        elif valence < 0.5 and arousal >= 0.5:
+            return 2  # Angry/Stressed
+        elif valence < 0.5 and arousal < 0.5:
+            return 3  # Sad/Depressed
+        else:  # valence >= 0.5 and arousal < 0.5
+            return 4  # Calm/Relaxed
+
     def _send_combined_vad(self):
         """Send the combined VAD values via OSC."""
         valence, arousal, dominance = self.vad_state.get_vad()
         status = self.vad_state.get_status()
+        vaq = self._calculate_vaq(valence, arousal)
         
-        print(f"Combined VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
-        print(f"Status: EEG={status['eeg']}, Facial={status['facial']}, GSR={status['gsr']}")
-        print("-" * 50)
+        # Only print debug info every 3 seconds
+        if self._should_print():
+            print(f"Combined VAD: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}, VAQ={vaq}")
+            print(f"Status: EEG={status['eeg']}, Facial={status['facial']}, GSR={status['gsr']}")
+            print("-" * 50)
         
         if self.osc_client:
             try:
@@ -214,7 +218,11 @@ class OSCClient:
                 self.osc_client.send_message("/valence", valence)
                 self.osc_client.send_message("/arousal", arousal)
                 self.osc_client.send_message("/dominance", dominance)
-                print(f"→ OSC sent: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}")
+                self.osc_client.send_message("/vaq", vaq)
+                
+                # Only print OSC send confirmation every 3 seconds
+                if self._should_print():
+                    print(f"→ OSC sent: V={valence:.3f}, A={arousal:.3f}, D={dominance:.3f}, VAQ={vaq}")
             except Exception as e:
                 print(f"Error sending OSC: {e}")
 
@@ -260,15 +268,6 @@ def mock_sensor_thread(sensor_type, interval, stop_event):
     """Thread function to simulate sensor data"""
     while not stop_event.is_set():
         vad = generate_mock_vad()
-        
-        if sensor_type == "eeg":
-            print_message("/eeg", *vad)
-        elif sensor_type == "facial":
-            print_message("/facial", *vad)
-        elif sensor_type == "gsr_8s":
-            print_message("/gsr/prediction/8s", *vad)
-        elif sensor_type == "gsr_20s":
-            print_message("/gsr/prediction/20s", *vad)
         
         stop_event.wait(interval)
 

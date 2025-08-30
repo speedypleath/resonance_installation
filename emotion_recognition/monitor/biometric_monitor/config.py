@@ -13,7 +13,7 @@ class FacialConfig:
     target_fps: int = 15
     sadness_boost: float = 2.0
     camera_id: int = 0
-    confidence_threshold: float = 0.0
+    confidence_threshold: float = 0.1
 
 
 @dataclass

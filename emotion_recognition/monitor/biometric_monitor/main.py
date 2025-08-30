@@ -17,6 +17,7 @@ from .pipelines.base import PipelineManager
 from .pipelines.face import FacePipeline
 from .pipelines.eeg import DummyEEGModel, EEGPipeline
 from .pipelines.gsr import GSRPipeline
+from .pipelines.emotion import EmotionPipeline
 from .web.app import BiometricWebApp
 
 # https://bugs.python.org/issue30385 fucking god i hate my life
@@ -141,6 +142,9 @@ class BiometricMonitorSystem:
                 self.pipeline_manager.register_pipeline(gsr_pipeline)
                 print("GSR processing pipeline initialized")
 
+            emotion_pipeline = EmotionPipeline()
+            self.pipeline_manager.register_pipeline(emotion_pipeline)
+            
             return True
             
         except Exception as e:

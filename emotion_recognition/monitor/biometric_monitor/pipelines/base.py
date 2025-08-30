@@ -22,12 +22,11 @@ class PipelineResult:
     error_message: Optional[str] = None
 
 
-class BiometricPipeline(ABC):
-    """Abstract base class for biometric data processing pipelines."""
+class BasePipeline(ABC):
+    """Base class for all pipeline types."""
     
-    def __init__(self, name: str, model: BiometricModel):
+    def __init__(self, name: str):
         self.name = name
-        self.model = model
 
         # Pipeline state
         self.is_running = False
@@ -72,28 +71,7 @@ class BiometricPipeline(ABC):
         if self.is_running:
             return True
         
-        # Check if it's a dummy model (for visualization pipelines like EEG)
-        is_dummy_model = (hasattr(self.model, '__class__') and 
-                         'Dummy' in self.model.__class__.__name__)
-        
         print(f"Starting pipeline '{self.name}'...")
-        print(f" - Model: {self.model.__class__.__name__ if self.model else 'None'}")
-        print(f" - Is dummy model: {is_dummy_model}")
-
-        # Check model requirement - allow dummy models for visualization
-        if self.model is None and not is_dummy_model:
-            print(f"Cannot start pipeline '{self.name}': no model provided")
-            return False
-        
-        # Check if it's a real model that needs to be loaded
-        is_loaded = getattr(self.model, 'is_loaded', False)
-        
-        if not is_dummy_model and not is_loaded:
-            print(f"Cannot start pipeline '{self.name}': model not loaded")
-            return False
-        
-        if is_dummy_model:
-            print(f"Pipeline '{self.name}' starting with dummy model for visualization")
         
         self._stop_event.clear()
         self._pause_event.clear()
@@ -238,7 +216,6 @@ class BiometricPipeline(ABC):
             "uptime": uptime,
             "input_queue_size": self.input_queue.qsize(),
             "output_queue_size": self.output_queue.qsize(),
-            "model_info": self.model.get_model_info() if self.model else None,
         }
     
     def clear_queues(self) -> None:
@@ -258,14 +235,59 @@ class BiometricPipeline(ABC):
         print(f"Cleared queues for pipeline '{self.name}'")
 
 
+class BiometricPipeline(BasePipeline):
+    """Abstract base class for biometric data processing pipelines."""
+    
+    def __init__(self, name: str, model: BiometricModel):
+        super().__init__(name)
+        self.model = model
+    
+    def start(self) -> bool:
+        """Start the pipeline processing thread with model validation."""
+        if self.is_running:
+            return True
+        
+        # Check if it's a dummy model (for visualization pipelines like EEG)
+        is_dummy_model = (hasattr(self.model, '__class__') and 
+                         'Dummy' in self.model.__class__.__name__)
+        
+        print(f"Starting biometric pipeline '{self.name}'...")
+        print(f" - Model: {self.model.__class__.__name__ if self.model else 'None'}")
+        print(f" - Is dummy model: {is_dummy_model}")
+
+        # Check model requirement - allow dummy models for visualization
+        if self.model is None and not is_dummy_model:
+            print(f"Cannot start pipeline '{self.name}': no model provided")
+            return False
+        
+        # Check if it's a real model that needs to be loaded
+        is_loaded = getattr(self.model, 'is_loaded', False)
+        
+        if not is_dummy_model and not is_loaded:
+            print(f"Cannot start pipeline '{self.name}': model not loaded")
+            return False
+        
+        if is_dummy_model:
+            print(f"Pipeline '{self.name}' starting with dummy model for visualization")
+        
+        # Call parent start method
+        return super().start()
+    
+    def get_stats(self) -> Dict[str, Any]:
+        """Get pipeline statistics with model info."""
+        stats = super().get_stats()
+        stats["model_info"] = self.model.get_model_info() if self.model else None
+        return stats
+
+
 class PipelineManager:
-    """Manager for multiple biometric pipelines."""
+    """Manager for multiple pipelines."""
     
     def __init__(self):
-        self.pipelines: Dict[str, BiometricPipeline] = {}
+        self.pipelines: Dict[str, BasePipeline] = {}
         self.global_callbacks: List[Callable[[str, PipelineResult], None]] = []
     
-    def register_pipeline(self, pipeline: BiometricPipeline) -> None:
+    def register_pipeline(self, pipeline: BasePipeline) -> None:
         """Register a pipeline."""
         self.pipelines[pipeline.name] = pipeline
         
@@ -276,7 +298,7 @@ class PipelineManager:
         
         print(f"Registered pipeline: {pipeline.name}")
     
-    def get_pipeline(self, name: str) -> Optional[BiometricPipeline]:
+    def get_pipeline(self, name: str) -> Optional[BasePipeline]:
         """Get pipeline by name."""
         return self.pipelines.get(name)
     

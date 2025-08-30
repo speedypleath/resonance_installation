@@ -122,12 +122,14 @@ function startAllPipelines() {
   startPipeline("facial_emotion");
   startPipeline("gsr_stress_detection");
   startPipeline("eeg_processing");
+  startPipeline("emotion_aggregation");
 }
 
 function stopAllPipelines() {
   stopPipeline("facial_emotion");
   stopPipeline("gsr_stress_detection");
   stopPipeline("eeg_processing");
+  stopPipeline("emotion_aggregation");
 }
 
 function pauseAllPipelines() {
@@ -165,8 +167,17 @@ function requestStats() {
 
 // Data handlers
 socket.on("emotion_update", function (data) {
-  updateEmotionDisplay(data);
+  console.log('update');
+  console.log(data);
+  updateCombinedEmotionDisplay(data);
   emotionCount++;
+  updateStats();
+});
+
+socket.on('facial_update', function(data) {
+  if (data.probabilities) {
+    updateEmotionProbChart(data.probabilities);
+  }
   updateStats();
 });
 
@@ -330,24 +341,46 @@ function updateEmotionDisplay(data) {
     document.getElementById("valenceValue").textContent = data.vad.valence.toFixed(3);
     document.getElementById("arousalValue").textContent = data.vad.arousal.toFixed(3);
     document.getElementById("dominanceValue").textContent = data.vad.dominance.toFixed(3);
-    
-    // Log OSC messages for VAD values
-    addOSCMessage("/valence", [data.vad.valence]);
-    addOSCMessage("/arousal", [data.vad.arousal]);
-    addOSCMessage("/dominance", [data.vad.dominance]);
-  }
-
-  // Log emotion label OSC message
-  if (data.emotion) {
-    addOSCMessage("/emotion", [data.emotion]);
-  }
-
-  // Update emotion probabilities chart
-  if (data.probabilities) {
-    updateEmotionProbChart(data.probabilities);
   }
 
   addLog("Emotion: " + data.emotion + " (" + (data.confidence * 100).toFixed(1) + "%)");
+}
+
+function updateCombinedEmotionDisplay(data) {
+  // Handle combined emotion data from EmotionPipeline
+  if (data.metadata && data.metadata.source === 'emotion_aggregation') {
+    // This is combined sensor data
+    document.getElementById("currentEmotion").textContent = data.emotion || "Combined";
+    document.getElementById("confidenceText").textContent = (data.confidence * 100).toFixed(1) + "%";
+    document.getElementById("confidenceBar").style.width = (data.confidence * 100) + "%";
+
+    if (data.vad) {
+      document.getElementById("valenceValue").textContent = data.vad.valence.toFixed(3);
+      document.getElementById("arousalValue").textContent = data.vad.arousal.toFixed(3);
+      document.getElementById("dominanceValue").textContent = data.vad.dominance.toFixed(3);
+
+      // Log OSC messages for combined VAD values
+      addOSCMessage("/valence", [data.vad.valence]);
+      addOSCMessage("/arousal", [data.vad.arousal]);
+      addOSCMessage("/dominance", [data.vad.dominance]);
+    }
+
+    // Log VAQ if available
+    if (data.vaq) {
+      addOSCMessage("/vaq", [data.vaq]);
+    }
+
+    // Show active sensors in log
+    let sensorInfo = "";
+    if (data.metadata.active_sensors && data.metadata.active_sensors.length > 0) {
+      sensorInfo = " (Sensors: " + data.metadata.active_sensors.join(", ") + ")";
+    }
+    
+    addLog("Combined Emotion: " + (data.emotion || "Combined") + " (" + (data.confidence * 100).toFixed(1) + "%)" + sensorInfo);
+  } else {
+    // Fall back to regular emotion display for non-aggregated data
+    updateEmotionDisplay(data);
+  }
 }
 
 function updateEEGDisplay(data) {
@@ -568,7 +601,6 @@ function addOSCMessage(address, values) {
 function clearOSCMessages() {
   const oscContainer = document.getElementById("oscLogContainer");
   oscContainer.innerHTML = "";
-  addOSCMessage("/system", "OSC log cleared");
 }
 
 // Initialize dashboard

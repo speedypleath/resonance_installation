@@ -18,7 +18,8 @@ class FacePipeline(BiometricPipeline):
     """Pipeline for real-time emotion recognition from webcam."""
     
     def __init__(self, model: FaceModel,
-                 camera_id: int = 0, target_fps: int = 15, confidence_threshold: float = 0.5):        
+                 camera_id: int = 0, target_fps: int = 15, confidence_threshold: float = 0.2,
+                 prediction_fps: float = 2.0):        
         
         super().__init__("facial_emotion", model)
         
@@ -28,6 +29,12 @@ class FacePipeline(BiometricPipeline):
         self.target_fps = target_fps
         self.frame_interval = 1.0 / target_fps
         self.confidence_threshold = confidence_threshold
+        
+        # Prediction rate limiting (2Hz by default)
+        self.prediction_fps = prediction_fps
+        self.prediction_interval = 1.0 / prediction_fps
+        self.last_prediction_time = 0.0
+        self.last_prediction_result = None
         
         # MediaPipe face detection with lower thresholds
         self.mp_face_mesh = mp.solutions.face_mesh
@@ -125,6 +132,9 @@ class FacePipeline(BiometricPipeline):
                     try:
                         result = self.process_data(frame)
                         
+                        if not result:
+                            continue
+
                         # Update statistics
                         self.process_count += 1
                         if not result.success:
@@ -385,42 +395,80 @@ class FacePipeline(BiometricPipeline):
                     if face_region.size == 0:
                         continue
                     
-                    # Convert to PIL and predict emotion
-                    face_image = Image.fromarray(face_region)
-                    prediction = self.model.predict(face_image)
+                    # Check if it's time to make a new prediction (2Hz rate limiting)
+                    should_predict = (timestamp - self.last_prediction_time) >= self.prediction_interval
                     
-                    # Check confidence threshold
-                    if prediction["confidence"] >= self.confidence_threshold:
-                        self.last_emotion = prediction["emotion"]
-                        self.last_confidence = prediction["confidence"]
-                        
-                        return PipelineResult(
-                            timestamp=timestamp,
-                            data_type="facial",
-                            predictions=prediction,
-                            raw_data={"frame": frame, "bbox": bbox},
-                            metadata={
-                                "frame_size": (w, h),
-                                "face_region_size": face_region.shape,
-                                "processing_fps": self._calculate_fps(),
-                                "face_detected": True
-                            },
-                            success=True
-                        )
+                    if should_predict:
+                        # Convert to PIL and predict emotion
+                        face_image = Image.fromarray(face_region)
+                        prediction = self.model.predict(face_image)
+                        self.last_prediction_time = timestamp
+                        self.last_prediction_result = prediction
                     else:
-                        # Low confidence
-                        return PipelineResult(
-                            timestamp=timestamp,
-                            data_type="facial",
-                            predictions=prediction,
-                            raw_data={"frame": frame, "bbox": bbox},
-                            metadata={
-                                "low_confidence": True,
-                                "threshold": self.confidence_threshold
-                            },
-                            success=False,
-                            error_message=f"Confidence {prediction['confidence']:.2%} below threshold {self.confidence_threshold:.2%}"
-                        )
+                        # Use cached prediction
+                        prediction = self.last_prediction_result if self.last_prediction_result else {
+                            "emotion": self.last_emotion,
+                            "confidence": self.last_confidence,
+                            "vad": {"valence": 0.0, "arousal": 0.0, "dominance": 0.0},
+                            "probabilities": {}
+                        }
+                    
+                    # Only send results when we made a new prediction
+                    if should_predict:
+                        # Check confidence threshold
+                        if prediction["confidence"] >= self.confidence_threshold:
+                            self.last_emotion = prediction["emotion"]
+                            self.last_confidence = prediction["confidence"]
+                            
+                            return PipelineResult(
+                                timestamp=timestamp,
+                                data_type="facial",
+                                predictions=prediction,
+                                raw_data={"frame": frame, "bbox": bbox},
+                                metadata={
+                                    "frame_size": (w, h),
+                                    "face_region_size": face_region.shape,
+                                    "processing_fps": self._calculate_fps(),
+                                    "face_detected": True,
+                                    "prediction_fps": self.prediction_fps
+                                },
+                                success=True
+                            )
+                        else:
+                            # Low confidence on new prediction
+                            return PipelineResult(
+                                timestamp=timestamp,
+                                data_type="facial",
+                                predictions=prediction,
+                                raw_data={"frame": frame, "bbox": bbox},
+                                metadata={
+                                    "low_confidence": True,
+                                    "threshold": self.confidence_threshold,
+                                    "prediction_fps": self.prediction_fps
+                                },
+                                success=False,
+                                error_message=f"Confidence {prediction['confidence']:.2%} below threshold {self.confidence_threshold:.2%}"
+                            )
+                    
+                    # No new prediction made, return last known prediction but don't trigger callbacks/OSC
+                    return PipelineResult(
+                        timestamp=timestamp,
+                        data_type="facial",
+                        predictions={
+                            "emotion": self.last_emotion,
+                            "confidence": self.last_confidence,
+                            "vad": self.last_prediction_result.get("vad", {"valence": 0.0, "arousal": 0.0, "dominance": 0.0}) if self.last_prediction_result else {"valence": 0.0, "arousal": 0.0, "dominance": 0.0},
+                            "probabilities": self.last_prediction_result.get("probabilities", {}) if self.last_prediction_result else {}
+                        },
+                        raw_data={"frame": frame, "bbox": bbox},
+                        metadata={
+                            "face_detected": True,
+                            "prediction_skipped": True,
+                            "prediction_fps": self.prediction_fps
+                        },
+                        success=True,  # Show as successful to avoid error display
+                        error_message=None
+                    )
             
             # No face detected
             self.no_face_count += 1
