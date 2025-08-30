@@ -53,14 +53,16 @@ class FaceModel(BiometricModel):
             0: 'Neutral', 1: 'Happiness', 2: 'Sadness', 3: 'Surprise',
             4: 'Fear', 5: 'Disgust', 6: 'Anger'
         }
+
+        # since we don't have labels such as bored or calm I lowered the overall arousal
         self.vad_mapping = {
-            0: (0.5, 0.5, 0.5),   # Neutral
+            0: (0.5, 0.2, 0.5),   # Neutral
             1: (0.9, 0.8, 0.8),   # Happiness
-            2: (0.15, 0.3, 0.15), # Sadness
-            3: (0.65, 0.95, 0.45), # Surprise
-            4: (0.1, 0.95, 0.05), # Fear
-            5: (0.2, 0.7, 0.25),  # Disgust
-            6: (0.15, 0.9, 0.85), # Anger
+            2: (0.15, 0.1, 0.15), # Sadness
+            3: (0.65, 0.8, 0.45), # Surprise
+            4: (0.1, 0.8, 0.05), # Fear
+            5: (0.2, 0.4, 0.25),  # Disgust
+            6: (0.15, 0.8, 0.85), # Anger
         }
     
     def compute_vad(self, emotion_probs: np.ndarray) -> Tuple[float, float, float]:
