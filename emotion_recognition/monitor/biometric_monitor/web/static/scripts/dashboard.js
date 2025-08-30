@@ -191,12 +191,6 @@ socket.on("stats_update", function (data) {
   updateSystemStats(data);
 });
 
-socket.on("osc_message", function (data) {
-  if (data.address && data.values !== undefined) {
-    addOSCMessage(data.address, data.values);
-  }
-});
-
 // GSR Display Functions
 function updateGSRDisplay(data) {
   console.log("GSR Data received:", data);

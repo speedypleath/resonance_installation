@@ -7,6 +7,7 @@ from flask_socketio import SocketIO, emit
 from typing import Dict, Any
 from ..config import WebConfig
 from ..pipelines.base import PipelineManager, PipelineResult
+from ..osc.osc_client import get_osc_client
 
 class BiometricWebApp:
     """Flask web application for real-time biometric monitoring."""
@@ -24,7 +25,8 @@ class BiometricWebApp:
         self.connected_clients = 0
         self.messages_sent = 0
         self.start_time = time.time()
-        
+        self.osc_client = get_osc_client()
+
         self._setup_routes()
         self._setup_socketio_events()
         self._setup_pipeline_callbacks()
@@ -347,7 +349,7 @@ class BiometricWebApp:
     def _setup_pipeline_callbacks(self):
         """Set up callbacks for pipeline results."""
         
-        def handle_emotion_result(pipeline_name: str, result: PipelineResult):
+        def handle_face_result(pipeline_name: str, result: PipelineResult):
             """Handle emotion recognition results."""
             if result.data_type == "facial":
                 try:
@@ -377,7 +379,6 @@ class BiometricWebApp:
                     data['metadata'] = result.metadata
                     
                     # Emit to all connected clients
-                    self.socketio.emit('emotion_update', data)
                     self.messages_sent += 1
                     
                     # Debug logging
@@ -451,11 +452,42 @@ class BiometricWebApp:
                 except Exception as e:
                     print(f"Error in GSR callback: {e}")
 
+        def handle_osc_result(pipeline_name: str, result: PipelineResult):
+            """Handle OSC combined VAD results from OSC client."""
+            try:                
+                # Get the combined VAD state
+                valence, arousal, dominance = self.osc_client.vad_state.get_vad()
+                
+                # Create emotion_update data with combined values
+                data = {
+                    'timestamp': result.timestamp,
+                    'success': True,
+                    'emotion': 'Emotion',  # Indicate this is combined from all sensors
+                    'confidence': 1.0,  # Combined values are always "confident"
+                    'vad': {
+                        'valence': float(valence),
+                        'arousal': float(arousal), 
+                        'dominance': float(dominance)
+                    },
+                    'metadata': {
+                        'source': 'osc_combined',
+                        'pipeline': pipeline_name
+                    }
+                }
+                
+                # Emit emotion_update event for the OSC panel
+                self.socketio.emit('emotion_update', data)
+                self.messages_sent += 1
+                
+            except Exception as e:
+                print(f"Error in OSC callback: {e}")
+
         # Register callbacks with debug output
         print("Setting up pipeline callbacks...")
-        self.pipeline_manager.add_global_callback(handle_emotion_result)
+        self.pipeline_manager.add_global_callback(handle_face_result)
         self.pipeline_manager.add_global_callback(handle_eeg_result)
         self.pipeline_manager.add_global_callback(handle_gsr_result)
+        self.pipeline_manager.add_global_callback(handle_osc_result)
         print("Pipeline callbacks registered")
     
     def run(self) -> None:
